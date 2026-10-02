@@ -6,7 +6,7 @@ shortcuts. Read 2026-10-02. The bar is **parity for one person running it locall
 agents as the second "user". Collaboration, accounts and cloud features are out by design.
 
 Legend: ✅ have · ⏭ skip (reason). Everything marked 🔨 in the first draft was built on 2026-10-02 in three
-phases (commits aa2b1e6, 7eb6238 and the phase 3 commit) and verified in the browser.
+phases (commits aa2b1e6, 4cc5ad8, 435d5a7) and verified in the browser.
 
 ## Cards
 
