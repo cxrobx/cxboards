@@ -31,10 +31,14 @@ SEARCH_ROOTS = [
 MAX_IMAGE_BYTES = 25 * 1024 * 1024
 
 
+DEFAULT_VAULT = Path.home() / "Documents" / "CX"
+
+
 @dataclass(frozen=True)
 class Config:
     home: Path
     port: int
+    vault: Path = DEFAULT_VAULT
 
     @property
     def db_path(self) -> Path:
@@ -60,4 +64,5 @@ class Config:
 def load_config() -> Config:
     home = Path(os.environ.get("CXBOARDS_HOME", str(DEFAULT_HOME))).expanduser()
     port = int(os.environ.get("CXBOARDS_PORT", str(DEFAULT_PORT)))
-    return Config(home=home, port=port)
+    vault = Path(os.environ.get("CXBOARDS_VAULT", str(DEFAULT_VAULT))).expanduser()
+    return Config(home=home, port=port, vault=vault)

@@ -15,7 +15,10 @@ import {
   type Node,
   type NodeChange,
   type OnNodeDrag,
+  getNodesBounds,
+  getViewportForBounds,
 } from '@xyflow/react'
+import { toPng } from 'html-to-image'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { api, type Board, type BoardState, type Card, type Connector, type Place } from './api'
 import { ContextMenu, type MenuItem, type MenuState } from './ContextMenu'
@@ -23,6 +26,7 @@ import { BoardContext, COLORS, type BoardContextValue } from './context'
 import { FloatingEdge, type LineData } from './edges'
 import { CardNode, ColumnNode } from './nodes'
 import { CropModal, FocusEditor, LabelPicker, Lightbox } from './Overlays'
+import { SketchEditor } from './Sketch'
 import { Toolbar } from './Toolbar'
 import { TRAY_MIME, TrayDrawer } from './Tray'
 
@@ -109,13 +113,14 @@ interface Props {
   touched: Set<string>
   focusId: string | null
   presenting: boolean
+  onPresent: () => void
   onOpenBoard: (id: string) => void
   onState: (state: BoardState) => void
   onError: (message: string) => void
   onToast: Toast
 }
 
-export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, presenting, onOpenBoard, onState, onError, onToast }: Props) {
+export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, presenting, onPresent, onOpenBoard, onState, onError, onToast }: Props) {
   const flow = useReactFlow()
   const [state, setState] = useState<BoardState | null>(null)
   const [nodes, setNodes] = useState<Node[]>([])
@@ -129,6 +134,7 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
   const [focusing, setFocusing] = useState<Card | null>(null)
   const [picking, setPicking] = useState<{ cards: Card[]; at: { x: number; y: number } } | null>(null)
   const [trayOpen, setTrayOpen] = useState(false)
+  const [sketching, setSketching] = useState<Card | null>(null)
   const wrapper = useRef<HTMLDivElement>(null)
   const dragging = useRef(false)
   const dragStart = useRef<{ alt: boolean; positions: Map<string, { x: number; y: number }> } | null>(null)
@@ -138,7 +144,7 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
   const fitted = useRef<string | null>(null)
   const pointer = useRef<{ x: number; y: number } | null>(null)
   const menuAt = useRef({ x: 0, y: 0 })
-  const sketchRef = useRef<(card: Card) => void>(() => {})
+  const sketchRef = useRef<(card: Card) => void>((card) => setSketching(card))
 
   const load = useCallback(async () => {
     try {
@@ -306,8 +312,21 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
   const add = useCallback(
     async (spec: Record<string, unknown>, edit = false, at?: { x: number; y: number }) => {
       try {
-        const card = await api.addCard(boardId, { ...(at ?? centre()), ...spec })
+        // No point given (toolbar): about the middle of the view, without covering a card.
+        const card = await api.addCard(boardId, { ...(at ?? { ...centre(), avoid: true }), ...spec })
         if (edit) setEditId(card.id)
+      } catch (e) {
+        onError((e as Error).message)
+      }
+    },
+    [boardId, centre, onError],
+  )
+
+  const newSketch = useCallback(
+    async (at?: { x: number; y: number }) => {
+      try {
+        const card = await api.addCard(boardId, { ...(at ?? { ...centre(), avoid: true }), kind: 'sketch', data: { paths: [], box: [640, 440] } })
+        setSketching(card)
       } catch (e) {
         onError((e as Error).message)
       }
@@ -435,6 +454,7 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
           { label: 'Crop…', run: () => setCropping(one) },
           { label: 'Rotate right', run: () => void guarded(() => api.rotate(one.id, 90)) },
           { label: 'Rotate left', run: () => void guarded(() => api.rotate(one.id, -90)) },
+          { label: one.data.annotations?.paths?.length ? 'Draw on it again' : 'Draw on the image', run: () => setSketching(one) },
           { label: 'Edit caption', run: () => setEditId(one.id) },
         )
       }
@@ -748,6 +768,12 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
         setNodes((ns) => ns.map((n) => (n.selected ? { ...n, selected: false } : n)))
       } else if (!meta && key === 'z' && !e.shiftKey) {
         void flow.fitView({ padding: 0.2, duration: 300 })
+      } else if (!meta && e.shiftKey && key === 'd') {
+        e.preventDefault()
+        void newSketch(pointer.current ?? undefined)
+      } else if (!meta && !e.shiftKey && key === 'p') {
+        e.preventDefault()
+        onPresent()
       } else if (!meta && e.key === 'Enter' && sel.length === 1) {
         const card = cardsRef.current.get(sel[0])
         if (card && !['board', 'audio', 'video', 'file'].includes(card.kind)) {
@@ -758,7 +784,40 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [copy, deleteEdges, deleteIds, duplicate, flow, menu, nudge, onOpenBoard, presenting, redo, selectedIds, undo, zOrder])
+  }, [copy, deleteEdges, deleteIds, duplicate, flow, menu, newSketch, nudge, onOpenBoard, onPresent, presenting, redo, selectedIds, undo, zOrder])
+
+  // Board ▸ Export ▸ PNG: render the whole board (not just what's in view) to an image.
+  useEffect(() => {
+    const onPng = async () => {
+      const viewport = document.querySelector<HTMLElement>('.react-flow__viewport')
+      const nodes = flow.getNodes()
+      if (!viewport || !nodes.length || !state) return
+      const bounds = getNodesBounds(nodes)
+      const width = Math.min(4000, Math.max(800, bounds.width + 160))
+      const height = Math.min(4000, Math.max(600, bounds.height + 160))
+      const vp = getViewportForBounds(bounds, width, height, 0.2, 2, 0.06)
+      try {
+        const url = await toPng(viewport, {
+          backgroundColor: getComputedStyle(document.body).getPropertyValue('--canvas').trim() || '#fdf6e3',
+          width,
+          height,
+          pixelRatio: 2,
+          skipFonts: true,
+          style: { width: `${width}px`, height: `${height}px`, transform: `translate(${vp.x}px, ${vp.y}px) scale(${vp.zoom})` },
+          filter: (n) => !(n.classList?.contains('tools') || n.classList?.contains('react-flow__handle')),
+        })
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `${state.board.export_slug}.png`
+        a.click()
+      } catch (e) {
+        onError(`Couldn't make the PNG: ${(e as Error).message}`)
+      }
+    }
+    const handler = () => void onPng()
+    window.addEventListener('cxboards:png', handler)
+    return () => window.removeEventListener('cxboards:png', handler)
+  }, [flow, onError, state])
 
   // Paste: our own cards (⌘C/⌘X here or on another board), else an image, a link, a
   // file path, or text becomes a card.
@@ -873,6 +932,7 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
           <Toolbar
             onAdd={(spec, edit) => void add(spec, edit)}
             onImages={(files) => void ingestFiles(files)}
+            extra={[{ label: 'Sketch', glyph: '✎', run: () => void newSketch() }]}
             onBoard={async (title) => {
               await guarded(async () => {
                 await api.createBoard(title, boardId)
@@ -917,7 +977,13 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
             const p = flow.screenToFlowPosition({ x: e.clientX, y: e.clientY })
             openMenu(e, paneMenu({ x: Math.round(p.x), y: Math.round(p.y) }))
           }}
-          onPaneClick={() => setEditId(null)}
+          onPaneClick={() => {
+            setEditId(null)
+            if (presenting) void flow.fitView({ padding: 0.15, duration: 500 })
+          }}
+          onNodeClick={(_e, node) => {
+            if (presenting) void flow.fitView({ nodes: [{ id: node.id }], padding: 0.25, maxZoom: 2, duration: 500 })
+          }}
           zoomOnDoubleClick={false}
           deleteKeyCode={null}
           selectionKeyCode={null}
@@ -958,6 +1024,7 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
         {cropping && <CropModal card={cropping} onClose={() => setCropping(null)} onDone={() => setCropping(null)} />}
         {focusing && <FocusEditor card={focusing} onClose={() => setFocusing(null)} />}
         {picking && <LabelPicker cards={picking.cards} at={picking.at} onClose={() => setPicking(null)} onError={onError} />}
+        {sketching && <SketchEditor card={sketching} onClose={() => setSketching(null)} onError={onError} />}
       </div>
     </BoardContext.Provider>
   )

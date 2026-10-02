@@ -1540,3 +1540,218 @@ mark {
 .focus-preview .md h3 {
   font-size: 18px;
 }
+
+/* ---------- phase 3: templates, presentation, sketching, clipping ---------- */
+
+.app.presenting {
+  grid-template-columns: 1fr;
+}
+
+.app.presenting .sidebar,
+.app.presenting .topbar {
+  display: none;
+}
+
+.canvas.presenting .react-flow__node {
+  cursor: zoom-in;
+}
+
+.present-hint {
+  position: fixed;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+  font-size: 11px;
+  color: var(--muted);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 4px 12px;
+  opacity: 0.85;
+}
+
+.section-label {
+  padding: 8px 8px 4px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.templates {
+  border-top: 1px dashed var(--line);
+  padding-top: 4px;
+}
+
+.dialog {
+  width: min(560px, 92vw);
+}
+
+.dialog-body {
+  padding: 14px 16px;
+  display: grid;
+  gap: 12px;
+}
+
+.dialog footer {
+  justify-content: flex-end;
+}
+
+.template-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+}
+
+.template-tile {
+  display: grid;
+  gap: 2px;
+  justify-items: start;
+  text-align: left;
+  border: 1px solid var(--line);
+  background: var(--canvas);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.template-tile .glyph {
+  color: var(--amber);
+  font-size: 18px;
+}
+
+.template-tile.on {
+  border-color: var(--amber);
+  box-shadow: 0 0 0 2px var(--glow);
+}
+
+.board-menu {
+  border-color: var(--line) !important;
+}
+
+.bookmarklet {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: var(--amber);
+  color: #1a1a1a;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: grab;
+}
+
+.sketch-overlay {
+  flex-direction: column;
+}
+
+.sketch-editor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  max-width: 94vw;
+}
+
+.sketch-tools {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+  flex-wrap: wrap;
+}
+
+.sketch-tools .sep {
+  width: 1px;
+  height: 20px;
+  background: var(--line);
+  margin: 0 4px;
+}
+
+.sketch-tools .spacer {
+  flex: 1;
+  min-width: 20px;
+}
+
+.swatch-dot.picked {
+  box-shadow: 0 0 0 2px var(--card), 0 0 0 4px var(--amber);
+}
+
+.sketch-surface {
+  position: relative;
+  max-height: 72vh;
+  background: #fffdf6;
+  border-radius: 8px;
+  cursor: crosshair;
+  touch-action: none;
+  overflow: hidden;
+  box-shadow: 0 20px 50px -20px rgba(0, 0, 0, 0.6);
+}
+
+.sketch-surface.erasing {
+  cursor: cell;
+}
+
+.sketch-surface img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  pointer-events: none;
+  user-select: none;
+}
+
+.sketch-surface svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.sketch-hint {
+  color: #ddd;
+  font-size: 11px;
+}
+
+.kind-sketch.card {
+  background: #fffdf6;
+}
+
+.clip {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 22px 18px;
+  display: grid;
+  gap: 14px;
+}
+
+.clip label {
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.clip .clip-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.clip-preview {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--card);
+  padding: 12px 14px;
+}
+
+.clip select.field {
+  height: 34px;
+}
+
+.clip-error {
+  color: var(--clay);
+}

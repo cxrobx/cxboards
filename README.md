@@ -2,8 +2,14 @@
 
 A local visual planning board (Milanote-shaped) that a person and their agents share.
 
-- Boards of cards: notes (markdown), to-dos, links (auto preview), images, audio (a file on
-  disk, streamed, never copied), columns, nested boards.
+- Boards of cards: notes (markdown, formatting keys, full-screen writer), to-dos, links
+  (preview, and YouTube/Spotify/SoundCloud/Bandcamp/Vimeo/Apple Music/Maps players), images
+  (crop, rotate, draw on), audio/video/files on disk (streamed or opened, never copied; a
+  Finder drop is resolved to the real path), colour swatches, sketches, columns, nested
+  boards and shortcuts, lines between cards, labels, an Unsorted tray.
+- Undo/redo, a trash, duplicate and copy/paste across boards, lock, search across every
+  board, templates, presentation mode, and exports (Markdown, text, Word, ZIP, PNG, PDF, a
+  vault note), plus a bookmarklet that clips pages into a board.
 - A stdio MCP (`cxboards mcp`) gives agents the same moves through the same API, with
   layout tools instead of coordinates. Their edits appear live in the open board.
 - Every board is also written as a static, script-free HTML snapshot for reading elsewhere.

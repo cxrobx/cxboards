@@ -109,6 +109,23 @@ def free_slot(existing: list[Rect], w: float, h: float) -> tuple[float, float]:
     return best if best is not None else (left, bottom + GAP)
 
 
+def nearest_free(existing: list[Rect], w: float, h: float, x: float, y: float) -> tuple[float, float]:
+    """The free spot closest to (x, y): rings of candidates around it, nearest first."""
+    step = GAP
+    for ring in range(0, 60):
+        spots = []
+        for dx in range(-ring, ring + 1):
+            for dy in range(-ring, ring + 1):
+                if max(abs(dx), abs(dy)) != ring:
+                    continue
+                spots.append((x + dx * step * 2, y + dy * step))
+        spots.sort(key=lambda p: (p[0] - x) ** 2 + (p[1] - y) ** 2)
+        for sx, sy in spots:
+            if not any(Rect(sx, sy, w, h).overlaps(r) for r in existing):
+                return sx, sy
+    return free_slot(existing, w, h)
+
+
 def beside(anchor: Rect, existing: list[Rect], w: float, h: float, side: str = "right") -> tuple[float, float]:
     """Next to ``anchor``; slides down (or right, for ``below``) until clear."""
     if side == "below":

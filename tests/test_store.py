@@ -164,3 +164,13 @@ def test_board_cannot_move_inside_itself(store: Store) -> None:
     board_card = [c for c in store.cards(parent["id"]) if c["kind"] == "board"][0]
     with pytest.raises(Invalid):
         store.move_card(board_card["id"], board_id=child["id"])
+
+
+def test_about_here_placement_avoids_covering_cards(store: Store) -> None:
+    board = store.create_board("Sessions")
+    big = store.add_card(board["id"], "note", text="x" * 400, x=100, y=100)
+    card = store.add_card(board["id"], "note", text="new", x=120, y=120, avoid=True)
+    assert_no_overlaps(store, board["id"])
+    assert abs(card["x"] - 120) + abs(card["y"] - 120) < 900  # still near where it was asked for
+    exact = store.add_card(board["id"], "note", text="exact", x=130, y=130)
+    assert (exact["x"], exact["y"]) == (130, 130)  # a pointer drop keeps its spot

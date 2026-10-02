@@ -358,6 +358,8 @@ function LinkCard({ card }: { card: Card }) {
   const [playing, setPlaying] = useState(false)
   const embed = d.embed as { provider: string; src: string; aspect?: number; height?: number } | undefined
   const showImage = d.image && !d.hide_image
+  // Remote thumbnails come through the local proxy: kept offline, and PNG export can read them.
+  const thumb = typeof d.image === 'string' && /^https?:/.test(d.image) ? `/api/proxy?url=${encodeURIComponent(d.image)}` : d.image
   let host = ''
   try {
     host = new URL(d.url).hostname
@@ -377,11 +379,11 @@ function LinkCard({ card }: { card: Card }) {
         </div>
       ) : embed ? (
         <button className="thumb-play nodrag" onClick={() => setPlaying(true)} title={`Play here (${embed.provider})`}>
-          {showImage ? <img className="thumb" src={d.image} alt="" draggable={false} /> : <div className="thumb blank" />}
+          {showImage ? <img className="thumb" src={thumb} alt="" draggable={false} /> : <div className="thumb blank" />}
           <span className="play">▶</span>
         </button>
       ) : (
-        showImage && <img className="thumb" src={d.image} alt="" draggable={false} />
+        showImage && <img className="thumb" src={thumb} alt="" draggable={false} />
       )}
       <a className="link-title nodrag" href={d.url} target="_blank" rel="noreferrer">
         {d.title || d.url}

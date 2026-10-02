@@ -43,7 +43,7 @@ def test_agent_plans_a_session_end_to_end(client, bounce) -> None:
     made = m.make_sub_board("october", [note_id], "Hook ideas")
     assert "Made board Hook ideas" in made
     assert "inside October sessions" in m.list_boards()
-    assert "Artifacts/Muzik/Boards/october-sessions" in m.snapshot_board("october")
+    assert "Artifacts/Muzik/Boards/october-sessions" in m.export_board("october")
 
 
 def test_errors_read_as_sentences(client) -> None:

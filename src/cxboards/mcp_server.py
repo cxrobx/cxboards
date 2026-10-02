@@ -92,7 +92,8 @@ def list_boards() -> str:
     lines = []
     for b in boards:
         parent = f" · inside {titles.get(b['parent_id'], b['parent_id'])}" if b["parent_id"] else ""
-        lines.append(f"- {b['title']} ({b['id']}) · {b['card_count']} cards{parent} · updated {b['updated_at']}")
+        template = " · TEMPLATE" if b.get("is_template") else ""
+        lines.append(f"- {b['title']} ({b['id']}) · {b['card_count']} cards{parent}{template} · updated {b['updated_at']}")
     return "\n".join(lines)
 
 
@@ -103,9 +104,13 @@ def read_board(board: str) -> str:
 
 
 @mcp.tool()
-def create_board(title: str, description: str = "", parent: str = "") -> str:
-    """Make a board. With `parent` (id or title) it is nested there and a board card appears on the parent."""
-    board = _call("POST", "/api/boards", {"title": title, "description": description, "parent": parent or None})
+def create_board(title: str, description: str = "", parent: str = "", template: str = "") -> str:
+    """Make a board. With `parent` (id or title) it is nested there and a board card appears on the parent.
+    With `template` (a template board's id or title, see list_boards), it starts as a copy of that template."""
+    board = _call(
+        "POST", "/api/boards",
+        {"title": title, "description": description, "parent": parent or None, "template": template or None},
+    )
     return f"Created {board['title']} ({board['id']}). Live: {_base()}/b/{board['id']}"
 
 
@@ -286,8 +291,17 @@ def make_sub_board(board: str, card_ids: list[str], title: str) -> str:
 
 
 @mcp.tool()
-def snapshot_board(board: str) -> str:
-    """Write the board's Onyx snapshot now (it also happens on its own a moment after each change)."""
+def export_board(board: str, format: str = "snapshot") -> str:
+    """Export a board. `snapshot`: write its Onyx page now (it also happens by itself after each change).
+    `markdown`: return the board as Markdown. `vault`: save it as a note in the Obsidian vault's
+    Inbox/Quick Notes (images to Other/Attachments; a note Chris has edited is never overwritten)."""
+    if format == "markdown":
+        return _call("GET", f"/api/boards/{board}/export.md")
+    if format == "vault":
+        result = _call("POST", f"/api/boards/{board}/export/vault")
+        return f"Saved to the vault: {result['relative']}"
+    if format != "snapshot":
+        raise ValueError("format is snapshot, markdown or vault")
     result = _call("POST", f"/api/boards/{board}/export")
     return f"Snapshot written: Artifacts/{result['artifacts']} ({result['path']})"
 

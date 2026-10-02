@@ -882,6 +882,8 @@ class Store:
                 data["crop"] = box if box["w"] > 0 and box["h"] > 0 else None
             if data.get("rotate") is not None:
                 data["rotate"] = int(data["rotate"]) % 360 // 90 * 90
+            if data.get("annotations"):
+                data["annotations"] = self._strokes(data["annotations"])
         elif kind in PATH_KINDS:
             path = Path(str(data.get("path", ""))).expanduser()
             if not path.is_absolute():
@@ -912,16 +914,25 @@ class Store:
             if data.get("format") not in ("hex", "rgb", "hsl", "none"):
                 data["format"] = "hex"
         elif kind == "sketch":
-            paths = data.get("paths") or []
-            if not isinstance(paths, list):
-                raise Invalid("a sketch's paths must be a list")
-            data["paths"] = [
-                {"d": str(p.get("d", "")), "color": str(p.get("color") or "#222")}
-                for p in paths if isinstance(p, dict) and p.get("d")
-            ]
-            box = data.get("box") or [400, 300]
-            data["box"] = [float(box[0]), float(box[1])]
+            data.update(self._strokes(data))
         return data
+
+    @staticmethod
+    def _strokes(data: dict[str, Any]) -> dict[str, Any]:
+        """A drawing's strokes: SVG path data (only path commands and numbers) and a colour each."""
+        paths = data.get("paths") or []
+        if not isinstance(paths, list):
+            raise Invalid("a drawing's paths must be a list")
+        clean = []
+        for p in paths:
+            if not isinstance(p, dict):
+                continue
+            d = str(p.get("d", ""))
+            color = str(p.get("color") or "#222")
+            if d and re.fullmatch(r"[MLQCZmlqcz0-9.,\s-]+", d) and re.fullmatch(r"#[0-9A-Fa-f]{3,8}|currentColor", color):
+                clean.append({"d": d, "color": color})
+        box = data.get("box") or [400, 300]
+        return {"paths": clean, "box": [max(1.0, float(box[0])), max(1.0, float(box[1]))]}
 
     def _insert_card(
         self,
@@ -939,6 +950,7 @@ class Store:
         y: float | None = None,
         w: float | None = None,
         tray: bool = False,
+        avoid: bool = False,
         actor: str,
     ) -> str:
         if kind not in KINDS:
@@ -964,6 +976,8 @@ class Store:
             existing = self._canvas_rects(board_id)
             if x is not None and y is not None:
                 cx, cy = float(x), float(y)
+                if avoid:  # "about here": the nearest spot that doesn't cover a card
+                    cx, cy = layout.nearest_free(existing, width, height, cx, cy)
             elif near:
                 anchor = self._card_row(near)
                 if anchor["board_id"] != board_id:

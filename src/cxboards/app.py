@@ -13,6 +13,7 @@ and whose undo stack a change lands on.
 from __future__ import annotations
 
 import asyncio
+import hashlib
 import json
 import mimetypes
 import re
@@ -27,7 +28,7 @@ from fastapi import Body, FastAPI, File, Form, Request, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, PlainTextResponse, Response, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
-from . import outline
+from . import formats, outline
 from .config import AUDIO_EXTENSIONS, MAX_FILE_BYTES, MAX_IMAGE_BYTES, VIDEO_EXTENSIONS, Config, load_config
 from .events import Broadcaster
 from .export import Exporter
@@ -165,6 +166,8 @@ def create_app(
                 out[key] = spec[key]
         if spec.get("unsorted") or spec.get("tray"):
             out["tray"] = True
+        if spec.get("avoid"):
+            out["avoid"] = True
         return out
 
     def import_image_url(url: str) -> str:
@@ -250,6 +253,76 @@ def create_app(
         board = store.resolve_board(board_id)
         path = exporter.export_board(board["id"])
         return {"path": str(path), "artifacts": f"{ARTIFACTS_ADDRESS}/{board['export_slug']}"}
+
+    # ------------------------------------------------------------------ documents and print
+
+    def download(content: bytes, filename: str, media_type: str) -> Response:
+        quoted = filename.replace('"', "")
+        return Response(content, media_type=media_type, headers={"Content-Disposition": f'attachment; filename="{quoted}"'})
+
+    @app.get("/api/boards/{board_id}/export.{fmt}")
+    def export_document(board_id: str, fmt: str) -> Response:
+        board = store.resolve_board(board_id)
+        stem = board["export_slug"]
+        if fmt == "md":
+            return download(formats.bundle(store, board["id"])[0].encode(), f"{stem}.md", "text/markdown; charset=utf-8")
+        if fmt == "txt":
+            return download(formats.to_text(formats.bundle(store, board["id"])[0]).encode(), f"{stem}.txt", "text/plain; charset=utf-8")
+        if fmt == "zip":
+            return download(formats.to_zip(store, board["id"]), f"{stem}.zip", "application/zip")
+        if fmt == "docx":
+            try:
+                content = formats.to_docx(store, board["id"])
+            except (RuntimeError, subprocess.SubprocessError) as exc:
+                raise Invalid(f"couldn't make the Word file: {exc}") from exc
+            return download(content, f"{stem}.docx",
+                            "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+        raise NotFound(f"no export called {fmt}: use md, txt, docx or zip")
+
+    @app.post("/api/boards/{board_id}/export/vault")
+    def export_vault(board_id: str) -> dict[str, Any]:
+        path = formats.to_vault(store, store.resolve_board(board_id)["id"], config.vault)
+        return {"path": str(path), "relative": str(path.relative_to(config.vault))}
+
+    @app.get("/print/{board_id}/", response_class=HTMLResponse)
+    def print_view(board_id: str) -> HTMLResponse:
+        """The board's snapshot, opened for printing (Save as PDF from the print dialog)."""
+        board = store.resolve_board(board_id)
+        page = exporter.export_board(board["id"]).read_text(encoding="utf-8")
+        script = "<script>addEventListener('load',()=>setTimeout(()=>print(),400))</script>"
+        page = page.replace("<head>", f'<head><base href="/print/{board["id"]}/">', 1).replace("</body>", script + "</body>")
+        page = page.replace("@media screen and (prefers-color-scheme: dark)", "@media not all")  # print on paper colours
+        return HTMLResponse(page)
+
+    @app.get("/print/{board_id}/media/{name}")
+    def print_media(board_id: str, name: str) -> FileResponse:
+        board = store.resolve_board(board_id)
+        path = exporter.root / board["export_slug"] / "media" / name
+        if "/" in name or not path.is_file():
+            raise NotFound(name)
+        return FileResponse(path)
+
+    @app.get("/api/proxy")
+    def proxy(url: str) -> Response:
+        """A remote image (a link's thumbnail), fetched once and kept: works offline, exports to PNG."""
+        if not re.match(r"^https?://", url):
+            raise Invalid("only http(s) images")
+        cache = config.uploads_dir / ".proxy"
+        cache.mkdir(exist_ok=True)
+        key = hashlib.sha256(url.encode()).hexdigest()[:24]
+        hit = next(cache.glob(f"{key}.*"), None)
+        if hit is None:
+            try:
+                with httpx.Client(timeout=10, follow_redirects=True, headers={"User-Agent": "CXBoards/0.1"}) as client:
+                    resp = client.get(url)
+            except httpx.HTTPError as exc:
+                raise NotFound(f"couldn't fetch the image: {exc}") from exc
+            kind = resp.headers.get("content-type", "").split(";")[0]
+            if resp.status_code >= 400 or not kind.startswith("image/") or len(resp.content) > MAX_IMAGE_BYTES:
+                raise NotFound("not an image")
+            hit = cache / f"{key}.{kind.split('/')[1].replace('jpeg', 'jpg').replace('svg+xml', 'svg')}"
+            hit.write_bytes(resp.content)
+        return FileResponse(hit, headers={"Cache-Control": "max-age=604800"})
 
     # ------------------------------------------------------------------ undo / redo
 
@@ -624,6 +697,10 @@ def create_app(
 
     @app.get("/b/{board_id}", response_class=HTMLResponse)
     def board_page(board_id: str) -> HTMLResponse:
+        return index()
+
+    @app.get("/clip", response_class=HTMLResponse)
+    def clip_page() -> HTMLResponse:
         return index()
 
     for name in ("icon.png", "favicon.png", "favicon.ico", "apple-touch-icon.png"):

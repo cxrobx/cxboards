@@ -22,21 +22,29 @@ Data lives in `~/Library/Application Support/CXBoards/` (`cxboards.db`, `uploads
 
 ## Invariants (machine-checked in `tests/`)
 
-1. Agents never send coordinates; placement (`layout.py`) never overlaps a card.
-2. Deleting a card never deletes other content (column → its cards return to the canvas;
-   board card → that board becomes top-level).
-3. One transaction = one rev bump = one event = one snapshot.
-4. CXBoards writes only inside its home. Audio cards **only read** the bounce they point at.
-   Snapshots stream audio from `:4870/api/cards/<id>/audio`; never copy or symlink it.
-   Onyx refuses a symlink that resolves outside its folders (tried: 404).
-5. Local-only guard: Host must be 127.0.0.1/localhost, and every write needs the
+1. Agents never send coordinates; placement (`layout.py`) never overlaps a card. "About
+   here" adds (toolbar) take the nearest free spot; a pointer drop or paste keeps its spot.
+2. Deleting never destroys: cards and boards go to the `trash` table (90 days, restorable);
+   a column's cards return to the canvas; a board card's board becomes top-level.
+3. One transaction = one rev bump = one event = one snapshot = one undo step.
+4. Undo restores exactly the rows one step touched, or refuses if any changed since (an
+   agent's later edit is never clobbered). Undo is per actor: ⌘Z is Chris's stack; an
+   agent's step is undone by its id (the toast's Undo). System writes fold into the step
+   they follow. The journal is fed by triggers generated from the live column list.
+5. CXBoards writes only inside its home, except exports Chris asks for (downloads, and
+   the vault note, which never overwrites a note he has edited since). Audio, video and
+   files on disk are **only read**: cards point at them, Finder drops are resolved to the
+   real path (name + size + mtime → Spotlight), and snapshots stream audio from
+   `:4870/api/cards/<id>/file`. Onyx refuses symlinks outside its folders (tried: 404).
+6. Local-only guard: Host must be 127.0.0.1/localhost, and every write needs the
    `X-CXBoards: 1` header (cross-site forms/fetches can't send it without a preflight).
-6. Snapshots never carry `<script>`; raw HTML in notes is escaped.
+7. Snapshots never carry `<script>`: note HTML is escaped, and drawing strokes are stored
+   only as path commands + numbers with hex colours.
 
 ## Run / verify
 
 ```bash
-.venv/bin/python -m pytest -q          # 31 tests: store invariants, API, export, MCP
+.venv/bin/python -m pytest -q          # 82 tests: invariants, API, export, MCP, phases 1-3
 scripts/install.sh                     # build UI, (re)install LaunchAgent, wait for health
 launchctl kickstart -k gui/$(id -u)/com.cx.cxboards.server   # restart after Python edits
 cd web && npm run dev                  # UI on :4871, proxying the API on :4870
@@ -44,8 +52,15 @@ tail -f ~/Library/Logs/cxboards.log
 ```
 
 A Python change needs a restart; a UI change needs `npm run build` (the server serves
-`web/dist`). Playwright: a one-step `dragTo` doesn't trigger React Flow drags. Drive
-`page.mouse` in steps.
+`web/dist`). Before a schema change on the live data, back up the database
+(`sqlite3 cxboards.db ".backup cxboards.db.bak-<date>"`); old databases migrate in place
+(`ADDED_COLUMNS` in `store.py`).
+
+Playwright gotchas: a one-step `dragTo` doesn't trigger React Flow drags (drive
+`page.mouse` in steps); `window.prompt` is intercepted by Playwright MCP; the print
+view's automatic `print()` wedges headless Chromium (fetch its HTML instead).
+
+Milanote parity, what's built and what's skipped (with reasons): `docs/milanote-parity.md`.
 
 ## Icon
 
