@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 from typing import Any
+from urllib.parse import quote
 
 import httpx
 from mcp.server.fastmcp import FastMCP
@@ -109,26 +110,38 @@ def create_board(title: str, description: str = "", parent: str = "") -> str:
 
 
 @mcp.tool()
-def add_cards(board: str, cards: list[dict[str, Any]], column: str = "", near: str = "", side: str = "right") -> str:
-    """Add one or more cards in a single step (one live update for Chris).
+def add_cards(
+    board: str,
+    cards: list[dict[str, Any]],
+    column: str = "",
+    near: str = "",
+    side: str = "right",
+    unsorted: bool = False,
+) -> str:
+    """Add one or more cards in a single step (one live update, one undo step for Chris).
 
     Each card is a dict with `kind` plus:
       note   {text}                         markdown
-      todo   {title?, items: [str | {text, done}]}
-      link   {url, text?}                   preview (title, image) fills in by itself
+      todo   {title?, items: [str | {text, done, indent}]}
+      link   {url, text?}                   preview (title, image, player) fills in by itself
       image  {path | url, text?}            text = caption; the image is copied into CXBoards
-      audio  {path, text?}                  absolute path to an audio file; only ever read
+      media  {path, text?}                  any file on disk: becomes an audio, video or file card;
+                                            only ever read (a .flp can then be opened in FL)
+      swatch {hex, text?}                   a colour swatch
       column {title, cards?: [...]}         a column, optionally with its own cards
       color  optional on any card: a CSS colour for its accent stripe
     Placement (applies to the whole call): `column` puts every card into that column (id or
     title); `near` puts the first card beside that card id (side right|below) and each next
-    card beside the one before; neither = next free spots in reading order.
+    card beside the one before; `unsorted` drops them in the board's Unsorted tray for Chris
+    to place; none of these = next free spots in reading order.
     """
     specs = []
     for card in cards:
         spec = dict(card)
         if column and spec.get("kind") != "column":
             spec["column"] = column
+        if unsorted:
+            spec["unsorted"] = True
         specs.append(spec)
     if near and specs:
         specs[0]["near"] = near
@@ -170,12 +183,16 @@ def move_card(
     side: str = "right",
     out_of_column: bool = False,
     board: str = "",
+    unsorted: bool = False,
 ) -> str:
     """Move a card: into a `column` (id or title, optional `index` within it), out of its column
-    (`out_of_column`), beside another card (`near`), or onto another `board` (a column brings its cards)."""
+    (`out_of_column`), beside another card (`near`), into the Unsorted tray (`unsorted`), or onto
+    another `board` (a column brings its cards). Locked cards refuse."""
     body: dict[str, Any] = {"side": side}
     if board:
         body["board"] = board
+    elif unsorted:
+        body["unsorted"] = True
     elif out_of_column:
         body["column"] = ""
         if near:
@@ -187,15 +204,39 @@ def move_card(
     elif near:
         body["near"] = near
     else:
-        raise ValueError("say where: column, near, out_of_column or board")
+        raise ValueError("say where: column, near, out_of_column, unsorted or board")
     return "Moved " + _brief(_call("POST", f"/api/cards/{card_id}/move", body))
 
 
 @mcp.tool()
 def delete_card(card_id: str) -> str:
-    """Remove a card. A column's cards go back onto the canvas; a board card's board becomes top-level."""
+    """Move a card to the trash (Chris can restore it). A column's cards go back onto the canvas;
+    a board card's board becomes top-level. Locked cards refuse."""
     _call("DELETE", f"/api/cards/{card_id}")
-    return f"Deleted {card_id}."
+    return f"Moved {card_id} to the trash."
+
+
+@mcp.tool()
+def duplicate_cards(card_ids: list[str], board: str = "") -> str:
+    """Copy cards (a column brings its cards, a board card copies its whole board). Without `board`
+    the copies land beside the originals; with it, in the next free spot on that board."""
+    copies = _call("POST", "/api/cards/duplicate", {"card_ids": card_ids, "board": board or None})
+    return "Copied:\n" + "\n".join(f"- {_brief(c)}" for c in copies)
+
+
+@mcp.tool()
+def search(query: str) -> str:
+    """Search every board's cards and titles. `label:name words` narrows to one label."""
+    results = _call("GET", f"/api/search?q={quote(query)}")
+    if not results:
+        return f"Nothing matches {query!r}."
+    lines = []
+    for r in results:
+        if r["type"] == "board":
+            lines.append(f"- board {r['board_id']}: {r['title']}")
+        else:
+            lines.append(f"- {r['kind']} {r['card_id']} on {r['board_title']} ({r['board_id']}): {r['title']}")
+    return "\n".join(lines)
 
 
 @mcp.tool()

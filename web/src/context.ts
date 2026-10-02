@@ -8,6 +8,11 @@ export interface BoardActions {
   renameBoard: (boardId: string, title: string) => Promise<void>
   openBoard: (boardId: string) => void
   resized: (id: string, width: number) => void
+  /** ⌘↵ while editing: save, then start the next note below (or next in the column). */
+  addAfter: (card: Card) => void
+  openFile: (card: Card, reveal?: boolean) => void
+  /** Right-click on something that isn't a canvas node (a card inside a column). */
+  menuFor: (event: React.MouseEvent, card: Card) => void
 }
 
 export interface BoardContextValue {
@@ -17,6 +22,8 @@ export interface BoardContextValue {
   setEditId: (id: string | null) => void
   touched: Set<string>
   dropTarget: string | null
+  focusId: string | null
+  presenting: boolean
   actions: BoardActions
 }
 
@@ -29,3 +36,15 @@ export function useBoard(): BoardContextValue {
 }
 
 export const COLORS = ['', '#E0A33A', '#CB4B16', '#859900', '#2AA198', '#6C71C4', '#D33682']
+
+export function humanSize(bytes?: number): string {
+  if (!bytes && bytes !== 0) return ''
+  const units = ['B', 'KB', 'MB', 'GB']
+  let n = bytes
+  let i = 0
+  while (n >= 1024 && i < units.length - 1) {
+    n /= 1024
+    i++
+  }
+  return `${n < 10 && i ? n.toFixed(1) : Math.round(n)} ${units[i]}`
+}

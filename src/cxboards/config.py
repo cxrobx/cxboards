@@ -17,6 +17,17 @@ DEFAULT_HOME = Path.home() / "Library" / "Application Support" / "CXBoards"
 
 AUDIO_EXTENSIONS = {".mp3", ".wav", ".m4a", ".aac", ".flac", ".ogg", ".aif", ".aiff"}
 IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg", ".heic"}
+VIDEO_EXTENSIONS = {".mp4", ".mov", ".m4v", ".webm"}
+MAX_FILE_BYTES = 2 * 1024 * 1024 * 1024  # a dropped file we couldn't find on disk and had to copy
+
+# Where a file dropped from Finder is looked for when Spotlight doesn't know it.
+SEARCH_ROOTS = [
+    "/Volumes/ChrisX/MuZik",
+    "~/Music",
+    "~/Downloads",
+    "~/Desktop",
+    "~/Documents",
+]
 MAX_IMAGE_BYTES = 25 * 1024 * 1024
 
 

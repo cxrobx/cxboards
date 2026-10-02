@@ -52,3 +52,19 @@ def test_errors_read_as_sentences(client) -> None:
     m.create_board("A board")
     with pytest.raises(ValueError, match="say where"):
         m.move_card("c_123")
+
+
+def test_search_duplicate_and_unsorted(client) -> None:
+    m.create_board("Refs & ideas")
+    m.add_cards("refs", [{"kind": "note", "text": "drums & bass idea"}])
+    m.add_cards("refs", [{"kind": "note", "text": "for later"}], unsorted=True)
+    found = m.search("drums & bass")
+    assert "note c_" in found and "Refs & ideas" in found
+    card_id = found.split("note ")[1].split()[0]
+    assert "Copied" in m.duplicate_cards([card_id])
+    outline = m.read_board("refs")
+    assert outline.count("drums & bass idea") == 2
+    tray = [c for c in client.get("/api/boards/refs").json()["cards"] if c["tray"]]
+    assert [c["text"] for c in tray] == ["for later"]
+    assert "## Unsorted" in outline and "for later" in outline.split("## Unsorted")[1]
+    assert "trash" in m.delete_card(card_id)

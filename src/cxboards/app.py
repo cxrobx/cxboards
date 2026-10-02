@@ -6,13 +6,16 @@ every write, which a cross-site form or fetch can't send without a CORS
 preflight this server never grants.
 
 The caller says who it is with ``X-CXBoards-Actor`` (``chris`` from the UI,
-``agent`` from the MCP); that is how the UI knows which cards to highlight.
+``agent`` from the MCP); that is how the UI knows which cards to highlight,
+and whose undo stack a change lands on.
 """
 
 from __future__ import annotations
 
 import asyncio
 import json
+import mimetypes
+import subprocess
 import threading
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -24,28 +27,45 @@ from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, PlainTex
 from fastapi.staticfiles import StaticFiles
 
 from . import outline
-from .config import AUDIO_EXTENSIONS, MAX_IMAGE_BYTES, Config, load_config
+from .config import AUDIO_EXTENSIONS, MAX_FILE_BYTES, MAX_IMAGE_BYTES, VIDEO_EXTENSIONS, Config, load_config
 from .events import Broadcaster
 from .export import Exporter
-from .store import Invalid, NotFound, Store
+from .locate import locate as default_locate
+from .store import PATH_KINDS, Invalid, NotFound, Store
 from .unfurl import unfurl as default_unfurl
 
 WEB_DIST = Path(__file__).resolve().parents[2] / "web" / "dist"
 ARTIFACTS_ADDRESS = "Muzik/Boards"
 
 
+def kind_for(path: str | Path) -> str:
+    suffix = Path(path).suffix.lower()
+    if suffix in AUDIO_EXTENSIONS:
+        return "audio"
+    if suffix in VIDEO_EXTENSIONS:
+        return "video"
+    return "file"
+
+
 def create_app(
     config: Config | None = None,
-    unfurl: Callable[[str], dict[str, str]] = default_unfurl,
+    unfurl: Callable[[str], dict[str, Any]] = default_unfurl,
     export_delay: float = 1.5,
+    locate: Callable[[str, int, float], list[Path]] = default_locate,
+    opener: Callable[[list[str]], None] | None = None,
 ) -> FastAPI:
     config = config or load_config()
     store = Store(config)
     broadcaster = Broadcaster()
     exporter = Exporter(store, delay=export_delay)
+    run_open = opener or (lambda args: subprocess.run(args, check=False, timeout=10))
 
-    def on_change(board_id: str, rev: int, card_ids: list[str], actor: str) -> None:
-        broadcaster.publish({"board_id": board_id, "rev": rev, "card_ids": card_ids, "actor": actor})
+    def on_change(board_id: str, rev: int, card_ids: list[str], actor: str, history_id: int | None) -> None:
+        event: dict[str, Any] = {"board_id": board_id, "rev": rev, "card_ids": card_ids, "actor": actor}
+        if history_id is not None:
+            event["history_id"] = history_id
+            event["summary"] = store.history_summary(history_id)
+        broadcaster.publish(event)
         exporter.schedule(board_id)
 
     store.listeners.append(on_change)
@@ -84,6 +104,9 @@ def create_app(
         actor = request.headers.get("x-cxboards-actor", "chris")
         return actor if actor in ("chris", "agent") else "chris"
 
+    def board_id_of(ref: str) -> str:
+        return store.resolve_board(ref)["id"]
+
     def resolve_column(board_id: str, ref: str | None) -> str | None:
         if not ref:
             return None
@@ -103,7 +126,7 @@ def create_app(
         spec = dict(spec)
         kind = spec.get("kind")
         data = dict(spec.pop("data", None) or {})
-        for key in ("url", "items", "path"):
+        for key in ("url", "items", "path", "hex"):
             if key in spec:
                 data[key] = spec.pop(key)
         if kind == "image" and not data.get("file"):
@@ -113,6 +136,8 @@ def create_app(
                 data["file"] = import_image_url(data.pop("url", None) or spec.pop("image_url"))
             else:
                 raise Invalid("an image card needs a path or url")
+        if kind == "media":  # "whatever this file is": audio, video, or a file card
+            kind = kind_for(data.get("path", ""))
         out = {
             "kind": kind,
             "text": spec.get("text") or spec.get("title") or "",
@@ -127,6 +152,8 @@ def create_app(
         for key in ("near", "side", "x", "y", "w"):
             if spec.get(key) not in (None, ""):
                 out[key] = spec[key]
+        if spec.get("unsorted") or spec.get("tray"):
+            out["tray"] = True
         return out
 
     def import_image_url(url: str) -> str:
@@ -153,7 +180,7 @@ def create_app(
         preview = unfurl(url)
         try:
             store.update_card(card_id, data=preview, actor="system")
-        except NotFound:
+        except (NotFound, Invalid):
             pass
 
     # ------------------------------------------------------------------ boards
@@ -169,26 +196,43 @@ def create_app(
     @app.post("/api/boards")
     def create_board(request: Request, body: dict[str, Any] = Body(...)) -> dict[str, Any]:
         parent = body.get("parent") or body.get("parent_id")
-        parent_id = store.resolve_board(parent)["id"] if parent else None
-        return store.create_board(body.get("title", ""), body.get("description", ""), parent_id, actor_of(request))
+        parent_id = board_id_of(parent) if parent else None
+        template = body.get("template")
+        template_id = board_id_of(template) if template else None
+        return store.create_board(
+            body.get("title", ""), body.get("description", ""), parent_id, actor_of(request), template_id=template_id
+        )
 
     @app.get("/api/boards/{ref}")
     def get_board(ref: str) -> dict[str, Any]:
-        return store.board_state(store.resolve_board(ref)["id"])
+        return store.board_state(board_id_of(ref))
 
     @app.get("/api/boards/{ref}/outline", response_class=PlainTextResponse)
     def get_outline(ref: str) -> str:
-        return outline.board_outline(store, store.resolve_board(ref)["id"], config.base_url)
+        return outline.board_outline(store, board_id_of(ref), config.base_url)
 
     @app.patch("/api/boards/{board_id}")
     def update_board(board_id: str, request: Request, body: dict[str, Any] = Body(...)) -> dict[str, Any]:
-        return store.update_board(board_id, body.get("title"), body.get("description"), actor_of(request))
+        return store.update_board(
+            board_id, body.get("title"), body.get("description"), actor_of(request), is_template=body.get("is_template")
+        )
 
     @app.delete("/api/boards/{board_id}")
     def delete_board(board_id: str, request: Request) -> dict[str, Any]:
-        store.delete_board(board_id, actor_of(request))
+        trash_id = store.delete_board(board_id, actor_of(request))
         exporter.sweep()
-        return {"ok": True}
+        return {"ok": True, "trash_id": trash_id}
+
+    @app.post("/api/boards/{board_id}/duplicate")
+    def duplicate_board(board_id: str, request: Request, body: dict[str, Any] = Body(default={})) -> dict[str, Any]:
+        parent = body.get("parent")
+        return store.duplicate_board(
+            board_id_of(board_id),
+            parent_id=board_id_of(parent) if parent else None,
+            title=body.get("title"),
+            actor=actor_of(request),
+            as_template=bool(body.get("template")),
+        )
 
     @app.post("/api/boards/{board_id}/export")
     def export_now(board_id: str) -> dict[str, Any]:
@@ -196,11 +240,49 @@ def create_app(
         path = exporter.export_board(board["id"])
         return {"path": str(path), "artifacts": f"{ARTIFACTS_ADDRESS}/{board['export_slug']}"}
 
+    # ------------------------------------------------------------------ undo / redo
+
+    @app.post("/api/boards/{board_id}/undo")
+    def undo(board_id: str) -> dict[str, Any]:
+        return store.undo(board_id=board_id_of(board_id))
+
+    @app.post("/api/boards/{board_id}/redo")
+    def redo(board_id: str) -> dict[str, Any]:
+        return store.redo(board_id_of(board_id))
+
+    @app.post("/api/history/{history_id}/undo")
+    def undo_step(history_id: int) -> dict[str, Any]:
+        return store.undo(history_id=history_id)
+
+    @app.get("/api/boards/{board_id}/history")
+    def history(board_id: str) -> list[dict[str, Any]]:
+        return store.history(board_id_of(board_id))
+
+    # ------------------------------------------------------------------ trash
+
+    @app.get("/api/trash")
+    def trash(board: str | None = None) -> list[dict[str, Any]]:
+        return store.list_trash(board_id_of(board) if board else None)
+
+    @app.post("/api/trash/{trash_id}/restore")
+    def restore(trash_id: str, request: Request) -> dict[str, Any]:
+        return store.restore(trash_id, actor_of(request))
+
+    @app.delete("/api/trash")
+    def empty_trash(request: Request) -> dict[str, Any]:
+        return {"emptied": store.empty_trash(actor_of(request))}
+
+    # ------------------------------------------------------------------ search
+
+    @app.get("/api/search")
+    def search(q: str = "") -> list[dict[str, Any]]:
+        return store.search(q)
+
     # ------------------------------------------------------------------ cards
 
     @app.post("/api/boards/{board_id}/cards")
     def add_card(board_id: str, request: Request, body: dict[str, Any] = Body(...)) -> dict[str, Any]:
-        board_id = store.resolve_board(board_id)["id"]
+        board_id = board_id_of(board_id)
         spec = prepare_spec(board_id, body)
         card = store.add_card(board_id, spec.pop("kind"), actor=actor_of(request), **spec)
         after_add([card])
@@ -213,13 +295,13 @@ def create_app(
         Placement chains: when the first card is placed ``near`` something, each
         later card in the batch is placed beside the one before it.
         """
-        board_id = store.resolve_board(board_id)["id"]
+        board_id = board_id_of(board_id)
         specs = body.get("cards") or []
         if not isinstance(specs, list) or not specs:
             raise Invalid("send a non-empty list of cards")
         actor = actor_of(request)
         created: list[dict[str, Any]] = []
-        with store.batch():  # one revision, one event, one snapshot for the whole batch
+        with store.batch():  # one revision, one event, one undo step for the whole batch
             previous: str | None = None
             for raw in specs:
                 raw = dict(raw)
@@ -240,11 +322,11 @@ def create_app(
     @app.patch("/api/cards/{card_id}")
     def update_card(card_id: str, request: Request, body: dict[str, Any] = Body(...)) -> dict[str, Any]:
         data = dict(body.get("data") or {})
-        for key in ("url", "items", "path"):
+        for key in ("url", "items", "path", "hex"):
             if key in body:
                 data[key] = body[key]
         if "url" in data:  # a new link: drop the old preview so nothing stale survives
-            data.update(title=None, description=None, image=None, site=None)
+            data.update(title=None, description=None, image=None, site=None, embed=None)
         card = store.update_card(
             card_id,
             text=body.get("text"),
@@ -252,6 +334,9 @@ def create_app(
             color=body.get("color"),
             w=body.get("w"),
             h=body.get("h"),
+            locked=body.get("locked"),
+            z=body.get("z"),
+            kind=body.get("kind"),
             actor="system" if set(body) <= {"h"} else actor_of(request),
         )
         if "url" in data:
@@ -261,9 +346,10 @@ def create_app(
     @app.post("/api/cards/{card_id}/move")
     def move_card(card_id: str, request: Request, body: dict[str, Any] = Body(...)) -> dict[str, Any]:
         card = store.card(card_id)
-        target_board = store.resolve_board(body["board"])["id"] if body.get("board") else None
+        target_board = board_id_of(body["board"]) if body.get("board") else None
         column = body.get("column", body.get("column_id"))
         column_id = "" if column == "" else resolve_column(card["board_id"], column) if column else None
+        unsorted = body.get("unsorted", body.get("tray"))
         return store.move_card(
             card_id,
             x=body.get("x"),
@@ -273,31 +359,66 @@ def create_app(
             near=body.get("near") or None,
             side=body.get("side") or "right",
             board_id=target_board,
+            tray=bool(unsorted) if unsorted is not None else None,
             actor=actor_of(request),
         )
 
     @app.delete("/api/cards/{card_id}")
     def delete_card(card_id: str, request: Request) -> dict[str, Any]:
-        store.delete_card(card_id, actor_of(request))
-        return {"ok": True}
+        return {"ok": True, "trash_id": store.delete_card(card_id, actor_of(request))}
+
+    @app.post("/api/cards/delete")
+    def delete_cards(request: Request, body: dict[str, Any] = Body(...)) -> dict[str, Any]:
+        return {"ok": True, "trash_ids": store.delete_cards(body.get("card_ids") or [], actor_of(request))}
+
+    @app.post("/api/cards/duplicate")
+    def duplicate_cards(request: Request, body: dict[str, Any] = Body(...)) -> list[dict[str, Any]]:
+        board = body.get("board")
+        return store.duplicate_cards(
+            body.get("card_ids") or [],
+            board_id=board_id_of(board) if board else None,
+            x=body.get("x"),
+            y=body.get("y"),
+            actor=actor_of(request),
+        )
+
+    @app.post("/api/cards/move-to-board")
+    def move_to_board(request: Request, body: dict[str, Any] = Body(...)) -> dict[str, Any]:
+        moved = store.move_cards(
+            body.get("card_ids") or [], board_id_of(body.get("board", "")),
+            x=body.get("x"), y=body.get("y"), actor=actor_of(request),
+        )
+        return {"moved": moved}
+
+    @app.post("/api/boards/{board_id}/positions")
+    def set_positions(board_id: str, request: Request, body: dict[str, Any] = Body(...)) -> dict[str, Any]:
+        return {"moved": store.set_positions(board_id_of(board_id), body.get("positions") or {}, actor_of(request))}
 
     @app.post("/api/boards/{board_id}/arrange")
     def arrange(board_id: str, request: Request, body: dict[str, Any] = Body(...)) -> dict[str, Any]:
-        board_id = store.resolve_board(board_id)["id"]
-        order = store.arrange(board_id, body.get("card_ids") or None, body.get("mode", "grid"), actor_of(request))
+        order = store.arrange(board_id_of(board_id), body.get("card_ids") or None, body.get("mode", "grid"), actor_of(request))
         return {"arranged": order}
 
     @app.post("/api/boards/{board_id}/group")
     def group(board_id: str, request: Request, body: dict[str, Any] = Body(...)) -> dict[str, Any]:
-        board_id = store.resolve_board(board_id)["id"]
-        return store.group_into_column(board_id, body.get("card_ids") or [], body.get("title", ""), actor_of(request))
+        return store.group_into_column(board_id_of(board_id), body.get("card_ids") or [], body.get("title", ""), actor_of(request))
 
     @app.post("/api/boards/{board_id}/sub-board")
     def sub_board(board_id: str, request: Request, body: dict[str, Any] = Body(...)) -> dict[str, Any]:
-        board_id = store.resolve_board(board_id)["id"]
-        return store.make_sub_board(board_id, body.get("card_ids") or [], body.get("title", ""), actor_of(request))
+        return store.make_sub_board(board_id_of(board_id), body.get("card_ids") or [], body.get("title", ""), actor_of(request))
 
-    # ------------------------------------------------------------------ media
+    # ------------------------------------------------------------------ media and files
+
+    def placement(board_id: str, x: float | None, y: float | None, column: str | None, unsorted: bool) -> dict[str, Any]:
+        fields: dict[str, Any] = {}
+        column_id = resolve_column(board_id, column)
+        if unsorted:
+            fields["tray"] = True
+        elif column_id:
+            fields["column_id"] = column_id
+        elif x is not None and y is not None:
+            fields.update(x=x, y=y)
+        return fields
 
     @app.post("/api/boards/{board_id}/images")
     def upload_image(
@@ -307,33 +428,78 @@ def create_app(
         x: float | None = Form(None),
         y: float | None = Form(None),
         column: str | None = Form(None),
+        unsorted: bool = Form(False),
     ) -> dict[str, Any]:
-        board_id = store.resolve_board(board_id)["id"]
-        content = file.file.read()
-        name = store.save_image_bytes(content, file.filename or "image.png")
-        fields: dict[str, Any] = {"data": {"file": name}}
-        column_id = resolve_column(board_id, column)
-        if column_id:
-            fields["column_id"] = column_id
-        elif x is not None and y is not None:
-            fields.update(x=x, y=y)
-        return store.add_card(board_id, "image", actor=actor_of(request), **fields)
+        board_id = board_id_of(board_id)
+        name = store.save_image_bytes(file.file.read(), file.filename or "image.png")
+        return store.add_card(board_id, "image", actor=actor_of(request), data={"file": name},
+                              **placement(board_id, x, y, column, unsorted))
+
+    @app.post("/api/boards/{board_id}/locate")
+    def locate_dropped(board_id: str, request: Request, body: dict[str, Any] = Body(...)) -> dict[str, Any]:
+        """A file dropped from Finder: find it on disk by name + size + mtime and point a card at it."""
+        board_id = board_id_of(board_id)
+        found = locate(str(body.get("name", "")), int(body.get("size", -1)), float(body.get("mtime", 0)))
+        if not found:
+            raise NotFound(f"couldn't find {body.get('name')} on disk")
+        path = found[0]
+        card = store.add_card(
+            board_id, kind_for(path), actor=actor_of(request), data={"path": str(path)},
+            **placement(board_id, body.get("x"), body.get("y"), body.get("column"), bool(body.get("unsorted"))),
+        )
+        return {**card, "matches": [str(p) for p in found]}
+
+    @app.post("/api/boards/{board_id}/files")
+    def upload_file(
+        board_id: str,
+        request: Request,
+        file: UploadFile = File(...),
+        x: float | None = Form(None),
+        y: float | None = Form(None),
+        column: str | None = Form(None),
+        unsorted: bool = Form(False),
+    ) -> dict[str, Any]:
+        """The fallback when a dropped file can't be found on disk: keep a copy, and say so on the card."""
+        board_id = board_id_of(board_id)
+        content = file.file.read(MAX_FILE_BYTES + 1)
+        if len(content) > MAX_FILE_BYTES:
+            raise Invalid("file is larger than 2 GB")
+        name = file.filename or "file"
+        path = store.save_file_bytes(content, name)
+        return store.add_card(
+            board_id, kind_for(name), actor=actor_of(request), data={"path": str(path), "name": name, "copied": True},
+            **placement(board_id, x, y, column, unsorted),
+        )
 
     @app.get("/media/{name}")
     def media(name: str) -> FileResponse:
         return FileResponse(store.upload_path(name))
 
-    @app.get("/api/cards/{card_id}/audio")
-    def audio(card_id: str) -> Response:
+    def card_file(card_id: str) -> Path:
         card = store.card(card_id)
-        if card["kind"] != "audio":
-            raise NotFound("not an audio card")
+        if card["kind"] not in PATH_KINDS:
+            raise NotFound("this card has no file")
         path = Path(card["data"]["path"])
-        if path.suffix.lower() not in AUDIO_EXTENSIONS:
-            raise NotFound("not an audio file")
         if not path.is_file():
-            return JSONResponse({"error": f"{path} isn't reachable (is the drive mounted?)"}, status_code=404)
-        return FileResponse(path)
+            raise NotFound(f"{path} isn't reachable (is the drive mounted?)")
+        return path
+
+    @app.get("/api/cards/{card_id}/file")
+    def file(card_id: str) -> FileResponse:
+        path = card_file(card_id)
+        media_type = mimetypes.guess_type(path.name)[0] or "application/octet-stream"
+        return FileResponse(path, media_type=media_type, headers={"Content-Disposition": "inline"})
+
+    @app.get("/api/cards/{card_id}/audio")
+    def audio(card_id: str) -> FileResponse:
+        return file(card_id)
+
+    @app.post("/api/cards/{card_id}/open")
+    def open_file(card_id: str, body: dict[str, Any] = Body(default={})) -> dict[str, Any]:
+        """Open the card's file in its app (a .flp opens FL Studio), or reveal it in Finder."""
+        path = card_file(card_id)
+        run_open(["open", "-R", str(path)] if body.get("reveal") else ["open", str(path)])
+        return {"ok": True, "path": str(path)}
 
     # ------------------------------------------------------------------ live events
 
