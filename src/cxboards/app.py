@@ -15,6 +15,7 @@ from __future__ import annotations
 import asyncio
 import json
 import mimetypes
+import re
 import subprocess
 import threading
 from contextlib import asynccontextmanager
@@ -35,6 +36,7 @@ from .store import PATH_KINDS, Invalid, NotFound, Store
 from .unfurl import unfurl as default_unfurl
 
 WEB_DIST = Path(__file__).resolve().parents[2] / "web" / "dist"
+HEX = re.compile(r"^\s*#?([0-9a-fA-F]{6}|[0-9a-fA-F]{3})\s*$")
 ARTIFACTS_ADDRESS = "Muzik/Boards"
 
 
@@ -53,12 +55,19 @@ def create_app(
     export_delay: float = 1.5,
     locate: Callable[[str, int, float], list[Path]] = default_locate,
     opener: Callable[[list[str]], None] | None = None,
+    rotator: Callable[[Path, Path, int], None] | None = None,
 ) -> FastAPI:
     config = config or load_config()
     store = Store(config)
     broadcaster = Broadcaster()
     exporter = Exporter(store, delay=export_delay)
     run_open = opener or (lambda args: subprocess.run(args, check=False, timeout=10))
+
+    def sips_rotate(source: Path, target: Path, degrees: int) -> None:
+        subprocess.run(["sips", "-r", str(degrees), str(source), "--out", str(target)],
+                       check=True, capture_output=True, timeout=30)
+
+    rotate_image = rotator or sips_rotate
 
     def on_change(board_id: str, rev: int, card_ids: list[str], actor: str, history_id: int | None) -> None:
         event: dict[str, Any] = {"board_id": board_id, "rev": rev, "card_ids": card_ids, "actor": actor}
@@ -138,6 +147,8 @@ def create_app(
                 raise Invalid("an image card needs a path or url")
         if kind == "media":  # "whatever this file is": audio, video, or a file card
             kind = kind_for(data.get("path", ""))
+        if kind == "note" and HEX.match(spec.get("text") or ""):  # a hex code alone becomes a swatch
+            kind, data, spec["text"] = "swatch", {**data, "hex": spec["text"].strip()}, ""
         out = {
             "kind": kind,
             "text": spec.get("text") or spec.get("title") or "",
@@ -327,16 +338,20 @@ def create_app(
                 data[key] = body[key]
         if "url" in data:  # a new link: drop the old preview so nothing stale survives
             data.update(title=None, description=None, image=None, site=None, embed=None)
+        kind = body.get("kind")
+        text = body.get("text")
+        if text is not None and HEX.match(text) and store.card(card_id)["kind"] == "note":
+            kind, data, text = "swatch", {**data, "hex": text.strip()}, ""
         card = store.update_card(
             card_id,
-            text=body.get("text"),
+            text=text,
             data=data or None,
             color=body.get("color"),
             w=body.get("w"),
             h=body.get("h"),
             locked=body.get("locked"),
             z=body.get("z"),
-            kind=body.get("kind"),
+            kind=kind,
             actor="system" if set(body) <= {"h"} else actor_of(request),
         )
         if "url" in data:
@@ -362,6 +377,10 @@ def create_app(
             tray=bool(unsorted) if unsorted is not None else None,
             actor=actor_of(request),
         )
+
+    @app.get("/api/cards/{card_id}/board")
+    def card_board(card_id: str) -> dict[str, Any]:
+        return {"board_id": store.card(card_id)["board_id"]}
 
     @app.delete("/api/cards/{card_id}")
     def delete_card(card_id: str, request: Request) -> dict[str, Any]:
@@ -406,6 +425,49 @@ def create_app(
     @app.post("/api/boards/{board_id}/sub-board")
     def sub_board(board_id: str, request: Request, body: dict[str, Any] = Body(...)) -> dict[str, Any]:
         return store.make_sub_board(board_id_of(board_id), body.get("card_ids") or [], body.get("title", ""), actor_of(request))
+
+    # ------------------------------------------------------------------ lines and labels
+
+    @app.post("/api/connectors")
+    def add_connector(request: Request, body: dict[str, Any] = Body(...)) -> dict[str, Any]:
+        """A line between two cards; the board is theirs."""
+        return store.add_connector(
+            body.get("from") or body.get("from_id", ""), body.get("to") or body.get("to_id", ""),
+            label=body.get("label", ""), color=body.get("color"), style=body.get("style", "solid"),
+            arrow=body.get("arrow", "end"), curve=body.get("curve", True), actor=actor_of(request),
+        )
+
+    @app.patch("/api/connectors/{connector_id}")
+    def update_connector(connector_id: str, request: Request, body: dict[str, Any] = Body(...)) -> dict[str, Any]:
+        return store.update_connector(connector_id, actor=actor_of(request), **body)
+
+    @app.delete("/api/connectors/{connector_id}")
+    def delete_connector(connector_id: str, request: Request) -> dict[str, Any]:
+        store.delete_connector(connector_id, actor_of(request))
+        return {"ok": True}
+
+    @app.get("/api/labels")
+    def labels() -> list[dict[str, Any]]:
+        return store.labels()
+
+    @app.post("/api/cards/labels")
+    def label_cards(request: Request, body: dict[str, Any] = Body(...)) -> list[dict[str, Any]]:
+        return store.label_cards(body.get("card_ids") or [], body.get("names") or [], bool(body.get("remove")), actor_of(request))
+
+    @app.patch("/api/labels/{label_id}")
+    def update_label(label_id: str, request: Request, body: dict[str, Any] = Body(...)) -> dict[str, Any]:
+        return store.update_label(label_id, body.get("name"), body.get("color"), actor_of(request))
+
+    @app.delete("/api/labels/{label_id}")
+    def delete_label(label_id: str, request: Request) -> dict[str, Any]:
+        store.delete_label(label_id, actor_of(request))
+        return {"ok": True}
+
+    @app.post("/api/uploads")
+    def upload(file: UploadFile = File(...)) -> dict[str, Any]:
+        """An image kept without making a card (a link's replacement thumbnail)."""
+        name = store.save_image_bytes(file.file.read(), file.filename or "image.png")
+        return {"file": name, "url": f"/media/{name}"}
 
     # ------------------------------------------------------------------ media and files
 
@@ -470,6 +532,26 @@ def create_app(
             board_id, kind_for(name), actor=actor_of(request), data={"path": str(path), "name": name, "copied": True},
             **placement(board_id, x, y, column, unsorted),
         )
+
+    @app.post("/api/cards/{card_id}/rotate")
+    def rotate(card_id: str, request: Request, body: dict[str, Any] = Body(default={})) -> dict[str, Any]:
+        """Turn an image card 90° (or -90, 180). A rotated copy is made; the original stays in uploads, so undo works."""
+        card = store.card(card_id)
+        if card["kind"] != "image":
+            raise Invalid("only images rotate")
+        degrees = int(body.get("degrees", 90)) % 360
+        if degrees not in (90, 180, 270):
+            raise Invalid("rotate by 90, 180 or -90 degrees")
+        source = store.upload_path(card["data"]["file"])
+        target = config.uploads_dir / f".rotating-{card_id}{source.suffix}"
+        try:
+            rotate_image(source, target, degrees)
+            name = store.save_image_bytes(target.read_bytes(), source.name)
+        except (OSError, subprocess.SubprocessError) as exc:
+            raise Invalid(f"couldn't rotate the image: {exc}") from exc
+        finally:
+            target.unlink(missing_ok=True)
+        return store.update_card(card_id, data={"file": name, "crop": None}, actor=actor_of(request))
 
     @app.get("/media/{name}")
     def media(name: str) -> FileResponse:

@@ -4,21 +4,30 @@
 import {
   Background,
   Controls,
+  MarkerType,
   ReactFlow,
+  applyEdgeChanges,
   applyNodeChanges,
   useReactFlow,
+  type Connection,
+  type Edge,
+  type EdgeChange,
   type Node,
   type NodeChange,
   type OnNodeDrag,
 } from '@xyflow/react'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { api, type Board, type BoardState, type Card, type Place } from './api'
+import { api, type Board, type BoardState, type Card, type Connector, type Place } from './api'
 import { ContextMenu, type MenuItem, type MenuState } from './ContextMenu'
 import { BoardContext, COLORS, type BoardContextValue } from './context'
+import { FloatingEdge, type LineData } from './edges'
 import { CardNode, ColumnNode } from './nodes'
+import { CropModal, FocusEditor, LabelPicker, Lightbox } from './Overlays'
 import { Toolbar } from './Toolbar'
+import { TRAY_MIME, TrayDrawer } from './Tray'
 
 const nodeTypes = { card: CardNode, column: ColumnNode }
+const edgeTypes = { floating: FloatingEdge }
 const PATH_KINDS = new Set(['audio', 'video', 'file'])
 const IMAGE_URL = /\.(png|jpe?g|gif|webp|svg)(\?|$)/i
 
@@ -42,6 +51,35 @@ function buildNodes(cards: Card[], previous: Node[], presenting: boolean): Node[
       measured: before.get(c.id)?.measured, // keep sizes React Flow already measured
       data: {},
     }))
+}
+
+function buildEdges(connectors: Connector[], cards: Map<string, Card>, previous: Edge[]): Edge[] {
+  const selected = new Set(previous.filter((e) => e.selected).map((e) => e.id))
+  const nodeOf = (id: string) => {
+    const card = cards.get(id)
+    if (!card || card.tray) return null
+    return card.column_id ?? card.id
+  }
+  return connectors.flatMap((c) => {
+    const source = nodeOf(c.from_id)
+    const target = nodeOf(c.to_id)
+    if (!source || !target || source === target) return []
+    const color = c.color || undefined
+    const marker = { type: MarkerType.ArrowClosed, width: 16, height: 16, color: color ?? 'var(--line-ink)' }
+    const data: LineData = { label: c.label, color: c.color, style: c.style, curve: c.curve }
+    return [
+      {
+        id: c.id,
+        source,
+        target,
+        type: 'floating',
+        data,
+        selected: selected.has(c.id),
+        markerEnd: c.arrow === 'none' ? undefined : marker,
+        markerStart: c.arrow === 'both' ? marker : undefined,
+      },
+    ]
+  })
 }
 
 function cardText(card: Card): string {
@@ -85,6 +123,12 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
   const [dropTarget, setDropTarget] = useState<string | null>(null)
   const [menu, setMenu] = useState<MenuState | null>(null)
   const [flash, setFlash] = useState<string | null>(null)
+  const [edges, setEdges] = useState<Edge[]>([])
+  const [lightbox, setLightbox] = useState<Card | null>(null)
+  const [cropping, setCropping] = useState<Card | null>(null)
+  const [focusing, setFocusing] = useState<Card | null>(null)
+  const [picking, setPicking] = useState<{ cards: Card[]; at: { x: number; y: number } } | null>(null)
+  const [trayOpen, setTrayOpen] = useState(false)
   const wrapper = useRef<HTMLDivElement>(null)
   const dragging = useRef(false)
   const dragStart = useRef<{ alt: boolean; positions: Map<string, { x: number; y: number }> } | null>(null)
@@ -93,6 +137,8 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
   const nudges = useRef<{ timer: number; positions: Record<string, [number, number]> }>({ timer: 0, positions: {} })
   const fitted = useRef<string | null>(null)
   const pointer = useRef<{ x: number; y: number } | null>(null)
+  const menuAt = useRef({ x: 0, y: 0 })
+  const sketchRef = useRef<(card: Card) => void>(() => {})
 
   const load = useCallback(async () => {
     try {
@@ -130,6 +176,11 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
   }, [state])
   const cardsRef = useRef(cards)
   cardsRef.current = cards
+  const trayCards = useMemo(() => (state?.cards ?? []).filter((c) => c.tray), [state])
+
+  useEffect(() => {
+    if (state) setEdges((prev) => buildEdges(state.connectors ?? [], cards, prev))
+  }, [state, cards])
 
   // A search result asked for this card: bring it into view and flash it.
   useEffect(() => {
@@ -188,6 +239,59 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
       })
     },
     [guarded, onToast, undo],
+  )
+
+  const deleteEdges = useCallback(
+    (ids: string[]) => void guarded(() => Promise.all(ids.map((id) => api.deleteConnector(id)))),
+    [guarded],
+  )
+
+  const lineMenu = useCallback(
+    (line: Connector): MenuItem[] => {
+      const set = (patch: Partial<Connector>) => void guarded(() => api.updateConnector(line.id, patch))
+      return [
+        {
+          label: line.label ? 'Edit label…' : 'Add a label…',
+          run: () => {
+            const label = window.prompt('Label', line.label)
+            if (label !== null) set({ label })
+          },
+        },
+        {
+          kind: 'sub',
+          label: 'Arrow',
+          items: [
+            { label: `${line.arrow === 'end' ? '✓ ' : ''}At the end`, run: () => set({ arrow: 'end' }) },
+            { label: `${line.arrow === 'both' ? '✓ ' : ''}Both ends`, run: () => set({ arrow: 'both' }) },
+            { label: `${line.arrow === 'none' ? '✓ ' : ''}None`, run: () => set({ arrow: 'none' }) },
+          ],
+        },
+        { label: line.style === 'dashed' ? 'Solid' : 'Dashed', run: () => set({ style: line.style === 'dashed' ? 'solid' : 'dashed' }) },
+        { label: line.curve ? 'Straight' : 'Curved', run: () => set({ curve: !line.curve }) },
+        {
+          kind: 'custom',
+          render: (close) => (
+            <div className="menu-colors">
+              {COLORS.map((c) => (
+                <button
+                  key={c || 'none'}
+                  className="swatch-dot big"
+                  title={c || 'Default'}
+                  style={{ background: c || 'transparent' }}
+                  onClick={() => {
+                    close()
+                    set({ color: c || null })
+                  }}
+                />
+              ))}
+            </div>
+          ),
+        },
+        { kind: 'sep' },
+        { label: 'Delete line', hint: '⌫', danger: true, run: () => deleteEdges([line.id]) },
+      ]
+    },
+    [deleteEdges, guarded],
   )
 
   const centre = useCallback(() => {
@@ -325,6 +429,41 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
         items.push({ label: 'Open in its app', run: () => void guarded(() => api.openFile(one.id)) })
         items.push({ label: 'Reveal in Finder', run: () => void guarded(() => api.openFile(one.id, true)) })
       }
+      if (one?.kind === 'image') {
+        items.push(
+          { label: 'View full size', run: () => setLightbox(one) },
+          { label: 'Crop…', run: () => setCropping(one) },
+          { label: 'Rotate right', run: () => void guarded(() => api.rotate(one.id, 90)) },
+          { label: 'Rotate left', run: () => void guarded(() => api.rotate(one.id, -90)) },
+          { label: 'Edit caption', run: () => setEditId(one.id) },
+        )
+      }
+      if (one?.kind === 'note') {
+        items.push(
+          { label: 'Open full screen', run: () => setFocusing(one) },
+          { label: one.data.doc ? 'Show as a note' : 'Show as a document', run: () => void guarded(() => api.updateCard(one.id, { data: { doc: !one.data.doc } })) },
+        )
+      }
+      if (one?.kind === 'link') {
+        items.push(
+          { label: one.data.hide_image ? 'Show the image' : 'Hide the image', run: () => void guarded(() => api.updateCard(one.id, { data: { hide_image: !one.data.hide_image } })) },
+          { label: one.data.hide_desc ? 'Show the description' : 'Hide the description', run: () => void guarded(() => api.updateCard(one.id, { data: { hide_desc: !one.data.hide_desc } })) },
+        )
+      }
+      if (one?.kind === 'swatch') {
+        items.push({
+          kind: 'sub',
+          label: 'Show value as',
+          items: (['hex', 'rgb', 'hsl', 'none'] as const).map((f) => ({
+            label: `${(one.data.format ?? 'hex') === f ? '✓ ' : ''}${f === 'none' ? 'Hidden' : f.toUpperCase()}`,
+            run: () => void guarded(() => api.updateCard(one.id, { data: { format: f } })),
+          })),
+        })
+      }
+      if (one?.kind === 'board' && one.board) {
+        const target = one.board.id
+        items.push({ label: 'Copy link to board', run: () => void navigator.clipboard?.writeText(`${window.location.origin}/b/${target}`) })
+      }
       if (items.length) items.push({ kind: 'sep' })
       items.push(
         { label: 'Duplicate', hint: '⌘D', run: () => duplicate(ids) },
@@ -354,8 +493,15 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
         },
       })
       if (one?.column_id) items.push({ label: 'Move out of the column', run: () => void guarded(() => api.moveCard(one.id, { column: '' })) })
+      if (one?.tray) items.push({ label: 'Place on the board', run: () => void guarded(() => api.moveCard(one.id, { unsorted: false })) })
+      else if (list.every((c) => c.kind !== 'column'))
+        items.push({ label: 'Send to Unsorted', run: () => void guarded(() => Promise.all(ids.map((id) => api.moveCard(id, { unsorted: true })))) })
       items.push(
         { kind: 'sep' },
+        {
+          label: 'Labels…',
+          run: () => setPicking({ cards: list, at: { x: menuAt.current.x, y: menuAt.current.y } }),
+        },
         { label: 'Bring to front', hint: '⇧⌘↑', run: () => zOrder(ids, 'front') },
         { label: 'Send to back', hint: '⇧⌘↓', run: () => zOrder(ids, 'back') },
         {
@@ -381,6 +527,15 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
             </div>
           ),
         },
+        {
+          label: list.every((c) => c.data.fill) ? 'Clear the fill' : 'Fill with its colour',
+          run: () => {
+            const fill = !list.every((c) => c.data.fill)
+            void guarded(() =>
+              Promise.all(list.map((c) => api.updateCard(c.id, { data: { fill }, ...(fill && !c.color ? { color: '#E0A33A' } : {}) }))),
+            )
+          },
+        },
         { kind: 'sep' },
         { label: 'Delete', hint: '⌫', danger: true, disabled: allLocked, run: () => void deleteIds(ids) },
       )
@@ -394,6 +549,14 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
       { label: 'New note here', run: () => void add({ kind: 'note', text: '' }, true, at) },
       { label: 'New to-do here', run: () => void add({ kind: 'todo', title: '', items: [] }, true, at) },
       { label: 'New column here', run: () => void add({ kind: 'column', title: '' }, true, at) },
+      { label: 'New colour swatch here', run: () => void add({ kind: 'swatch', hex: '#E0A33A' }, true, at) },
+      {
+        kind: 'sub',
+        label: 'Add a shortcut to a board',
+        items: boards
+          .filter((b) => b.id !== boardId && !b.is_template)
+          .map((b) => ({ label: b.title, run: () => void add({ kind: 'board', data: { board_id: b.id, shortcut: true } }, false, at) })),
+      },
       { label: 'Paste here', hint: '⌘V', disabled: !clip, run: () => void pasteClip(at) },
       { kind: 'sep' },
       { label: 'Undo', hint: '⌘Z', run: () => void undo() },
@@ -401,12 +564,13 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
       { label: 'Select all', hint: '⌘A', run: () => setNodes((ns) => ns.map((n) => ({ ...n, selected: true }))) },
       { label: 'Fit to screen', hint: 'Z', run: () => void flow.fitView({ padding: 0.2, duration: 300 }) },
     ],
-    [add, flow, pasteClip, redo, undo],
+    [add, boardId, boards, flow, pasteClip, redo, undo],
   )
 
   const openMenu = useCallback(
     (e: { clientX: number; clientY: number; preventDefault: () => void }, items: MenuItem[]) => {
       e.preventDefault()
+      menuAt.current = { x: e.clientX, y: e.clientY }
       setMenu({ x: e.clientX, y: e.clientY, items })
     },
     [],
@@ -427,6 +591,9 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
       addAfter,
       openFile: (card, reveal) => void guarded(() => api.openFile(card.id, reveal)),
       menuFor: (event, card) => openMenu(event, cardMenu([card.id])),
+      lightbox: (card) => setLightbox(card),
+      focusEdit: (card) => setFocusing(card),
+      sketch: (card) => sketchRef.current(card),
     }),
     [guarded, childrenOf, deleteIds, onOpenBoard, addAfter, openMenu, cardMenu],
   )
@@ -565,9 +732,11 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
       } else if (meta && e.shiftKey && (e.key === 'ArrowUp' || e.key === 'ArrowDown') && sel.length) {
         e.preventDefault()
         zOrder(sel, e.key === 'ArrowUp' ? 'front' : 'back')
-      } else if (!meta && (e.key === 'Delete' || e.key === 'Backspace') && sel.length) {
+      } else if (!meta && (e.key === 'Delete' || e.key === 'Backspace') && (sel.length || flow.getEdges().some((x) => x.selected))) {
         e.preventDefault()
-        void deleteIds(sel)
+        const lines = flow.getEdges().filter((x) => x.selected).map((x) => x.id)
+        if (lines.length) deleteEdges(lines)
+        if (sel.length) void deleteIds(sel)
       } else if (!meta && e.key.startsWith('Arrow') && sel.length) {
         e.preventDefault()
         const step = e.shiftKey ? 48 : 8
@@ -589,7 +758,7 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [copy, deleteIds, duplicate, flow, menu, nudge, onOpenBoard, presenting, redo, selectedIds, undo, zOrder])
+  }, [copy, deleteEdges, deleteIds, duplicate, flow, menu, nudge, onOpenBoard, presenting, redo, selectedIds, undo, zOrder])
 
   // Paste: our own cards (⌘C/⌘X here or on another board), else an image, a link, a
   // file path, or text becomes a card.
@@ -636,7 +805,24 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
     if (presenting) return
     const p = flow.screenToFlowPosition({ x: e.clientX, y: e.clientY })
     const at = { x: Math.round(p.x), y: Math.round(p.y) }
+    const trayCard = e.dataTransfer.getData(TRAY_MIME)
+    if (trayCard) {
+      e.preventDefault()
+      void guarded(() => api.moveCard(trayCard, { x: at.x, y: at.y, unsorted: false }))
+      return
+    }
     const files = Array.from(e.dataTransfer.files)
+    // An image dropped on a link card replaces its thumbnail.
+    const under = (e.target as HTMLElement).closest('.react-flow__node')?.getAttribute('data-id')
+    const link = under ? cardsRef.current.get(under) : undefined
+    if (link?.kind === 'link' && files.length === 1 && files[0].type.startsWith('image/')) {
+      e.preventDefault()
+      void guarded(async () => {
+        const asset = await api.uploadAsset(files[0])
+        await api.updateCard(link.id, { data: { image: asset.url, hide_image: false } })
+      })
+      return
+    }
     if (files.length) {
       e.preventDefault()
       void ingestFiles(files, at)
@@ -675,7 +861,7 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
         onDoubleClick={onDoubleClick}
         onDragOver={(e) => {
           const types = e.dataTransfer.types
-          if (types.includes('Files') || types.includes('text/uri-list')) e.preventDefault()
+          if (types.includes('Files') || types.includes('text/uri-list') || types.includes(TRAY_MIME)) e.preventDefault()
         }}
         onDrop={onDrop}
         onMouseMove={(e) => {
@@ -696,9 +882,26 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
         )}
         <ReactFlow
           nodes={nodes}
-          edges={[]}
+          edges={edges}
           nodeTypes={nodeTypes}
+          edgeTypes={edgeTypes}
           onNodesChange={onNodesChange}
+          onEdgesChange={(changes: EdgeChange[]) => setEdges((es) => applyEdgeChanges(changes.filter((c) => c.type === 'select'), es))}
+          onConnect={(c: Connection) => {
+            if (c.source && c.target && c.source !== c.target) void guarded(() => api.connect(c.source, c.target))
+          }}
+          isValidConnection={(c) => c.source !== c.target}
+          onEdgeContextMenu={(e, edge) => {
+            if (presenting) return
+            const line = state?.connectors.find((x) => x.id === edge.id)
+            if (line) openMenu(e, lineMenu(line))
+          }}
+          onEdgeDoubleClick={(_e, edge) => {
+            const line = state?.connectors.find((x) => x.id === edge.id)
+            if (!line || presenting) return
+            const label = window.prompt('Label', line.label)
+            if (label !== null) void guarded(() => api.updateConnector(line.id, { label }))
+          }}
           onNodeDragStart={onNodeDragStart}
           onNodeDrag={onNodeDrag}
           onNodeDragStop={onNodeDragStop}
@@ -739,6 +942,22 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
           </div>
         )}
         {menu && <ContextMenu state={menu} onClose={() => setMenu(null)} />}
+        {!presenting && (trayCards.length > 0 || trayOpen) && !trayOpen && (
+          <button className="tray-button" onClick={() => setTrayOpen(true)}>
+            Unsorted · {trayCards.length}
+          </button>
+        )}
+        {trayOpen && !presenting && (
+          <TrayDrawer
+            cards={trayCards}
+            onClose={() => setTrayOpen(false)}
+            onPlace={(card) => void guarded(() => api.moveCard(card.id, { unsorted: false }))}
+          />
+        )}
+        {lightbox && <Lightbox card={lightbox} onClose={() => setLightbox(null)} />}
+        {cropping && <CropModal card={cropping} onClose={() => setCropping(null)} onDone={() => setCropping(null)} />}
+        {focusing && <FocusEditor card={focusing} onClose={() => setFocusing(null)} />}
+        {picking && <LabelPicker cards={picking.cards} at={picking.at} onClose={() => setPicking(null)} onError={onError} />}
       </div>
     </BoardContext.Provider>
   )

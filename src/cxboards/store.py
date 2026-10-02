@@ -874,6 +874,14 @@ class Store:
             name = str(data.get("file", ""))
             if not name or "/" in name or not (self.config.uploads_dir / name).is_file():
                 raise Invalid("an image card needs an uploaded file")
+            crop = data.get("crop")
+            if crop:
+                box = {k: max(0.0, min(100.0, float(crop.get(k, 0)))) for k in ("x", "y", "w", "h")}
+                if crop.get("aspect"):  # the crop region's pixel width / height
+                    box["aspect"] = max(0.05, min(20.0, float(crop["aspect"])))
+                data["crop"] = box if box["w"] > 0 and box["h"] > 0 else None
+            if data.get("rotate") is not None:
+                data["rotate"] = int(data["rotate"]) % 360 // 90 * 90
         elif kind in PATH_KINDS:
             path = Path(str(data.get("path", ""))).expanduser()
             if not path.is_absolute():
@@ -1481,6 +1489,154 @@ class Store:
             db.execute("DELETE FROM trash")
             self._actors.add(actor)
             return n
+
+    # ------------------------------------------------------------------ lines between cards
+
+    def _connector_row(self, connector_id: str) -> sqlite3.Row:
+        row = self._db.execute("SELECT * FROM connectors WHERE id = ?", (connector_id,)).fetchone()
+        if row is None:
+            raise NotFound(f"no line {connector_id}")
+        return row
+
+    @staticmethod
+    def _connector_dict(row: sqlite3.Row) -> dict[str, Any]:
+        out = dict(row)
+        out["curve"] = bool(out["curve"])
+        return out
+
+    @staticmethod
+    def _check_line_style(style: str | None, arrow: str | None) -> None:
+        if style is not None and style not in ("solid", "dashed"):
+            raise Invalid("a line's style is solid or dashed")
+        if arrow is not None and arrow not in ("end", "both", "none"):
+            raise Invalid("a line's arrow is end, both or none")
+
+    def add_connector(self, from_id: str, to_id: str, label: str = "", color: str | None = None,
+                      style: str = "solid", arrow: str = "end", curve: bool = True, actor: str = "chris") -> dict[str, Any]:
+        self._actor(actor)
+        self._check_line_style(style, arrow)
+        with self._tx() as db:
+            a, b = self._card_row(from_id), self._card_row(to_id)
+            if from_id == to_id:
+                raise Invalid("a line needs two different cards")
+            if a["board_id"] != b["board_id"]:
+                raise Invalid("both cards must be on the same board")
+            existing = db.execute(
+                "SELECT id FROM connectors WHERE (from_id = ? AND to_id = ?) OR (from_id = ? AND to_id = ?)",
+                (from_id, to_id, to_id, from_id),
+            ).fetchone()
+            if existing:
+                raise Invalid(f"those cards are already connected ({existing['id']})")
+            connector_id, now = _new_id("l"), _now()
+            db.execute(
+                "INSERT INTO connectors (id, board_id, from_id, to_id, label, color, style, arrow, curve, created_at, "
+                "updated_at, updated_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (connector_id, a["board_id"], from_id, to_id, label or "", color, style, arrow, int(curve), now, now, actor),
+            )
+            self._touch(a["board_id"], [from_id, to_id], actor)
+            return self._connector_dict(self._connector_row(connector_id))
+
+    def update_connector(self, connector_id: str, actor: str = "chris", **fields: Any) -> dict[str, Any]:
+        self._actor(actor)
+        self._check_line_style(fields.get("style"), fields.get("arrow"))
+        with self._tx() as db:
+            row = self._connector_row(connector_id)
+            allowed = {k: v for k, v in fields.items() if k in ("label", "color", "style", "arrow", "curve") and v is not None}
+            if "curve" in allowed:
+                allowed["curve"] = int(bool(allowed["curve"]))
+            if allowed:
+                sets = ", ".join(f"{k} = ?" for k in allowed)
+                db.execute(
+                    f"UPDATE connectors SET {sets}, updated_at = ?, updated_by = ? WHERE id = ?",
+                    [*allowed.values(), _now(), actor, connector_id],
+                )
+            self._touch(row["board_id"], [row["from_id"], row["to_id"]], actor)
+            return self._connector_dict(self._connector_row(connector_id))
+
+    def delete_connector(self, connector_id: str, actor: str = "chris") -> None:
+        self._actor(actor)
+        with self._tx() as db:
+            row = self._connector_row(connector_id)
+            db.execute("DELETE FROM connectors WHERE id = ?", (connector_id,))
+            self._touch(row["board_id"], [row["from_id"], row["to_id"]], actor)
+
+    # ------------------------------------------------------------------ labels
+
+    LABEL_COLORS = ["#E0A33A", "#CB4B16", "#859900", "#2AA198", "#6C71C4", "#D33682", "#268BD2", "#B58900"]
+
+    def labels(self) -> list[dict[str, Any]]:
+        with self._lock:
+            rows = self._db.execute(
+                "SELECT l.*, (SELECT COUNT(*) FROM card_labels cl WHERE cl.label_id = l.id) AS uses "
+                "FROM labels l ORDER BY lower(l.name)"
+            ).fetchall()
+            return [dict(r) for r in rows]
+
+    def _label_by_name(self, name: str, create: bool) -> sqlite3.Row | None:
+        name = " ".join((name or "").split())
+        if not name:
+            raise Invalid("a label needs a name")
+        row = self._db.execute("SELECT * FROM labels WHERE lower(name) = lower(?)", (name,)).fetchone()
+        if row is None and create:
+            count = self._db.execute("SELECT COUNT(*) AS n FROM labels").fetchone()["n"]
+            label_id = _new_id("lb")
+            self._db.execute(
+                "INSERT INTO labels (id, name, color, created_at) VALUES (?, ?, ?, ?)",
+                (label_id, name, self.LABEL_COLORS[count % len(self.LABEL_COLORS)], _now()),
+            )
+            row = self._db.execute("SELECT * FROM labels WHERE id = ?", (label_id,)).fetchone()
+        return row
+
+    def _touch_label_users(self, label_id: str, actor: str) -> None:
+        rows = self._db.execute(
+            "SELECT c.board_id, c.id FROM card_labels cl JOIN cards c ON c.id = cl.card_id WHERE cl.label_id = ?",
+            (label_id,),
+        ).fetchall()
+        for r in rows:
+            self._touch(r["board_id"], [r["id"]], actor)
+        self._actors.add(actor)
+
+    def label_cards(self, card_ids: list[str], names: list[str], remove: bool = False, actor: str = "chris") -> list[dict[str, Any]]:
+        """Add (or with ``remove``, take off) labels by name; missing labels are created."""
+        self._actor(actor)
+        with self._tx() as db:
+            for card_id in card_ids:
+                row = self._card_row(card_id)
+                for name in names:
+                    label = self._label_by_name(name, create=not remove)
+                    if label is None:
+                        continue
+                    if remove:
+                        db.execute("DELETE FROM card_labels WHERE card_id = ? AND label_id = ?", (card_id, label["id"]))
+                    else:
+                        db.execute("INSERT OR IGNORE INTO card_labels (card_id, label_id) VALUES (?, ?)", (card_id, label["id"]))
+                self._touch(row["board_id"], [card_id], actor)
+            labels = self._labels_for(card_ids)
+            return [{"card_id": cid, "labels": labels.get(cid, [])} for cid in card_ids]
+
+    def update_label(self, label_id: str, name: str | None = None, color: str | None = None, actor: str = "chris") -> dict[str, Any]:
+        self._actor(actor)
+        with self._tx() as db:
+            row = db.execute("SELECT * FROM labels WHERE id = ?", (label_id,)).fetchone()
+            if row is None:
+                raise NotFound(f"no label {label_id}")
+            if name is not None:
+                name = " ".join(name.split())
+                clash = db.execute("SELECT id FROM labels WHERE lower(name) = lower(?) AND id != ?", (name, label_id)).fetchone()
+                if not name or clash:
+                    raise Invalid("that label name is empty or taken")
+                db.execute("UPDATE labels SET name = ? WHERE id = ?", (name, label_id))
+            if color is not None:
+                db.execute("UPDATE labels SET color = ? WHERE id = ?", (color, label_id))
+            self._touch_label_users(label_id, actor)
+            return dict(db.execute("SELECT * FROM labels WHERE id = ?", (label_id,)).fetchone())
+
+    def delete_label(self, label_id: str, actor: str = "chris") -> None:
+        self._actor(actor)
+        with self._tx() as db:
+            self._touch_label_users(label_id, actor)
+            db.execute("DELETE FROM card_labels WHERE label_id = ?", (label_id,))
+            db.execute("DELETE FROM labels WHERE id = ?", (label_id,))
 
     # ------------------------------------------------------------------ layout tools
 

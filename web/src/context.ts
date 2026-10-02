@@ -13,6 +13,9 @@ export interface BoardActions {
   openFile: (card: Card, reveal?: boolean) => void
   /** Right-click on something that isn't a canvas node (a card inside a column). */
   menuFor: (event: React.MouseEvent, card: Card) => void
+  lightbox: (card: Card) => void
+  focusEdit: (card: Card) => void
+  sketch: (card: Card) => void
 }
 
 export interface BoardContextValue {
@@ -47,4 +50,36 @@ export function humanSize(bytes?: number): string {
     i++
   }
   return `${n < 10 && i ? n.toFixed(1) : Math.round(n)} ${units[i]}`
+}
+
+export function hexToRgb(hex: string): [number, number, number] {
+  const h = hex.replace('#', '')
+  return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16)) as [number, number, number]
+}
+
+export function swatchValue(hex: string, format: string): string {
+  const [r, g, b] = hexToRgb(hex)
+  if (format === 'rgb') return `rgb(${r}, ${g}, ${b})`
+  if (format === 'hsl') {
+    const [rr, gg, bb] = [r / 255, g / 255, b / 255]
+    const max = Math.max(rr, gg, bb)
+    const min = Math.min(rr, gg, bb)
+    const l = (max + min) / 2
+    let h = 0
+    let s = 0
+    if (max !== min) {
+      const d = max - min
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
+      h = max === rr ? (gg - bb) / d + (gg < bb ? 6 : 0) : max === gg ? (bb - rr) / d + 2 : (rr - gg) / d + 4
+      h *= 60
+    }
+    return `hsl(${Math.round(h)}, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%)`
+  }
+  return hex.toUpperCase()
+}
+
+/** Black or white, whichever reads on this colour. */
+export function inkOn(hex: string): string {
+  const [r, g, b] = hexToRgb(hex)
+  return 0.299 * r + 0.587 * g + 0.114 * b > 150 ? '#111' : '#fff'
 }

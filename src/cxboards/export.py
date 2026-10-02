@@ -15,6 +15,7 @@ from __future__ import annotations
 import html
 import json
 import os
+import re
 import shutil
 import threading
 from datetime import datetime
@@ -32,10 +33,24 @@ PAD = 32.0
 
 def render_markdown(text: str) -> str:
     # Raw HTML is never passed through: a snapshot is a page Onyx runs.
-    return md.markdown(
+    out = md.markdown(
         (text or "").replace("<", "&lt;"),
         extensions=["fenced_code", "tables", "sane_lists", "nl2br"],
     )
+    return re.sub(r"==([^=\n]+)==", r"<mark>\1</mark>", out)
+
+
+def _clip(cx: float, cy: float, tx: float, ty: float, rect: tuple[float, float, float, float]) -> tuple[float, float]:
+    """Where the line from a rect's centre (cx, cy) towards (tx, ty) leaves the rect."""
+    x, y, w, h = rect
+    dx, dy = tx - cx, ty - cy
+    if dx == 0 and dy == 0:
+        return cx, cy
+    scale = min(
+        (w / 2) / abs(dx) if dx else float("inf"),
+        (h / 2) / abs(dy) if dy else float("inf"),
+    )
+    return cx + dx * scale, cy + dy * scale
 
 
 def _e(value: Any) -> str:
@@ -157,8 +172,12 @@ class Exporter:
             title = f'<div class="card-title">{_e(card["text"])}</div>' if card["text"] else ""
             body = f"{title}<ul class=\"todo\">{items}</ul>"
         elif kind == "link":
-            image = f'<img class="thumb" src="{_e(data["image"])}" alt="" loading="lazy">' if data.get("image") else ""
-            desc = f'<div class="desc">{_e(data.get("description"))}</div>' if data.get("description") else ""
+            show_image = data.get("image") and not data.get("hide_image")
+            image = f'<img class="thumb" src="{_e(data["image"])}" alt="" loading="lazy">' if show_image else ""
+            if data.get("embed"):
+                image += f'<div class="plays">▶ plays in CXBoards · {_e(data["embed"].get("provider"))}</div>'
+            show_desc = data.get("description") and not data.get("hide_desc")
+            desc = f'<div class="desc">{_e(data.get("description"))}</div>' if show_desc else ""
             note = f'<div class="md">{render_markdown(card["text"])}</div>' if card["text"] else ""
             body = (
                 f'{image}<a class="link-title" href="{_e(data["url"])}">{_e(data.get("title") or data["url"])}</a>'
@@ -167,7 +186,19 @@ class Exporter:
         elif kind == "image":
             src = self._place_image(card, media)
             caption = f'<div class="caption">{_e(card["text"])}</div>' if card["text"] else ""
-            body = f'<img class="picture" src="{_e(src)}" alt="{_e(card["text"])}">{caption}'
+            turn = f' style="transform:rotate({int(data["rotate"])}deg)"' if data.get("rotate") else ""
+            crop = data.get("crop")
+            img = f'<img class="picture" src="{_e(src)}" alt="{_e(card["text"])}"{turn}>'
+            if crop:
+                # Show only the cropped region: scale the image up inside a frame of the crop's shape.
+                sw, sh = 100 / crop["w"], 100 / crop["h"]
+                img = (
+                    f'<div class="crop" style="aspect-ratio:{crop.get("aspect") or crop["w"] / crop["h"]:.4f}">'
+                    f'<img src="{_e(src)}" alt="{_e(card["text"])}" style="width:{sw * 100:.2f}%;height:{sh * 100:.2f}%;'
+                    f'left:{-crop["x"] * sw:.2f}%;top:{-crop["y"] * sh:.2f}%"></div>'
+                )
+            sketch = self._sketch_svg(data.get("annotations")) if data.get("annotations") else ""
+            body = f'<div class="pic">{img}{sketch}</div>{caption}'
         elif kind == "audio":
             src = self._audio_src(card)
             note = f'<div class="md">{render_markdown(card["text"])}</div>' if card["text"] else ""
@@ -176,6 +207,22 @@ class Exporter:
                 f'<audio controls preload="none" src="{_e(src)}"></audio>{note}'
                 f'<div class="path">{_e(data.get("path"))}</div>'
             )
+        elif kind in ("video", "file"):
+            note = f'<div class="md">{render_markdown(card["text"])}</div>' if card["text"] else ""
+            ext = (data.get("ext") or "").upper() or "FILE"
+            player = (
+                f'<video controls preload="metadata" src="{_e(self._audio_src(card))}"></video>' if kind == "video" else ""
+            )
+            body = (
+                f'{player}<div class="card-title"><span class="ext">{_e(ext)}</span> {_e(data.get("name"))}</div>{note}'
+                f'<div class="path">{_e(data.get("path"))}</div>'
+            )
+        elif kind == "swatch":
+            note = f'<div class="caption">{_e(card["text"])}</div>' if card["text"] else ""
+            body = f'<div class="chip-color" style="background:{_e(data.get("hex"))}"></div><div class="hex">{_e(data.get("hex"))}</div>{note}'
+        elif kind == "sketch":
+            caption = f'<div class="caption">{_e(card["text"])}</div>' if card["text"] else ""
+            body = self._sketch_svg(data) + caption
         elif kind == "board":
             child = card.get("board") or {}
             slug = self._slug_of(child.get("id", ""))
@@ -187,9 +234,67 @@ class Exporter:
             )
         else:
             body = ""
+        labels = card.get("labels") or []
+        if labels:
+            chips = "".join(
+                f'<span class="label" style="--label:{_e(lb["color"])}">{_e(lb["name"])}</span>' for lb in labels
+            )
+            body += f'<div class="labels">{chips}</div>'
         style = ";".join(s for s in (position, f"--card-accent:{_e(card['color'])}" if card.get("color") else "") if s)
         style_attr = f' style="{style}"' if style else ""
-        return f'<article class="card card-{kind}" id="{card["id"]}"{style_attr}>{body}</article>'
+        fill = " filled" if data.get("fill") and card.get("color") else ""
+        return f'<article class="card card-{kind}{fill}" id="{card["id"]}"{style_attr}>{body}</article>'
+
+    @staticmethod
+    def _sketch_svg(data: dict[str, Any] | None) -> str:
+        data = data or {}
+        w, h = (data.get("box") or [400, 300])[:2]
+        paths = "".join(
+            f'<path d="{_e(p.get("d"))}" fill="{_e(p.get("color") or "currentColor")}"/>' for p in data.get("paths") or []
+        )
+        return f'<svg class="sketch" viewBox="0 0 {float(w):.0f} {float(h):.0f}" preserveAspectRatio="none">{paths}</svg>'
+
+    def _lines_svg(self, state: dict[str, Any], left: float, top: float, width: float, height: float) -> str:
+        cards = {c["id"]: c for c in state["cards"]}
+        out = []
+        for line in state.get("connectors") or []:
+            ends = []
+            for cid in (line["from_id"], line["to_id"]):
+                card = cards.get(cid)
+                if card and card["column_id"]:
+                    card = cards.get(card["column_id"])
+                if not card or card["tray"]:
+                    break
+                ends.append((card["x"] - left, card["y"] - top, card["w"], card["h"]))
+            if len(ends) != 2:
+                continue
+            (ax, ay, aw, ah), (bx, by, bw, bh) = ends
+            acx, acy, bcx, bcy = ax + aw / 2, ay + ah / 2, bx + bw / 2, by + bh / 2
+            x1, y1 = _clip(acx, acy, bcx, bcy, ends[0])
+            x2, y2 = _clip(bcx, bcy, acx, acy, ends[1])
+            color = _e(line.get("color") or "currentColor")
+            dash = ' stroke-dasharray="7 6"' if line.get("style") == "dashed" else ""
+            start = ' marker-start="url(#arrow)"' if line.get("arrow") == "both" else ""
+            end = ' marker-end="url(#arrow)"' if line.get("arrow") in ("end", "both") else ""
+            if line.get("curve"):
+                mx, my = (x1 + x2) / 2, (y1 + y2) / 2
+                nx, ny = -(y2 - y1) * 0.18, (x2 - x1) * 0.18
+                d = f"M{x1:.0f},{y1:.0f} Q{mx + nx:.0f},{my + ny:.0f} {x2:.0f},{y2:.0f}"
+                lx, ly = mx + nx / 2, my + ny / 2
+            else:
+                d = f"M{x1:.0f},{y1:.0f} L{x2:.0f},{y2:.0f}"
+                lx, ly = (x1 + x2) / 2, (y1 + y2) / 2
+            out.append(f'<path d="{d}" stroke="{color}" style="color:{color}"{dash}{start}{end}/>')
+            if line.get("label"):
+                out.append(f'<text x="{lx:.0f}" y="{ly:.0f}" text-anchor="middle" dy="-6">{_e(line["label"])}</text>')
+        if not out:
+            return ""
+        return (
+            f'<svg class="lines" width="{width:.0f}" height="{height:.0f}">'
+            '<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" '
+            'orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>'
+            + "".join(out) + "</svg>"
+        )
 
     def render(self, state: dict[str, Any], media: Path) -> str:
         board = state["board"]
@@ -215,6 +320,9 @@ class Exporter:
                 )
             else:
                 parts.append(self.render_card(card, media, position=style))
+        lines = self._lines_svg(state, left, top, width, height)
+        if lines:
+            parts.insert(0, lines)
         crumbs = state["breadcrumbs"][:-1]
         trail = " / ".join(
             f'<a href="../{_e(self._slug_of(b["id"]))}/index.html">{_e(b["title"])}</a>' for b in crumbs
@@ -298,6 +406,25 @@ audio {{ width:100%; margin:4px 0; }}
 .board-link {{ display:flex; flex-direction:column; gap:4px; text-decoration:none; color:var(--slate); }}
 .board-glyph {{ font-size:28px; color:var(--amber); line-height:1; }}
 .empty {{ color:var(--gray-500); text-align:center; padding:40px; }}
+mark {{ background:color-mix(in srgb, var(--amber) 35%, transparent); color:inherit; padding:0 2px; border-radius:2px; }}
+.card.filled {{ background:color-mix(in srgb, var(--card-accent) 16%, var(--card)); }}
+.labels {{ display:flex; flex-wrap:wrap; gap:4px; margin-top:8px; }}
+.label {{ font-size:10px; padding:1px 7px; border-radius:10px; background:color-mix(in srgb, var(--label) 22%, transparent); border:1px solid color-mix(in srgb, var(--label) 50%, transparent); }}
+.plays {{ font-size:11px; color:var(--amber); margin:-4px 0 6px; }}
+.ext {{ font-size:10px; font-weight:600; padding:2px 5px; border-radius:4px; background:var(--amber); color:#1a1a1a; }}
+.chip-color {{ height:90px; margin:-12px -14px 8px; border-radius:7px 7px 0 0; }}
+.hex {{ font-weight:600; }}
+.pic {{ position:relative; margin:-12px -14px 0; }}
+.pic .picture {{ margin:0; }}
+.crop {{ position:relative; overflow:hidden; border-radius:8px; }}
+.crop img {{ position:absolute; max-width:none; }}
+.pic .sketch {{ position:absolute; inset:0; width:100%; height:100%; }}
+svg.sketch {{ display:block; width:100%; height:auto; color:var(--slate); }}
+video {{ width:calc(100% + 28px); margin:-12px -14px 8px; border-radius:8px 8px 0 0; background:#000; }}
+svg.lines {{ position:absolute; left:0; top:0; overflow:visible; pointer-events:none; color:var(--gray-500); }}
+svg.lines path {{ fill:none; stroke-width:2; }}
+svg.lines text {{ font:11px var(--mono); fill:var(--gray-700); paint-order:stroke; stroke:var(--ivory); stroke-width:4px; }}
+@container (max-width: 760px) {{ svg.lines {{ display:none; }} }}
 @container (max-width: 760px) {{
   .canvas {{ width:auto; height:auto; zoom:1; }}
   .card, .column {{ position:static; width:auto !important; margin-bottom:12px; }}

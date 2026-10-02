@@ -173,6 +173,23 @@ export const api = {
   emptyTrash: () => req<{ emptied: number }>('DELETE', '/api/trash'),
   duplicateBoard: (id: string, opts: { template?: boolean; title?: string; parent?: string } = {}) =>
     req<Board>('POST', `/api/boards/${id}/duplicate`, opts),
+  connect: (from: string, to: string, extra: Partial<Connector> = {}) =>
+    req<Connector>('POST', '/api/connectors', { from, to, ...extra }),
+  updateConnector: (id: string, patch: Partial<Connector>) => req<Connector>('PATCH', `/api/connectors/${id}`, patch),
+  deleteConnector: (id: string) => req<{ ok: boolean }>('DELETE', `/api/connectors/${id}`),
+  labels: () => req<(Label & { uses: number })[]>('GET', '/api/labels'),
+  labelCards: (ids: string[], names: string[], remove = false) =>
+    req<{ card_id: string; labels: Label[] }[]>('POST', '/api/cards/labels', { card_ids: ids, names, remove }),
+  updateLabel: (id: string, patch: { name?: string; color?: string }) => req<Label>('PATCH', `/api/labels/${id}`, patch),
+  deleteLabel: (id: string) => req<{ ok: boolean }>('DELETE', `/api/labels/${id}`),
+  uploadAsset: async (file: File): Promise<{ file: string; url: string }> => {
+    const form = new FormData()
+    form.append('file', file)
+    const resp = await fetch('/api/uploads', { method: 'POST', headers: { 'X-CXBoards': '1' }, body: form })
+    if (!resp.ok) throw new Error((await resp.json().catch(() => ({}))).error ?? resp.statusText)
+    return resp.json()
+  },
+  rotate: (id: string, degrees: number) => req<Card>('POST', `/api/cards/${id}/rotate`, { degrees }),
 }
 
 export type Place = { x?: number; y?: number; column?: string; unsorted?: boolean }

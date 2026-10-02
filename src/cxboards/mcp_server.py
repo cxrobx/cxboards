@@ -240,6 +240,30 @@ def search(query: str) -> str:
 
 
 @mcp.tool()
+def connect_cards(from_card: str, to_card: str, label: str = "", arrow: str = "end", remove: bool = False) -> str:
+    """Draw a line between two cards on the same board (arrow: end | both | none), optionally labelled.
+    With `remove`, take the line between them away instead."""
+    if remove:
+        board_id = _call("GET", f"/api/cards/{from_card}/board")["board_id"]
+        for line in _call("GET", f"/api/boards/{board_id}")["connectors"]:
+            if {line["from_id"], line["to_id"]} == {from_card, to_card}:
+                _call("DELETE", f"/api/connectors/{line['id']}")
+                return f"Removed the line {line['id']}."
+        raise ValueError("those cards aren't connected")
+    line = _call("POST", "/api/connectors", {"from": from_card, "to": to_card, "label": label, "arrow": arrow})
+    return f"Connected {from_card} → {to_card} ({line['id']})" + (f": {label}" if label else "")
+
+
+@mcp.tool()
+def label_cards(card_ids: list[str], labels: list[str], remove: bool = False) -> str:
+    """Put labels on cards (created if new, e.g. "idea", "for Beth", "done"), or take them off with `remove`.
+    `search("label:idea")` then finds them across every board."""
+    result = _call("POST", "/api/cards/labels", {"card_ids": card_ids, "names": labels, "remove": remove})
+    lines = [f"- {r['card_id']}: {', '.join(lb['name'] for lb in r['labels']) or '(no labels)'}" for r in result]
+    return "Labels now:\n" + "\n".join(lines)
+
+
+@mcp.tool()
 def arrange(board: str, mode: str = "grid", card_ids: list[str] | None = None) -> str:
     """Tidy canvas cards (all of them, or `card_ids`) into a `grid`, a `row`, or a `stack`, in reading order."""
     result = _call("POST", f"/api/boards/{board}/arrange", {"mode": mode, "card_ids": card_ids or []})

@@ -5,7 +5,9 @@ import DOMPurify from 'dompurify'
 import { marked } from 'marked'
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
 import type { Card, TodoItem } from './api'
-import { COLORS, humanSize, useBoard } from './context'
+import { COLORS, humanSize, inkOn, swatchValue, useBoard } from './context'
+import { ConnectHandles } from './edges'
+import { formatKey } from './format'
 
 marked.setOptions({ breaks: true, gfm: true })
 
@@ -65,6 +67,7 @@ function Editor({ card, onDone }: { card: Card; onDone: () => void }) {
   const [extra, setExtra] = useState(
     card.kind === 'todo' ? todoToText(card.data.items ?? []) : card.kind === 'link' ? card.data.url ?? '' : '',
   )
+  const [hex, setHex] = useState<string>(card.data.hex ?? '#E0A33A')
   const area = useRef<HTMLTextAreaElement>(null)
   const saved = useRef(false)
   useEffect(() => {
@@ -80,6 +83,7 @@ function Editor({ card, onDone }: { card: Card; onDone: () => void }) {
     if (text !== card.text) patch.text = text
     if (card.kind === 'todo') patch.items = textToTodo(extra)
     if (card.kind === 'link' && extra.trim() && extra.trim() !== card.data.url) patch.url = extra.trim()
+    if (card.kind === 'swatch' && hex !== card.data.hex) patch.hex = hex
     onDone()
     if (Object.keys(patch).length) await actions.update(card.id, patch)
     if (thenNext) actions.addAfter(card)
@@ -118,6 +122,12 @@ function Editor({ card, onDone }: { card: Card; onDone: () => void }) {
       {card.kind === 'link' && (
         <input className="field" value={extra} placeholder="https://…" onChange={(e) => setExtra(e.target.value)} />
       )}
+      {card.kind === 'swatch' && (
+        <div className="swatch-edit">
+          <input type="color" value={hex} onChange={(e) => setHex(e.target.value.toUpperCase())} />
+          <input className="field" value={hex} onChange={(e) => setHex(e.target.value)} />
+        </div>
+      )}
       {singleLine ? (
         <input
           className="field"
@@ -137,6 +147,10 @@ function Editor({ card, onDone }: { card: Card; onDone: () => void }) {
             setText(e.target.value)
             autosize(e.target)
           }}
+          onKeyDown={(e) => {
+            const next = formatKey(e)
+            if (next !== null) setText(next)
+          }}
         />
       )}
       {card.kind === 'todo' && (
@@ -152,7 +166,7 @@ function Editor({ card, onDone }: { card: Card; onDone: () => void }) {
         />
       )}
       <div className="editor-hint">
-        {card.kind === 'note' || card.kind === 'todo' ? '⌘↵ next note · esc done' : 'esc done'}
+        {card.kind === 'note' ? '⌘B ⌘I ⌘K ⌘J · ⌘↵ next note · esc done' : card.kind === 'todo' ? '⌘↵ next note · esc done' : 'esc done'}
       </div>
     </div>
   )
@@ -302,31 +316,151 @@ function FileCard({ card }: { card: Card }) {
   )
 }
 
+export function SketchSvg({ data, className = 'sketch' }: { data: Record<string, any>; className?: string }) {
+  const [w, h] = data.box ?? [400, 300]
+  return (
+    <svg className={className} viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none">
+      {(data.paths ?? []).map((p: { d: string; color: string }, i: number) => (
+        <path key={i} d={p.d} fill={p.color} />
+      ))}
+    </svg>
+  )
+}
+
+function CroppedImage({ card }: { card: Card }) {
+  const d = card.data
+  const src = `/media/${d.file}`
+  const marks = d.annotations?.paths?.length ? <SketchSvg data={d.annotations} className="annotations" /> : null
+  if (!d.crop) {
+    return (
+      <div className="pic">
+        <img src={src} alt={card.text} draggable={false} />
+        {marks}
+      </div>
+    )
+  }
+  const { x, y, w, h, aspect } = d.crop
+  return (
+    <div className="pic crop" style={{ aspectRatio: String(aspect ?? w / h) }}>
+      <img
+        src={src}
+        alt={card.text}
+        draggable={false}
+        style={{ width: `${10000 / w}%`, height: `${10000 / h}%`, left: `${(-x * 100) / w}%`, top: `${(-y * 100) / h}%` }}
+      />
+      {marks}
+    </div>
+  )
+}
+
+function LinkCard({ card }: { card: Card }) {
+  const d = card.data
+  const [playing, setPlaying] = useState(false)
+  const embed = d.embed as { provider: string; src: string; aspect?: number; height?: number } | undefined
+  const showImage = d.image && !d.hide_image
+  let host = ''
+  try {
+    host = new URL(d.url).hostname
+  } catch {
+    /* not a URL we can parse; show what the server gave */
+  }
+  return (
+    <div className="link">
+      {embed && playing ? (
+        <div className="player nodrag nowheel" style={embed.height ? { height: embed.height } : { aspectRatio: String(embed.aspect ?? 16 / 9) }}>
+          <iframe
+            src={embed.src + (embed.provider === 'YouTube' || embed.provider === 'Vimeo' ? '?autoplay=1' : '')}
+            title={d.title || embed.provider}
+            allow="autoplay; encrypted-media; picture-in-picture; clipboard-write; fullscreen"
+            allowFullScreen
+          />
+        </div>
+      ) : embed ? (
+        <button className="thumb-play nodrag" onClick={() => setPlaying(true)} title={`Play here (${embed.provider})`}>
+          {showImage ? <img className="thumb" src={d.image} alt="" draggable={false} /> : <div className="thumb blank" />}
+          <span className="play">▶</span>
+        </button>
+      ) : (
+        showImage && <img className="thumb" src={d.image} alt="" draggable={false} />
+      )}
+      <a className="link-title nodrag" href={d.url} target="_blank" rel="noreferrer">
+        {d.title || d.url}
+      </a>
+      {d.description && !d.hide_desc && <div className="desc">{d.description}</div>}
+      <div className="site">
+        {d.site || host}
+        {embed && playing && (
+          <button className="chip stop nodrag" onClick={() => setPlaying(false)}>
+            ■ stop
+          </button>
+        )}
+      </div>
+      {card.text && <Markdown text={card.text} />}
+    </div>
+  )
+}
+
+function DocPreview({ card }: { card: Card }) {
+  const { actions } = useBoard()
+  const first = card.text.split('\n').find((l) => l.trim()) ?? 'Untitled'
+  const words = card.text.trim() ? card.text.trim().split(/\s+/).length : 0
+  return (
+    <div className="doc">
+      <div className="doc-glyph">▤</div>
+      <div className="card-title">{first.replace(/^#+\s*/, '').replace(/[*_`=]/g, '')}</div>
+      <div className="site">{words} words</div>
+      <button className="chip nodrag" onClick={() => actions.focusEdit(card)}>
+        Open
+      </button>
+    </div>
+  )
+}
+
+function Labels({ card }: { card: Card }) {
+  if (!card.labels?.length) return null
+  return (
+    <div className="labels">
+      {card.labels.map((l) => (
+        <span key={l.id} className="label" style={{ '--label': l.color } as React.CSSProperties}>
+          {l.name}
+        </span>
+      ))}
+    </div>
+  )
+}
+
 export function CardBody({ card }: { card: Card }) {
   const { editId, setEditId, actions } = useBoard()
   if (editId === card.id) return <Editor card={card} onDone={() => setEditId(null)} />
   const d = card.data
   switch (card.kind) {
     case 'note':
+      if (d.doc) return <DocPreview card={card} />
       return card.text ? <Markdown text={card.text} /> : <div className="muted">Double-click to write</div>
     case 'todo':
       return <TodoList card={card} />
     case 'link':
-      return (
-        <div className="link">
-          {d.image && <img className="thumb" src={d.image} alt="" draggable={false} />}
-          <a className="link-title nodrag" href={d.url} target="_blank" rel="noreferrer">
-            {d.title || d.url}
-          </a>
-          {d.description && <div className="desc">{d.description}</div>}
-          <div className="site">{d.site || new URL(d.url).hostname}</div>
-          {card.text && <Markdown text={card.text} />}
-        </div>
-      )
+      return <LinkCard card={card} />
     case 'image':
       return (
         <div className="image">
-          <img src={`/media/${d.file}`} alt={card.text} draggable={false} />
+          <CroppedImage card={card} />
+          {card.text && <div className="caption">{card.text}</div>}
+        </div>
+      )
+    case 'swatch':
+      return (
+        <div className="swatch-card">
+          <div className="swatch-block" style={{ background: d.hex, color: inkOn(d.hex) }}>
+            {d.format !== 'none' && <span>{swatchValue(d.hex, d.format)}</span>}
+          </div>
+          {card.text && <div className="caption">{card.text}</div>}
+        </div>
+      )
+    case 'sketch':
+      return (
+        <div className="sketch-card">
+          <SketchSvg data={d} />
           {card.text && <div className="caption">{card.text}</div>}
         </div>
       )
@@ -421,18 +555,33 @@ function cardClass(card: Card, extra: string, touched: Set<string>, focusId: str
 
 const NO_DOUBLE_CLICK_EDIT = new Set(['board', 'audio', 'video', 'file'])
 
+/** What a double-click on a card does: open the image, the sketch or the document, else edit. */
+function useOpen() {
+  const { actions, setEditId, presenting } = useBoard()
+  return (card: Card) => {
+    if (presenting) return
+    if (card.kind === 'image') actions.lightbox(card)
+    else if (card.kind === 'sketch') actions.sketch(card)
+    else if (card.kind === 'note' && card.data.doc) actions.focusEdit(card)
+    else if (!NO_DOUBLE_CLICK_EDIT.has(card.kind)) setEditId(card.id)
+  }
+}
+
 export function CardNode({ id, selected }: NodeProps) {
-  const { cards, touched, setEditId, focusId, presenting, dropTarget } = useBoard()
+  const { cards, touched, focusId, presenting, dropTarget } = useBoard()
+  const open = useOpen()
   const card = cards.get(id)
   if (!card) return null
   return (
     <div
       className={cardClass(card, `card${selected ? ' selected' : ''}${dropTarget === id ? ' drop' : ''}`, touched, focusId)}
       style={card.color ? ({ '--accent': card.color } as React.CSSProperties) : undefined}
-      onDoubleClick={() => !presenting && !NO_DOUBLE_CLICK_EDIT.has(card.kind) && setEditId(id)}
+      onDoubleClick={() => open(card)}
     >
       <Resizer id={id} />
+      <ConnectHandles id={id} hidden={presenting} />
       <CardBody card={card} />
+      <Labels card={card} />
       <Tools card={card} />
       {card.locked && (
         <span className="lock-badge" title="Locked">
@@ -446,6 +595,7 @@ export function CardNode({ id, selected }: NodeProps) {
 
 export function ColumnNode({ id, selected }: NodeProps) {
   const { cards, childrenOf, touched, editId, setEditId, dropTarget, focusId, actions, presenting } = useBoard()
+  const open = useOpen()
   const column = cards.get(id)
   if (!column) return null
   const kids = childrenOf.get(id) ?? []
@@ -462,6 +612,7 @@ export function ColumnNode({ id, selected }: NodeProps) {
       data-column={id}
     >
       <Resizer id={id} />
+      <ConnectHandles id={id} hidden={presenting} />
       <header onDoubleClick={() => !presenting && setEditId(id)}>
         <button
           className="collapse nodrag"
@@ -485,7 +636,7 @@ export function ColumnNode({ id, selected }: NodeProps) {
               style={kid.color ? ({ '--accent': kid.color } as React.CSSProperties) : undefined}
               onDoubleClick={(e) => {
                 e.stopPropagation()
-                if (!presenting && !NO_DOUBLE_CLICK_EDIT.has(kid.kind)) setEditId(kid.id)
+                open(kid)
               }}
               onContextMenu={(e) => {
                 e.preventDefault()
@@ -494,6 +645,7 @@ export function ColumnNode({ id, selected }: NodeProps) {
               }}
             >
               <CardBody card={kid} />
+              <Labels card={kid} />
               <Tools card={kid} index={i} />
               {kid.locked && <span className="lock-badge">🔒</span>}
               {touched.has(kid.id) && <span className="agent-badge">agent</span>}
@@ -502,6 +654,7 @@ export function ColumnNode({ id, selected }: NodeProps) {
           {!kids.length && <div className="column-empty">Drag cards here</div>}
         </div>
       )}
+      <Labels card={column} />
       <Tools card={column} />
       {column.locked && <span className="lock-badge">🔒</span>}
       {touched.has(id) && <span className="agent-badge">agent</span>}
