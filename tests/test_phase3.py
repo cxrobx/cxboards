@@ -123,3 +123,14 @@ def test_mcp_templates_and_exports(client, tmp_path) -> None:
         assert "## Goal" in m.export_board("december", format="markdown")
     finally:
         m.set_client(None)  # type: ignore[arg-type]
+
+
+def test_native_drop_thumbnail_from_a_path(client, tmp_path) -> None:
+    board = client.post("/api/boards", json={"title": "B"}, headers=W).json()
+    link = client.post(f"/api/boards/{board['id']}/cards", json={"kind": "link", "url": "https://example.com/"}, headers=W).json()
+    image = tmp_path / "cover.png"
+    image.write_bytes(PNG_1PX)
+    card = client.post(f"/api/cards/{link['id']}/thumbnail", json={"path": str(image)}, headers=W).json()
+    assert card["data"]["image"].startswith("/media/") and client.get(card["data"]["image"]).content == PNG_1PX
+    note = client.post(f"/api/boards/{board['id']}/cards", json={"kind": "note", "text": "x"}, headers=W).json()
+    assert client.post(f"/api/cards/{note['id']}/thumbnail", json={"path": str(image)}, headers=W).status_code == 400

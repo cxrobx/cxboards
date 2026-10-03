@@ -17,6 +17,17 @@ user, never deployed. Built 2026-10-02 to plan creative sessions next to the art
   changes. That `export/` folder is linked into Onyx Artifacts as **`Muzik/Boards`**, so
   boards appear in Onyx, get highlight-to-ask, and are indexed by the vault MCP.
 
+- **The app**: `/Applications/CXBoards.app` (`com.cx.cxboards`, source `app/CXBoards.swift`,
+  built by `app/build-app.sh`, no Xcode project) is a borderless native window around the
+  same server, like Onyx: it starts the LaunchAgent if it's down (kickstart, else
+  bootstrap), hands Finder drops to the page as **real paths** (`window.cxboardsNativeDrop`),
+  shows alert/confirm/prompt as sheets, saves downloads to ~/Downloads, opens outside links
+  in the browser, and answers `cxboards://b/<board id>`. The window drags by the page's top
+  28 px band, the board header and the sidebar's empty space (`web/src/native.ts` posts the
+  mouse-down to the app's `cxDrag` handler); controls, the board list and the canvas keep
+  their clicks. Verify with `scripts/selftest-app.sh` (the real app against the live server
+  on a throwaway board, cleaned up after).
+
 Data lives in `~/Library/Application Support/CXBoards/` (`cxboards.db`, `uploads/`,
 `export/`). `CXBOARDS_HOME` / `CXBOARDS_PORT` override both (the tests do).
 
@@ -44,7 +55,9 @@ Data lives in `~/Library/Application Support/CXBoards/` (`cxboards.db`, `uploads
 ## Run / verify
 
 ```bash
-.venv/bin/python -m pytest -q          # 82 tests: invariants, API, export, MCP, phases 1-3
+.venv/bin/python -m pytest -q          # 84 tests: invariants, API, export, MCP, phases 1-3
+app/build-app.sh                       # build + install CXBoards.app (Apple Development signed)
+scripts/selftest-app.sh                # the app's own end-to-end check (drops, dialogs, downloads, links)
 scripts/install.sh                     # build UI, (re)install LaunchAgent, wait for health
 launchctl kickstart -k gui/$(id -u)/com.cx.cxboards.server   # restart after Python edits
 cd web && npm run dev                  # UI on :4871, proxying the API on :4870

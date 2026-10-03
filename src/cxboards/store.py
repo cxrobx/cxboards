@@ -1496,6 +1496,14 @@ class Store:
             first_board = next(iter(boards), None) or (payload.get("cards") or [{}])[0].get("board_id")
             return {"restored": trash_id, "board_id": first_board, "kind": row["kind"]}
 
+    def purge(self, trash_id: str, actor: str = "chris") -> None:
+        """Delete one thing from the trash for good."""
+        self._actor(actor)
+        with self._tx() as db:
+            if db.execute("DELETE FROM trash WHERE id = ?", (trash_id,)).rowcount == 0:
+                raise NotFound(f"nothing in the trash called {trash_id}")
+            self._actors.add(actor)
+
     def empty_trash(self, actor: str = "chris") -> int:
         self._actor(actor)
         with self._tx() as db:

@@ -190,6 +190,7 @@ export const api = {
     return resp.json()
   },
   rotate: (id: string, degrees: number) => req<Card>('POST', `/api/cards/${id}/rotate`, { degrees }),
+  thumbnailFromPath: (id: string, path: string) => req<Card>('POST', `/api/cards/${id}/thumbnail`, { path }),
 }
 
 export type Place = { x?: number; y?: number; column?: string; unsorted?: boolean }

@@ -1755,3 +1755,22 @@ mark {
 .clip-error {
   color: var(--clay);
 }
+
+
+/* ---------- inside CXBoards.app: borderless window ---------- */
+
+/* The traffic lights sit over the page's top-left corner; the sidebar starts below them. */
+html.native .sidebar {
+  padding-top: 40px;
+}
+
+/* The header is the title bar's height or more, and drags the window (native.ts). */
+html.native .topbar,
+html.native .sidebar {
+  min-height: 52px;
+  user-select: none;
+}
+
+html.native .welcome {
+  padding-top: 28px;
+}

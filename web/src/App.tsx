@@ -427,8 +427,8 @@ function Shell() {
 
   return (
     <div className={`app${presenting ? ' presenting' : ''}`}>
-      <aside className="sidebar">
-        <div className="brand">
+      <aside className="sidebar" data-drag>
+        <div className="brand" data-drag>
           <img src="/icon.png" alt="" />
           <span>CXBoards</span>
         </div>
@@ -468,7 +468,7 @@ function Shell() {
       <main className="main">
         {current ? (
           <>
-            <header className="topbar">
+            <header className="topbar" data-drag>
               <div className="crumbs">
                 {state?.breadcrumbs.slice(0, -1).map((b) => (
                   <span key={b.id}>
@@ -496,7 +496,7 @@ function Shell() {
                     }}
                   />
                 ) : (
-                  <h1 onDoubleClick={() => setEditingTitle(true)} title="Double-click to rename">
+                  <h1 data-nodrag onDoubleClick={() => setEditingTitle(true)} title="Double-click to rename">
                     {state?.board.title ?? ''}
                   </h1>
                 )}
@@ -533,7 +533,7 @@ function Shell() {
             </ReactFlowProvider>
           </>
         ) : (
-          <div className="welcome">
+          <div className="welcome" data-drag>
             <img src="/icon.png" alt="" />
             <h1>CXBoards</h1>
             <p className="muted">Plan sessions on a board you and your agents share.</p>

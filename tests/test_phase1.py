@@ -13,7 +13,7 @@ from conftest import AGENT, W
 
 from cxboards.app import create_app
 from cxboards.locate import locate
-from cxboards.store import Invalid, Store
+from cxboards.store import Invalid, NotFound, Store
 
 
 def texts(store: Store, board_id: str) -> set[str]:
@@ -330,3 +330,14 @@ def test_a_first_release_database_migrates(tmp_path: Path) -> None:
     store.update_card("c_old", text="edited")
     store.undo(board_id="b_old")
     assert store.card("c_old")["text"] == "kept"
+
+
+def test_purge_one_trash_item(store: Store) -> None:
+    board = store.create_board("B")
+    a = store.add_card(board["id"], "note", text="a")
+    b = store.add_card(board["id"], "note", text="b")
+    ta, tb = store.delete_card(a["id"]), store.delete_card(b["id"])
+    store.purge(ta)
+    assert [t["id"] for t in store.list_trash()] == [tb]
+    with pytest.raises(NotFound):
+        store.purge(ta)

@@ -786,6 +786,39 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
     return () => window.removeEventListener('keydown', onKey)
   }, [copy, deleteEdges, deleteIds, duplicate, flow, menu, newSketch, nudge, onOpenBoard, onPresent, presenting, redo, selectedIds, undo, zOrder])
 
+  // CXBoards.app: Finder drops arrive with real paths (a browser only ever gives anonymous files).
+  // A bounce is pointed at where it lives; an image is imported; a drop on a column lands in it,
+  // an image dropped on a link card becomes its thumbnail.
+  useEffect(() => {
+    const w = window as unknown as { cxboardsNativeDrop?: (d: { paths: string[]; x: number; y: number }) => boolean }
+    const handler = (drop: { paths: string[]; x: number; y: number }) => {
+      if (presenting) return false
+      const el = document.elementFromPoint(drop.x, drop.y) as HTMLElement | null
+      const column = el?.closest('[data-column]')?.getAttribute('data-column') ?? undefined
+      const nodeId = el?.closest('.react-flow__node')?.getAttribute('data-id')
+      const target = nodeId ? cardsRef.current.get(nodeId) : undefined
+      const p = flow.screenToFlowPosition({ x: drop.x, y: drop.y })
+      void (async () => {
+        for (const [i, path] of drop.paths.entries()) {
+          const isImage = /\.(png|jpe?g|gif|webp|svg|heic)$/i.test(path)
+          await guarded(async () => {
+            if (target?.kind === 'link' && isImage && drop.paths.length === 1) {
+              await api.thumbnailFromPath(target.id, path)
+              return
+            }
+            const place = column ? { column } : { x: Math.round(p.x) + i * 24, y: Math.round(p.y) + i * 24 }
+            await api.addCard(boardId, { ...(isImage ? { kind: 'image', path } : { kind: 'media', path }), ...place })
+          })
+        }
+      })()
+      return true
+    }
+    w.cxboardsNativeDrop = handler
+    return () => {
+      if (w.cxboardsNativeDrop === handler) delete w.cxboardsNativeDrop
+    }
+  }, [boardId, flow, guarded, presenting])
+
   // Board ▸ Export ▸ PNG: render the whole board (not just what's in view) to an image.
   useEffect(() => {
     const onPng = async () => {

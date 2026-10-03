@@ -352,6 +352,11 @@ def create_app(
     def restore(trash_id: str, request: Request) -> dict[str, Any]:
         return store.restore(trash_id, actor_of(request))
 
+    @app.delete("/api/trash/{trash_id}")
+    def purge(trash_id: str, request: Request) -> dict[str, Any]:
+        store.purge(trash_id, actor_of(request))
+        return {"ok": True}
+
     @app.delete("/api/trash")
     def empty_trash(request: Request) -> dict[str, Any]:
         return {"emptied": store.empty_trash(actor_of(request))}
@@ -625,6 +630,14 @@ def create_app(
         finally:
             target.unlink(missing_ok=True)
         return store.update_card(card_id, data={"file": name, "crop": None}, actor=actor_of(request))
+
+    @app.post("/api/cards/{card_id}/thumbnail")
+    def thumbnail(card_id: str, request: Request, body: dict[str, Any] = Body(...)) -> dict[str, Any]:
+        """A link card's picture, from an image file on disk (the native app's Finder drop)."""
+        if store.card(card_id)["kind"] != "link":
+            raise Invalid("only link cards have a thumbnail")
+        name = store.import_image_path(str(body.get("path", "")))
+        return store.update_card(card_id, data={"image": f"/media/{name}", "hide_image": False}, actor=actor_of(request))
 
     @app.get("/media/{name}")
     def media(name: str) -> FileResponse:
