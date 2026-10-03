@@ -13,6 +13,7 @@ and whose undo stack a change lands on.
 from __future__ import annotations
 
 import asyncio
+import contextlib
 import hashlib
 import json
 import mimetypes
@@ -28,6 +29,7 @@ from fastapi import Body, FastAPI, File, Form, Request, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, PlainTextResponse, Response, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
+from . import chat as chatlib
 from . import formats, outline
 from .config import AUDIO_EXTENSIONS, MAX_FILE_BYTES, MAX_IMAGE_BYTES, VIDEO_EXTENSIONS, Config, load_config
 from .events import Broadcaster
@@ -57,6 +59,7 @@ def create_app(
     locate: Callable[[str, int, float], list[Path]] = default_locate,
     opener: Callable[[list[str]], None] | None = None,
     rotator: Callable[[Path, Path, int], None] | None = None,
+    claude: Callable[[], str | None] = chatlib.find_claude,
 ) -> FastAPI:
     config = config or load_config()
     store = Store(config)
@@ -668,6 +671,81 @@ def create_app(
         path = card_file(card_id)
         run_open(["open", "-R", str(path)] if body.get("reveal") else ["open", str(path)])
         return {"ok": True, "path": str(path)}
+
+    # ------------------------------------------------------------------ Ask (chat about a board)
+
+    @app.get("/api/chat/info")
+    def chat_info() -> dict[str, Any]:
+        return {"available": bool(claude()), "models": chatlib.MODELS, "default": chatlib.DEFAULT_MODEL}
+
+    @app.get("/api/boards/{board_id}/chats")
+    def list_chats(board_id: str) -> list[dict[str, Any]]:
+        return store.chats(board_id_of(board_id))
+
+    @app.get("/api/chats/{chat_id}")
+    def get_chat(chat_id: str) -> dict[str, Any]:
+        return store.chat(chat_id)
+
+    @app.delete("/api/chats/{chat_id}")
+    def delete_chat(chat_id: str) -> dict[str, Any]:
+        store.delete_chat(chat_id)
+        return {"ok": True}
+
+    @app.post("/api/boards/{board_id}/chat")
+    def ask(board_id: str, body: dict[str, Any] = Body(...)) -> StreamingResponse:
+        """One turn of the chat, streamed: chat, token, tool, done | error (server-sent events)."""
+        board = store.resolve_board(board_id)
+        message = str(body.get("message") or "").strip()
+        if not message:
+            raise Invalid("ask something")
+        model = body.get("model") if body.get("model") in chatlib.MODELS else chatlib.DEFAULT_MODEL
+        chat_id = body.get("chat_id") or store.start_chat(board["id"], message)
+        history = store.chat(chat_id)["messages"]
+        state = store.board_state(board["id"])
+        by_id = {c["id"]: c for c in state["cards"]}
+        picked = [by_id[i] for i in body.get("selection") or [] if i in by_id]
+        store.add_message(chat_id, {"role": "user", "text": message, "selection": [c["id"] for c in picked]})
+        binary = claude()
+
+        async def stream():
+            yield f"event: chat\ndata: {json.dumps({'chat_id': chat_id})}\n\n"
+            if not binary:
+                note = "Claude Code isn't installed (no `claude` on this Mac), so Ask can't answer."
+                store.add_message(chat_id, {"role": "assistant", "text": "", "error": note})
+                yield f"event: error\ndata: {json.dumps({'message': note})}\n\n"
+                return
+            system = chatlib.system_prompt(
+                outline.board_outline(store, board["id"], config.base_url),
+                [outline.card_line(c) for c in picked],
+            )
+            cmd = chatlib.build_cmd(
+                binary, chatlib.user_prompt(message, history), system, model,
+                chatlib.mcp_config(config.home, config.base_url),
+            )
+            text: list[str] = []
+            tools: list[str] = []
+            outcome: dict[str, Any] = {"stopped": True}
+            try:
+                async with contextlib.aclosing(chatlib.run_turn(cmd)) as events:
+                    async for event in events:
+                        kind = event.pop("event")
+                        if kind == "token":
+                            text.append(event["text"])
+                        elif kind == "tool" and event.get("state") == "start":
+                            tools.append(event["label"])
+                        elif kind == "done":
+                            outcome = {"cost": event.get("cost")}
+                            text = [event.get("text") or "".join(text)]
+                        elif kind == "error":
+                            outcome = {"error": event["message"]}
+                        yield f"event: {kind}\ndata: {json.dumps(event)}\n\n"
+            finally:
+                store.add_message(chat_id, {
+                    "role": "assistant", "text": "".join(text).strip(), "tools": tools, "model": model, **outcome,
+                })
+
+        return StreamingResponse(stream(), media_type="text/event-stream",
+                                 headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
 
     # ------------------------------------------------------------------ live events
 

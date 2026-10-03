@@ -22,6 +22,7 @@ import { toPng } from 'html-to-image'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { api, type Board, type BoardState, type Card, type Connector, type Place } from './api'
 import { ContextMenu, type MenuItem, type MenuState } from './ContextMenu'
+import { ChatPanel } from './ChatPanel'
 import { BoardContext, COLORS, type BoardContextValue } from './context'
 import { FloatingEdge, type LineData } from './edges'
 import { CardNode, ColumnNode } from './nodes'
@@ -113,6 +114,8 @@ interface Props {
   touched: Set<string>
   focusId: string | null
   presenting: boolean
+  chatOpen: boolean
+  onCloseChat: () => void
   onPresent: () => void
   onOpenBoard: (id: string) => void
   onState: (state: BoardState) => void
@@ -120,7 +123,7 @@ interface Props {
   onToast: Toast
 }
 
-export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, presenting, onPresent, onOpenBoard, onState, onError, onToast }: Props) {
+export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, presenting, chatOpen, onCloseChat, onPresent, onOpenBoard, onState, onError, onToast }: Props) {
   const flow = useReactFlow()
   const [state, setState] = useState<BoardState | null>(null)
   const [nodes, setNodes] = useState<Node[]>([])
@@ -216,6 +219,10 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
   )
 
   const selectedIds = useCallback(() => flow.getNodes().filter((n) => n.selected).map((n) => n.id), [flow])
+  const selectedCards = useCallback(
+    () => selectedIds().map((id) => cardsRef.current.get(id)).filter((c): c is Card => !!c),
+    [selectedIds],
+  )
 
   const undo = useCallback(
     () =>
@@ -1041,12 +1048,15 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
           </div>
         )}
         {menu && <ContextMenu state={menu} onClose={() => setMenu(null)} />}
-        {!presenting && (trayCards.length > 0 || trayOpen) && !trayOpen && (
+        {!presenting && !chatOpen && (trayCards.length > 0 || trayOpen) && !trayOpen && (
           <button className="tray-button" onClick={() => setTrayOpen(true)}>
             Unsorted · {trayCards.length}
           </button>
         )}
-        {trayOpen && !presenting && (
+        {chatOpen && !presenting && state && (
+          <ChatPanel boardId={boardId} boardTitle={state.board.title} selection={selectedCards} onClose={onCloseChat} />
+        )}
+        {trayOpen && !presenting && !chatOpen && (
           <TrayDrawer
             cards={trayCards}
             onClose={() => setTrayOpen(false)}

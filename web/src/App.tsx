@@ -175,6 +175,20 @@ function Shell() {
   const [clipperOpen, setClipperOpen] = useState(false)
   const [boardMenu, setBoardMenu] = useState<MenuState | null>(null)
   const [presenting, setPresenting] = useState(false)
+  const [chatOpen, setChatOpen] = useState(() => {
+    try {
+      return localStorage.getItem('cxboards.chat-open') === '1'
+    } catch {
+      return false
+    }
+  })
+  useEffect(() => {
+    try {
+      localStorage.setItem('cxboards.chat-open', chatOpen ? '1' : '0')
+    } catch {
+      /* a convenience */
+    }
+  }, [chatOpen])
   const currentRef = useRef(current)
   currentRef.current = current
 
@@ -237,7 +251,10 @@ function Shell() {
       const meta = e.metaKey || e.ctrlKey
       if (!meta) return
       const key = e.key.toLowerCase()
-      if (key === 'f' || key === 'k') {
+      if (e.key === '/') {
+        e.preventDefault()
+        setChatOpen((o) => !o)
+      } else if (key === 'f' || key === 'k') {
         e.preventDefault()
         setSearching(true)
       } else if (e.key === '[') {
@@ -508,6 +525,9 @@ function Shell() {
                   </span>
                 )}
                 {state?.board.is_template && <span className="badge">template</span>}
+                <button className={`ghost${chatOpen ? ' on' : ''}`} onClick={() => setChatOpen((o) => !o)} title="Ask about this board (⌘/)">
+                  Ask
+                </button>
                 <button className="ghost" onClick={present} title="Present (P)">
                   Present
                 </button>
@@ -524,6 +544,8 @@ function Shell() {
                 touched={touched}
                 focusId={focusId}
                 presenting={presenting}
+                chatOpen={chatOpen}
+                onCloseChat={() => setChatOpen(false)}
                 onPresent={present}
                 onOpenBoard={(id) => open(id)}
                 onState={onState}

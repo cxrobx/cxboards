@@ -13,6 +13,9 @@ A local visual planning board (Milanote-shaped) that a person and their agents s
 - A stdio MCP (`cxboards mcp`) gives agents the same moves through the same API, with
   layout tools instead of coordinates. Their edits appear live in the open board.
 - Every board is also written as a static, script-free HTML snapshot for reading elsewhere.
+- **Ask**: a chat panel on the board, answered by Claude (headless `claude -p` on your
+  subscription) with the board's own tools, so it can lay out, group, label and edit cards
+  while you watch. Selected cards go with the question.
 
 Open it as **CXBoards.app** (`app/build-app.sh` builds and installs it), or at http://127.0.0.1:4870
 in a browser. The app adds real file paths for Finder drops, native dialogs, downloads, and

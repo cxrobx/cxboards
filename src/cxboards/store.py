@@ -120,6 +120,15 @@ CREATE TABLE IF NOT EXISTS trash (
     deleted_at  TEXT NOT NULL,
     actor       TEXT NOT NULL
 );
+CREATE TABLE IF NOT EXISTS chats (
+    id          TEXT PRIMARY KEY,
+    board_id    TEXT NOT NULL,
+    title       TEXT NOT NULL,
+    messages    TEXT NOT NULL DEFAULT '[]',
+    created_at  TEXT NOT NULL,
+    updated_at  TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS chats_board ON chats(board_id);
 CREATE TABLE IF NOT EXISTS journal (
     seq         INTEGER PRIMARY KEY AUTOINCREMENT,
     tbl         TEXT NOT NULL,
@@ -1744,6 +1753,52 @@ class Store:
             self.move_cards(card_ids, child["id"], x=layout.ORIGIN[0], y=layout.ORIGIN[1], actor=actor)
             card_id = self._insert_card(board_id, "board", data={"board_id": child["id"]}, actor=actor, x=bx, y=by)
             return self._card_dict(self._card_row(card_id))
+
+    # ------------------------------------------------------------------ chats (Ask)
+    # Conversations about a board. Not board content: no undo, no trash, no rev bump.
+
+    def chats(self, board_id: str) -> list[dict[str, Any]]:
+        with self._lock:
+            rows = self._db.execute(
+                "SELECT id, board_id, title, updated_at, json_array_length(messages) AS n FROM chats "
+                "WHERE board_id = ? ORDER BY updated_at DESC, rowid DESC",
+                (board_id,),
+            ).fetchall()
+            return [dict(r) for r in rows]
+
+    def chat(self, chat_id: str) -> dict[str, Any]:
+        with self._lock:
+            row = self._db.execute("SELECT * FROM chats WHERE id = ?", (chat_id,)).fetchone()
+            if row is None:
+                raise NotFound(f"no chat {chat_id}")
+            out = dict(row)
+            out["messages"] = json.loads(out["messages"])
+            return out
+
+    def start_chat(self, board_id: str, title: str) -> str:
+        with self._lock:
+            self._board_row(board_id)
+            chat_id, now = _new_id("ch"), _now()
+            title = " ".join(title.split())[:70] or "Chat"
+            self._db.execute(
+                "INSERT INTO chats (id, board_id, title, created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
+                (chat_id, board_id, title, now, now),
+            )
+            return chat_id
+
+    def add_message(self, chat_id: str, message: dict[str, Any]) -> None:
+        with self._lock:
+            chat = self.chat(chat_id)
+            chat["messages"].append({**message, "at": _now()})
+            self._db.execute(
+                "UPDATE chats SET messages = ?, updated_at = ? WHERE id = ?",
+                (json.dumps(chat["messages"]), _now(), chat_id),
+            )
+
+    def delete_chat(self, chat_id: str) -> None:
+        with self._lock:
+            if self._db.execute("DELETE FROM chats WHERE id = ?", (chat_id,)).rowcount == 0:
+                raise NotFound(f"no chat {chat_id}")
 
     # ------------------------------------------------------------------ media
 
