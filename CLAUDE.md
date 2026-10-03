@@ -38,6 +38,16 @@ user, never deployed. Built 2026-10-02 to plan creative sessions next to the art
   costs about $0.04 of quota. Tests use a fake `claude` (tests/test_chat.py); a real turn
   was checked by hand on 2026-10-03.
 
+- **Themes** (Board ▸ Theme…): a board has a preset (vault, chrisx, film, studio, paper,
+  midnight, sage, rose) or custom ground/ink/accent + font + corners, and the whole app wears
+  the open board's theme. `src/cxboards/themes.py` is the only place palettes are computed
+  (board state, picker previews, Onyx snapshots all read it); muted text and accents are
+  derived and kept readable, and unreadable custom colours are corrected. Vault = no theme =
+  the app's own look, following macOS light/dark. `web/src/theme.ts` writes the palette onto
+  the page and tells CXBoards.app (`cxTheme`), whose window appearance and background follow
+  and are remembered for the next launch. Chris X takes chrisx.art's DESIGN.md literally:
+  #000 cards on #000, cream ink and accent, Fraunces + Poppins 300, square everything.
+
 Data lives in `~/Library/Application Support/CXBoards/` (`cxboards.db`, `uploads/`,
 `export/`). `CXBOARDS_HOME` / `CXBOARDS_PORT` override both (the tests do).
 
@@ -65,7 +75,7 @@ Data lives in `~/Library/Application Support/CXBoards/` (`cxboards.db`, `uploads
 ## Run / verify
 
 ```bash
-.venv/bin/python -m pytest -q          # 91 tests: invariants, API, export, MCP, chat, phases 1-3
+.venv/bin/python -m pytest -q          # 106 tests: invariants, API, export, MCP, chat, themes, phases 1-3
 app/build-app.sh                       # build + install CXBoards.app (Apple Development signed)
 scripts/selftest-app.sh                # the app's own end-to-end check (drops, dialogs, downloads, links)
 scripts/install.sh                     # build UI, (re)install LaunchAgent, wait for health

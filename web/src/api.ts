@@ -1,5 +1,9 @@
 // The UI's view of the CXBoards HTTP API (src/cxboards/app.py).
 
+import type { Palette } from './theme'
+
+export type Swatch = { ground: string; ink: string; accent: string } | null
+
 export type Kind =
   | 'note'
   | 'todo'
@@ -75,7 +79,7 @@ export interface Card {
   labels?: Label[]
   updated_by: 'chris' | 'agent' | 'system'
   updated_at: string
-  board?: { id: string; title: string; card_count: number } | null
+  board?: { id: string; title: string; card_count: number; swatch?: Swatch } | null
 }
 
 export interface Board {
@@ -86,8 +90,10 @@ export interface Board {
   rev: number
   export_slug: string
   is_template: boolean
+  theme?: Record<string, string> | null
   updated_at: string
   card_count?: number
+  swatch?: Swatch
 }
 
 export interface BoardState {
@@ -95,6 +101,7 @@ export interface BoardState {
   cards: Card[]
   connectors: Connector[]
   breadcrumbs: { id: string; title: string }[]
+  palette?: Palette | null
 }
 
 export interface ChangeEvent {
@@ -138,7 +145,7 @@ export const api = {
   board: (id: string) => req<BoardState>('GET', `/api/boards/${id}`),
   createBoard: (title: string, parent?: string, template?: string) =>
     req<Board>('POST', '/api/boards', { title, parent, template }),
-  updateBoard: (id: string, patch: { title?: string; description?: string; is_template?: boolean }) =>
+  updateBoard: (id: string, patch: { title?: string; description?: string; is_template?: boolean; theme?: unknown }) =>
     req<Board>('PATCH', `/api/boards/${id}`, patch),
   deleteBoard: (id: string) => req<{ ok: boolean }>('DELETE', `/api/boards/${id}`),
   addCard: (boardId: string, spec: Record<string, unknown>) => req<Card>('POST', `/api/boards/${boardId}/cards`, spec),
@@ -191,6 +198,8 @@ export const api = {
     return resp.json()
   },
   rotate: (id: string, degrees: number) => req<Card>('POST', `/api/cards/${id}/rotate`, { degrees }),
+  themes: () => req<{ name: string; label: string; note: string; palette: Palette | null }[]>('GET', '/api/themes'),
+  previewTheme: (theme: unknown) => req<{ palette: Palette | null }>('POST', '/api/themes/preview', { theme }),
   thumbnailFromPath: (id: string, path: string) => req<Card>('POST', `/api/cards/${id}/thumbnail`, { path }),
 }
 

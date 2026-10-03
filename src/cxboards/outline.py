@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from . import themes
 from .store import Store
 
 
@@ -49,7 +50,7 @@ def board_outline(store: Store, board_id: str, base_url: str) -> str:
         f"# {board['title']}  ({board['id']}, rev {board['rev']})",
         f"path: {trail}" if len(state["breadcrumbs"]) > 1 else "",
         board["description"] or "",
-        f"live: {base_url}/b/{board['id']}",
+        f"live: {base_url}/b/{board['id']} · theme: {themes.label(board.get('theme'))}",
         "",
     ]
     order = store.reading_order(board_id)

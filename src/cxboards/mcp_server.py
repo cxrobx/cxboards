@@ -269,6 +269,31 @@ def label_cards(card_ids: list[str], labels: list[str], remove: bool = False) ->
 
 
 @mcp.tool()
+def set_board_theme(
+    board: str,
+    preset: str = "",
+    ground: str = "",
+    ink: str = "",
+    accent: str = "",
+    font: str = "mono",
+    corners: str = "round",
+) -> str:
+    """Theme a board (the whole app takes it on while the board is open, and its Onyx page too).
+    Either a `preset`: vault (the default look), chrisx, film, studio, paper, midnight, sage, rose;
+    or custom hex colours `ground` (background), `ink` (text), `accent`, with `font` mono|sans|serif|chrisx
+    and `corners` round|square. Unreadable custom colours are corrected, not refused."""
+    if preset:
+        theme: Any = preset
+    elif ground and ink:
+        theme = {"preset": "custom", "ground": ground, "ink": ink, "accent": accent or ink, "font": font, "corners": corners}
+    else:
+        raise ValueError("give a preset, or ground and ink colours")
+    result = _call("PATCH", f"/api/boards/{board}", {"theme": theme})
+    picked = result.get("theme") or {"preset": "vault"}
+    return f"{result['title']} now uses the {picked.get('preset')} theme."
+
+
+@mcp.tool()
 def arrange(board: str, mode: str = "grid", card_ids: list[str] | None = None) -> str:
     """Tidy canvas cards (all of them, or `card_ids`) into a `grid`, a `row`, or a `stack`, in reading order."""
     result = _call("POST", f"/api/boards/{board}/arrange", {"mode": mode, "card_ids": card_ids or []})

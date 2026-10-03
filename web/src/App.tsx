@@ -8,6 +8,8 @@ import { BoardCanvas, type Toast } from './Board'
 import { BOOKMARKLET, ClipPage } from './Clip'
 import { ContextMenu, type MenuState } from './ContextMenu'
 import { rememberBoard, SearchPalette } from './Search'
+import { applyPalette } from './theme'
+import { ThemePicker } from './ThemePicker'
 import { TrashPanel } from './Trash'
 
 const TOUCH_MS = 4500
@@ -37,7 +39,9 @@ function BoardTree({ boards, current, onOpen }: { boards: Board[]; current: stri
           onClick={() => onOpen(b.id)}
           title={b.title}
         >
-          <span className="tree-glyph">{depth ? '└' : '▦'}</span>
+          <span className="tree-glyph" style={b.swatch ? { color: b.swatch.accent } : undefined}>
+            {depth ? '└' : '▦'}
+          </span>
           <span className="tree-title">{b.title}</span>
           <span className="tree-count">{b.card_count}</span>
         </button>
@@ -175,6 +179,7 @@ function Shell() {
   const [clipperOpen, setClipperOpen] = useState(false)
   const [boardMenu, setBoardMenu] = useState<MenuState | null>(null)
   const [presenting, setPresenting] = useState(false)
+  const [theming, setTheming] = useState(false)
   const [chatOpen, setChatOpen] = useState(() => {
     try {
       return localStorage.getItem('cxboards.chat-open') === '1'
@@ -342,6 +347,11 @@ function Shell() {
     document.title = state ? `${state.board.title} · CXBoards` : 'CXBoards'
   }, [state])
 
+  // The whole app wears the open board's theme (Vault, or no board, is the app's own look).
+  useEffect(() => {
+    if (!theming) applyPalette(current ? state?.palette ?? null : null)
+  }, [state, current, theming])
+
   const newBoard = () => setCreating(true)
 
   const createBoard = async (title: string, template: string | null) => {
@@ -394,6 +404,7 @@ function Shell() {
       y: r.bottom + 6,
       items: [
         { label: 'Present', hint: 'P', run: present },
+        { label: 'Theme…', run: () => setTheming(true) },
         {
           kind: 'sub',
           label: 'Export',
@@ -630,6 +641,9 @@ function Shell() {
         <NewBoardDialog templates={boards.filter((b) => b.is_template)} onCreate={(t, tpl) => void createBoard(t, tpl)} onClose={() => setCreating(false)} />
       )}
       {clipperOpen && <ClipperPanel onClose={() => setClipperOpen(false)} />}
+      {theming && state && (
+        <ThemePicker board={state.board} current={state.palette ?? null} onClose={() => setTheming(false)} onError={onError} />
+      )}
       {trashOpen && (
         <TrashPanel
           boards={boards ?? []}

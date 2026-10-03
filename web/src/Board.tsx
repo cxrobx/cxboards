@@ -1038,7 +1038,7 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
           panOnDrag={presenting ? true : [1, 2]}
           minZoom={0.1}
           maxZoom={2.5}
-          colorMode="system"
+          colorMode={state?.palette?.scheme ?? 'system'}
           proOptions={{ hideAttribution: true }}
         >
           <Background gap={24} size={1.2} />

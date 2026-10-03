@@ -40,7 +40,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Callable, Iterator
 
-from . import layout
+from . import layout, themes
 from .config import AUDIO_EXTENSIONS, IMAGE_EXTENSIONS, MAX_IMAGE_BYTES, VIDEO_EXTENSIONS, Config
 from .layout import Rect
 
@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS boards (
     rev         INTEGER NOT NULL DEFAULT 0,
     export_slug TEXT,
     is_template INTEGER NOT NULL DEFAULT 0,
+    theme       TEXT,
     created_at  TEXT NOT NULL,
     updated_at  TEXT NOT NULL
 );
@@ -150,6 +151,7 @@ CREATE TABLE IF NOT EXISTS history (
 # Columns added after the first release; created on old databases at startup.
 ADDED_COLUMNS = [
     ("boards", "is_template", "INTEGER NOT NULL DEFAULT 0"),
+    ("boards", "theme", "TEXT"),
     ("cards", "locked", "INTEGER NOT NULL DEFAULT 0"),
     ("cards", "tray", "INTEGER NOT NULL DEFAULT 0"),
 ]
@@ -522,7 +524,14 @@ class Store:
     def _board_dict(row: sqlite3.Row) -> dict[str, Any]:
         out = {k: row[k] for k in row.keys() if k != "n"}
         out["is_template"] = bool(out.get("is_template"))
+        out["theme"] = json.loads(out["theme"]) if out.get("theme") else None
         return out
+
+    @staticmethod
+    def _swatch(theme: dict[str, Any] | None) -> dict[str, str] | None:
+        """A board's colours in brief (for its card on a parent board and its sidebar row)."""
+        pal = themes.palette(theme)
+        return {"ground": pal["canvas"], "ink": pal["ink"], "accent": pal["accent"]} if pal else None
 
     def board(self, board_id: str) -> dict[str, Any]:
         with self._lock:
@@ -534,7 +543,11 @@ class Store:
                 "SELECT b.*, (SELECT COUNT(*) FROM cards c WHERE c.board_id = b.id) AS n "
                 "FROM boards b ORDER BY b.updated_at DESC"
             ).fetchall()
-            return [{**self._board_dict(r), "card_count": r["n"]} for r in rows]
+            out = []
+            for r in rows:
+                board = self._board_dict(r)
+                out.append({**board, "card_count": r["n"], "swatch": self._swatch(board["theme"])})
+            return out
 
     def resolve_board(self, ref: str) -> dict[str, Any]:
         """A board by id, exact title, or a title fragment that matches exactly one board."""
@@ -619,10 +632,22 @@ class Store:
         description: str | None = None,
         actor: str = "chris",
         is_template: bool | None = None,
+        theme: Any = ...,
     ) -> dict[str, Any]:
+        """``theme``: leave out to keep it; None or "vault" for the app's own look; a preset name or
+        {"preset": name}; or custom {ground, ink, accent, font, corners}."""
         self._actor(actor)
+        stored: str | None = None
+        if theme is not ...:
+            try:
+                normalized = themes.normalize(theme)
+            except themes.ThemeError as exc:
+                raise Invalid(str(exc)) from exc
+            stored = json.dumps(normalized) if normalized else None
         with self._tx() as db:
             row = self._board_row(board_id)
+            if theme is not ...:
+                db.execute("UPDATE boards SET theme = ? WHERE id = ?", (stored, board_id))
             if title is not None:
                 title = title.strip()
                 if not title:
@@ -710,9 +735,10 @@ class Store:
         new_id = _new_id("b")
         now = _now()
         self._db.execute(
-            "INSERT INTO boards (id, title, description, parent_id, export_slug, is_template, created_at, updated_at) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-            (new_id, title, source["description"], parent_id, self._unique_slug(title), int(as_template), now, now),
+            "INSERT INTO boards (id, title, description, parent_id, export_slug, is_template, theme, created_at, "
+            "updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (new_id, title, source["description"], parent_id, self._unique_slug(title), int(as_template),
+             source["theme"], now, now),
         )
         self._touch(new_id, [], actor)
         cards = self._rows("cards", "board_id = ? ORDER BY column_id IS NOT NULL", [board_id])
@@ -769,12 +795,14 @@ class Store:
                 if card["kind"] == "board":
                     child_id = card["data"].get("board_id")
                     child = self._db.execute(
-                        "SELECT b.title, (SELECT COUNT(*) FROM cards c WHERE c.board_id = b.id) AS n "
+                        "SELECT b.title, b.theme, (SELECT COUNT(*) FROM cards c WHERE c.board_id = b.id) AS n "
                         "FROM boards b WHERE b.id = ?",
                         (child_id,),
                     ).fetchone()
                     card["board"] = (
-                        {"id": child_id, "title": child["title"], "card_count": child["n"]} if child else None
+                        {"id": child_id, "title": child["title"], "card_count": child["n"],
+                         "swatch": self._swatch(json.loads(child["theme"]) if child["theme"] else None)}
+                        if child else None
                     )
             connectors = [dict(r) for r in self._db.execute(
                 "SELECT * FROM connectors WHERE board_id = ? ORDER BY created_at", (board_id,)
@@ -786,6 +814,7 @@ class Store:
                 "cards": cards,
                 "connectors": connectors,
                 "breadcrumbs": self.breadcrumbs(board_id),
+                "palette": themes.palette(board["theme"]),
             }
 
     def reading_order(self, board_id: str) -> list[dict[str, Any]]:

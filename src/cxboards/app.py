@@ -30,7 +30,7 @@ from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, PlainTex
 from fastapi.staticfiles import StaticFiles
 
 from . import chat as chatlib
-from . import formats, outline
+from . import formats, outline, themes
 from .config import AUDIO_EXTENSIONS, MAX_FILE_BYTES, MAX_IMAGE_BYTES, VIDEO_EXTENSIONS, Config, load_config
 from .events import Broadcaster
 from .export import Exporter
@@ -235,8 +235,20 @@ def create_app(
     @app.patch("/api/boards/{board_id}")
     def update_board(board_id: str, request: Request, body: dict[str, Any] = Body(...)) -> dict[str, Any]:
         return store.update_board(
-            board_id, body.get("title"), body.get("description"), actor_of(request), is_template=body.get("is_template")
+            board_id_of(board_id), body.get("title"), body.get("description"), actor_of(request),
+            is_template=body.get("is_template"), theme=body["theme"] if "theme" in body else ...,
         )
+
+    @app.get("/api/themes")
+    def theme_catalog() -> list[dict[str, Any]]:
+        return themes.catalog()
+
+    @app.post("/api/themes/preview")
+    def theme_preview(body: dict[str, Any] = Body(...)) -> dict[str, Any]:
+        try:
+            return {"palette": themes.palette(themes.normalize(body.get("theme")))}
+        except themes.ThemeError as exc:
+            raise Invalid(str(exc)) from exc
 
     @app.delete("/api/boards/{board_id}")
     def delete_board(board_id: str, request: Request) -> dict[str, Any]:

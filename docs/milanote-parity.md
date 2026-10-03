@@ -91,7 +91,8 @@ phases (commits aa2b1e6, 4cc5ad8, 435d5a7) and verified in the browser.
 ## Beyond Milanote (already here)
 
 Agents as first-class editors (MCP, live arrival with highlight, per-step Undo), an Ask chat
-panel that can change the board, layout tools instead of coordinates, audio streamed in place from the ChrisX drive, Onyx snapshots with
+panel that can change the board, per-board themes the whole app wears, layout tools instead of
+coordinates, audio streamed in place from the ChrisX drive, Onyx snapshots with
 highlight-to-ask, vault-MCP indexing.
 
 ## Known limits (2026-10-02)

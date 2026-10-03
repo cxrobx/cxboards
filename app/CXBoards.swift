@@ -141,6 +141,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
             forMainFrameOnly: true
         ))
         config.userContentController.add(self, name: "cxDrag")
+        // The open board's theme: the page reports it and the window (appearance, background) follows.
+        config.userContentController.add(self, name: "cxTheme")
 
         webView = BoardWebView(frame: .zero, configuration: config)
         webView.navigationDelegate = self
@@ -187,6 +189,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
         window.center()
         window.setFrameAutosaveName("CXBoardsMain")
         window.collectionBehavior.insert(.fullScreenPrimary)
+        // Open in the last board's colours, so there's no flash of the default before the page says.
+        let defaults = UserDefaults.standard
+        applyTheme(appearance: defaults.string(forKey: "themeAppearance"), ground: defaults.string(forKey: "themeGround"))
         window.makeKeyAndOrderFront(nil)
 
         // The board's title ("October sessions · CXBoards") becomes the window's.
@@ -260,7 +265,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
     /// for cxtasks and cxmail) do it. A Force Touch press arrives as a pressure event, which can't start
     /// a drag, so a mouse-down at the pointer stands in for it.
     func userContentController(_ controller: WKUserContentController, didReceive message: WKScriptMessage) {
-        guard message.name == "cxDrag", message.frameInfo.isMainFrame else { return }
+        guard message.frameInfo.isMainFrame else { return }
+        if message.name == "cxTheme" {
+            let body = message.body as? [String: Any] ?? [:]
+            let appearance = body["appearance"] as? String
+            let ground = body["ground"] as? String
+            applyTheme(appearance: appearance, ground: ground)
+            UserDefaults.standard.set(appearance, forKey: "themeAppearance")
+            UserDefaults.standard.set(ground, forKey: "themeGround")
+            return
+        }
+        guard message.name == "cxDrag" else { return }
         if (message.body as? [String: Any])?["double"] as? Bool == true {
             titleBarDoubleClick()
             return
@@ -277,6 +292,32 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
         }
         guard [.leftMouseDown, .leftMouseDragged].contains(event.type) else { return }
         window.performDrag(with: event)
+    }
+
+    /// Light or dark (nil: follow the Mac) for the window, its sheets and menus; the board's ground behind it.
+    private func applyTheme(appearance: String?, ground: String?) {
+        let chosen: NSAppearance? = switch appearance {
+        case "dark": NSAppearance(named: .darkAqua)
+        case "light": NSAppearance(named: .aqua)
+        default: nil
+        }
+        NSApp.appearance = chosen
+        window.appearance = chosen
+        let color = ground.flatMap(Self.color(hex:)) ?? NSColor.windowBackgroundColor
+        window.backgroundColor = color
+        window.contentView?.layer?.backgroundColor = color.cgColor
+        webView.underPageBackgroundColor = color
+    }
+
+    private static func color(hex: String) -> NSColor? {
+        let digits = hex.trimmingCharacters(in: CharacterSet(charactersIn: "#"))
+        guard digits.count == 6, let value = UInt32(digits, radix: 16) else { return nil }
+        return NSColor(
+            srgbRed: CGFloat((value >> 16) & 0xFF) / 255,
+            green: CGFloat((value >> 8) & 0xFF) / 255,
+            blue: CGFloat(value & 0xFF) / 255,
+            alpha: 1
+        )
     }
 
     /// A double-click on the title band does what Desktop & Dock says a title bar's does.
@@ -500,6 +541,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
                 "document.documentElement.classList.contains('native') && !!window.webkit.messageHandlers.cxDrag"
             )) as? Bool == true
             results["borderless_window"] = window.titlebarAppearsTransparent && window.styleMask.contains(.fullSizeContentView)
+            results["theme_bridge"] = (await js("!!window.webkit.messageHandlers.cxTheme")) as? Bool == true
             results["prompt"] = (await js("prompt('Label', 'from-selftest')")) as? String == "from-selftest"
             results["confirm"] = (await js("confirm('ok?')")) as? Bool == true
 
@@ -537,7 +579,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
     }
 
     private func finishSelfTest(_ results: [String: Any]) {
-        let checks = ["server", "drop_bridge", "borderless_page", "borderless_window", "prompt", "confirm",
+        let checks = ["server", "drop_bridge", "borderless_page", "borderless_window", "theme_bridge", "prompt", "confirm",
                       "native_drop_points_at_the_file", "stayed_on_board"]
         var ok = checks.allSatisfy { results[$0] as? Bool == true }
         ok = ok && results["download"] is String && (results["outside_links"] as? [String])?.count == 2

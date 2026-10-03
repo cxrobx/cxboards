@@ -13,6 +13,8 @@ A local visual planning board (Milanote-shaped) that a person and their agents s
 - A stdio MCP (`cxboards mcp`) gives agents the same moves through the same API, with
   layout tools instead of coordinates. Their edits appear live in the open board.
 - Every board is also written as a static, script-free HTML snapshot for reading elsewhere.
+- **Themes per board**: presets (including Chris X and Film) or your own colours; the whole
+  app, the native window and the board's Onyx page take on the open board's theme.
 - **Ask**: a chat panel on the board, answered by Claude (headless `claude -p` on your
   subscription) with the board's own tools, so it can lay out, group, label and edit cards
   while you watch. Selected cards go with the question.

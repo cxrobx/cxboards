@@ -24,6 +24,7 @@ from typing import Any
 
 import markdown as md
 
+from . import themes
 from .store import NotFound, Store
 
 MARKER = ".cxboards-board"
@@ -246,6 +247,25 @@ class Exporter:
         return f'<article class="card card-{kind}{fill}" id="{card["id"]}"{style_attr}>{body}</article>'
 
     @staticmethod
+    def _theme_css(pal: dict[str, str] | None) -> str:
+        """A themed board's palette over the page's default tokens. It comes last, so it wins in light and
+        dark alike: a theme is fixed, only Vault follows the reader's setting. Values come from themes.palette
+        (hex colours, our own font stacks and lengths), never from anything a user typed."""
+        if not pal:
+            return ""
+        return (
+            "\n:root{{"
+            f"--ivory:{pal['canvas']};--slate:{pal['ink']};--gray-100:{pal['fill']};--gray-300:{pal['line']};"
+            f"--gray-500:{pal['muted']};--gray-700:{pal['ink']};--white:{pal['card']};--card:{pal['card']};"
+            f"--clay:{pal['accent']};--amber:{pal['accent']};color-scheme:{pal['scheme']};"
+            "}}\n"
+            f"body{{{{font-family:{pal['font']};font-weight:{pal['fontWeight']}}}}}\n"
+            f"h1,.column h3,.card-title{{{{font-family:{pal['fontDisplay']};color:var(--slate)}}}}\n"
+            f".card{{{{border-radius:{pal['radius']}}}}} .column{{{{border-radius:{pal['radiusLg']}}}}}\n"
+            f"svg.lines{{{{color:{pal['lineInk']}}}}} svg.lines text{{{{stroke:{pal['canvas']}}}}}\n"
+        )
+
+    @staticmethod
     def _sketch_svg(data: dict[str, Any] | None) -> str:
         data = data or {}
         w, h = (data.get("box") or [400, 300])[:2]
@@ -330,7 +350,7 @@ class Exporter:
         when = datetime.now().strftime("%Y-%m-%d %H:%M")
         live = f"{self.store.config.base_url}/b/{board['id']}"
         description = f'<p class="subtitle">{_e(board["description"])}</p>' if board["description"] else ""
-        return TEMPLATE.format(
+        return TEMPLATE.replace("</style>", self._theme_css(state.get("palette")) + "</style>", 1).format(
             title=_e(board["title"]),
             trail=f'<p class="eyebrow">{trail} /</p>' if trail else '<p class="eyebrow">CXBoards</p>',
             description=description,
@@ -352,7 +372,7 @@ TEMPLATE = """<!doctype html>
 <meta name="generator" content="CXBoards" data-board="{data}">
 <title>{title}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Fraunces:opsz,wght@9..144,400..700&family=Poppins:wght@300;400;600&display=swap">
 <style>
 :root {{
   --ivory:#FDF6E3; --slate:#000; --gray-100:#EDE8D6; --gray-300:#E0D7B8; --gray-500:#666; --gray-700:#333;

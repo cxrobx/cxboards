@@ -475,7 +475,16 @@ export function CardBody({ card }: { card: Card }) {
     case 'board':
       return (
         <div className="board-card" onDoubleClick={() => card.board && actions.openBoard(card.board.id)}>
-          <div className="board-glyph">{d.shortcut ? '↪' : '▦'}</div>
+          {card.board?.swatch && (
+            <div className="board-swatch" title="This board's theme">
+              <span style={{ background: card.board.swatch.ground }} />
+              <span style={{ background: card.board.swatch.accent }} />
+              <span style={{ background: card.board.swatch.ink }} />
+            </div>
+          )}
+          <div className="board-glyph" style={card.board?.swatch ? { color: card.board.swatch.accent } : undefined}>
+            {d.shortcut ? '↪' : '▦'}
+          </div>
           <div className="card-title">{card.board?.title ?? 'Missing board'}</div>
           <div className="site">
             {card.board?.card_count ?? 0} cards · {d.shortcut ? 'shortcut · ' : ''}double-click

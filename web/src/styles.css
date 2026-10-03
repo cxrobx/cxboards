@@ -15,6 +15,10 @@
   --glow: rgba(224, 163, 58, 0.55);
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 10px 24px -16px rgba(0, 0, 0, 0.28);
   --mono: 'JetBrains Mono', 'SF Mono', ui-monospace, Menlo, monospace;
+  --font: var(--mono);
+  --font-display: var(--font);
+  --font-weight: 400;
+  --on-accent: #1a1a1a;
   color-scheme: light;
 }
 
@@ -49,7 +53,8 @@ body,
 body {
   background: var(--ground);
   color: var(--ink);
-  font-family: var(--mono);
+  font-family: var(--font);
+  font-weight: var(--font-weight);
   font-size: 13px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -324,7 +329,7 @@ a {
 }
 
 .react-flow__node {
-  font-family: var(--mono);
+  font-family: var(--font);
 }
 
 .empty-board {
@@ -435,7 +440,7 @@ a {
   padding: 1px 6px;
   border-radius: 10px;
   background: var(--amber);
-  color: #1a1a1a;
+  color: var(--on-accent);
 }
 
 .card-title {
@@ -1054,7 +1059,7 @@ mark {
   padding: 3px 6px;
   border-radius: 5px;
   background: var(--amber);
-  color: #1a1a1a;
+  color: var(--on-accent);
 }
 
 .media-missing {
@@ -1203,7 +1208,7 @@ mark {
 
 .thumb-play:hover .play {
   background: var(--amber);
-  color: #1a1a1a;
+  color: var(--on-accent);
 }
 
 .player {
@@ -1481,7 +1486,7 @@ mark {
 .primary {
   border: 0;
   background: var(--amber);
-  color: #1a1a1a;
+  color: var(--on-accent);
   border-radius: 7px;
   padding: 6px 14px;
   font-weight: 600;
@@ -1634,7 +1639,7 @@ mark {
   padding: 8px 14px;
   border-radius: 8px;
   background: var(--amber);
-  color: #1a1a1a;
+  color: var(--on-accent);
   font-weight: 600;
   text-decoration: none;
   cursor: grab;
@@ -1950,4 +1955,159 @@ html.native .welcome {
 /* With Ask open, toasts centre on the visible board, clear of the chat's input. */
 .main:has(.chat) .toast {
   left: calc((100% - min(420px, 46vw)) / 2);
+}
+
+
+/* ---------- per-board themes ---------- */
+
+/* Display type: titles and headings take the theme's display face (Fraunces for Chris X). */
+.crumbs h1,
+.card-title,
+.column header,
+.brand span,
+.panel h2,
+.chat header strong,
+.md h1,
+.md h2,
+.md h3 {
+  font-family: var(--font-display);
+}
+
+/* Square themes are square everywhere, as chrisx.art is. */
+html[data-corners='square'] *,
+html[data-corners='square'] *::before,
+html[data-corners='square'] *::after {
+  border-radius: 0 !important;
+}
+
+/* Changing boards blends from one theme to the next. */
+body,
+.sidebar,
+.topbar,
+.toolbar,
+.chat,
+.tray,
+.react-flow {
+  transition: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease;
+}
+
+.card,
+.column {
+  transition: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease, box-shadow 0.25s ease,
+    outline-color 0.6s ease;
+}
+
+.tree-swatch {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  border: 1px solid var(--line);
+}
+
+.board-swatch {
+  display: flex;
+  height: 6px;
+  margin: -12px -14px 10px;
+  border-radius: 7px 7px 0 0;
+  overflow: hidden;
+}
+
+.board-swatch span {
+  flex: 1;
+}
+
+/* the theme picker */
+.theme-picker {
+  width: min(720px, 94vw);
+}
+
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.theme-tile {
+  display: grid;
+  gap: 6px;
+  text-align: left;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  cursor: pointer;
+}
+
+.theme-tile.on {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+.theme-tile .mini {
+  border-radius: 6px;
+  padding: 7px 9px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.theme-tile .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.theme-tile .name {
+  font-weight: 600;
+}
+
+.theme-tile .note {
+  font-size: 11px;
+  opacity: 0.75;
+}
+
+.theme-tile.vault {
+  background: linear-gradient(135deg, #fdf6e3 50%, #1a1a1a 50%);
+  color: #111;
+}
+
+.theme-tile.vault .name,
+.theme-tile.vault .note {
+  background: rgba(253, 246, 227, 0.85);
+  padding: 0 4px;
+  border-radius: 3px;
+  width: fit-content;
+}
+
+.custom-theme {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 10px;
+  align-items: end;
+}
+
+.custom-theme label {
+  display: grid;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.custom-theme input[type='color'] {
+  width: 100%;
+  height: 32px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: none;
+  padding: 2px;
+}
+
+.custom-theme select {
+  font: inherit;
+  color: var(--ink);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 6px;
 }
