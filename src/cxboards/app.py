@@ -74,6 +74,10 @@ def create_app(
     rotate_image = rotator or sips_rotate
 
     def on_change(board_id: str, rev: int, card_ids: list[str], actor: str, history_id: int | None) -> None:
+        if rev < 0:  # the board was deleted: open windows move off it; its snapshot goes
+            broadcaster.publish({"board_id": board_id, "deleted": True, "card_ids": [], "actor": actor})
+            exporter.sweep()
+            return
         event: dict[str, Any] = {"board_id": board_id, "rev": rev, "card_ids": card_ids, "actor": actor}
         if history_id is not None:
             event["history_id"] = history_id

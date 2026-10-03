@@ -191,6 +191,10 @@ function Shell() {
   }, [chatOpen])
   const currentRef = useRef(current)
   currentRef.current = current
+  const stateRef = useRef<BoardState | null>(null)
+  stateRef.current = state
+  const deletingHere = useRef<string | null>(null)
+  const missingRef = useRef<() => void>(() => {})
 
   const showToast: Toast = useCallback((message, action) => {
     setToast({ id: Date.now() + Math.random(), message, action })
@@ -225,6 +229,25 @@ function Shell() {
       setState(null)
     }
   }, [])
+
+  // The open board has gone (deleted in another window, by an agent, or a stale link): go to the
+  // most recent board that's left (or the welcome screen) and say where it went.
+  const boardMissing = useCallback(() => {
+    const gone = currentRef.current
+    const title = stateRef.current?.board.id === gone ? stateRef.current?.board.title : undefined
+    // Off the local list now, so "open the most recent board" can't land on it again before the
+    // refreshed list arrives (that bounced once and swapped this message for a vaguer one).
+    setBoards((bs) => bs?.filter((b) => b.id !== gone && b.parent_id !== gone) ?? bs)
+    setState(null)
+    setCurrent(null)
+    window.history.replaceState(null, '', '/')
+    void loadBoards()
+    showToast(title ? `“${title}” was deleted. It's in the Trash.` : "That board doesn't exist any more. It may be in the Trash.", {
+      label: 'Open trash',
+      run: () => setTrashOpen(true),
+    })
+  }, [loadBoards, showToast])
+  missingRef.current = boardMissing
 
   // First visit with no board in the URL: open the most recently touched one.
   useEffect(() => {
@@ -281,6 +304,12 @@ function Shell() {
     source.onerror = () => setLive(false)
     source.addEventListener('change', (msg) => {
       const event = JSON.parse((msg as MessageEvent).data) as ChangeEvent
+      if (event.deleted) {
+        if (event.board_id === currentRef.current && deletingHere.current !== event.board_id) missingRef.current()
+        window.clearTimeout(listTimer)
+        listTimer = window.setTimeout(() => void loadBoards(), 200)
+        return
+      }
       if (event.board_id === currentRef.current) setReloadKey((k) => k + 1)
       window.clearTimeout(listTimer)
       listTimer = window.setTimeout(() => void loadBoards(), 400)
@@ -415,6 +444,7 @@ function Shell() {
     const { board } = state
     if (!window.confirm(`Move “${board.title}” and every board inside it to the trash?`)) return
     try {
+      deletingHere.current = board.id  // this window is moving off it already
       await api.deleteBoard(board.id)
       const parent = board.parent_id
       await loadBoards()
@@ -549,6 +579,7 @@ function Shell() {
                 onPresent={present}
                 onOpenBoard={(id) => open(id)}
                 onState={onState}
+                onMissing={boardMissing}
                 onError={onError}
                 onToast={showToast}
               />

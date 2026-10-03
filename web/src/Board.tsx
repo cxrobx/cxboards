@@ -119,11 +119,12 @@ interface Props {
   onPresent: () => void
   onOpenBoard: (id: string) => void
   onState: (state: BoardState) => void
+  onMissing: () => void
   onError: (message: string) => void
   onToast: Toast
 }
 
-export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, presenting, chatOpen, onCloseChat, onPresent, onOpenBoard, onState, onError, onToast }: Props) {
+export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, presenting, chatOpen, onCloseChat, onPresent, onOpenBoard, onState, onMissing, onError, onToast }: Props) {
   const flow = useReactFlow()
   const [state, setState] = useState<BoardState | null>(null)
   const [nodes, setNodes] = useState<Node[]>([])
@@ -155,9 +156,11 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
       if (dragging.current) deferred.current = next
       else setState(next)
     } catch (e) {
-      onError((e as Error).message)
+      // The board is gone (deleted elsewhere, or a stale link): move off it rather than show an empty canvas.
+      if (/^no board/.test((e as Error).message)) onMissing()
+      else onError((e as Error).message)
     }
-  }, [boardId, onError])
+  }, [boardId, onError, onMissing])
 
   useEffect(() => {
     void load()

@@ -341,3 +341,17 @@ def test_purge_one_trash_item(store: Store) -> None:
     assert [t["id"] for t in store.list_trash()] == [tb]
     with pytest.raises(NotFound):
         store.purge(ta)
+
+
+def test_deleting_a_board_tells_open_windows(store: Store) -> None:
+    parent = store.create_board("Year")
+    child = store.create_board("October", parent_id=parent["id"])
+    events = []
+    store.listeners.append(lambda *e: events.append(e))
+    store.delete_board(parent["id"])
+    deleted = {e[0] for e in events if e[1] == -1}
+    assert deleted == {parent["id"], child["id"]}  # nested boards go too, and say so
+    events.clear()
+    trash_id = store.list_trash()[0]["id"]
+    store.restore(trash_id)
+    assert {e[0] for e in events if e[1] > 0} == {parent["id"], child["id"]}

@@ -104,6 +104,7 @@ export interface ChangeEvent {
   actor: 'chris' | 'agent' | 'system'
   history_id?: number
   summary?: string
+  deleted?: boolean
 }
 
 export interface StepResult {

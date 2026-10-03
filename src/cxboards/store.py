@@ -273,8 +273,8 @@ class Store:
                             "UPDATE boards SET rev = rev + 1, updated_at = ? WHERE id = ?", (_now(), board_id)
                         )
                         row = self._db.execute("SELECT rev FROM boards WHERE id = ?", (board_id,)).fetchone()
-                        if row is not None:
-                            revs[board_id] = row["rev"]
+                        # A board this transaction deleted is reported as rev -1, so open windows hear of it.
+                        revs[board_id] = row["rev"] if row is not None else -1
                     history_id = self._record()
                     self._db.execute("DELETE FROM journal")
                     self._db.execute("COMMIT")
@@ -691,7 +691,7 @@ class Store:
             db.execute(f"DELETE FROM cards WHERE board_id IN ({marks})", doomed)
             for bid in doomed:
                 db.execute("DELETE FROM boards WHERE id = ?", (bid,))
-            self._actors.add(actor)
+                self._touch(bid, [], actor)  # reported as deleted (rev -1) once this commits
             return trash_id
 
     def duplicate_board(self, board_id: str, parent_id: str | None = None, title: str | None = None,
