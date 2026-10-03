@@ -239,6 +239,12 @@ def create_app(
             is_template=body.get("is_template"), theme=body["theme"] if "theme" in body else ...,
         )
 
+    @app.post("/api/boards/{board_id}/move")
+    def move_board(board_id: str, request: Request, body: dict[str, Any] = Body(default={})) -> dict[str, Any]:
+        """``parent``: the board to nest it in (id or title); leave out or null for top level."""
+        parent = body.get("parent")
+        return store.move_board(board_id_of(board_id), board_id_of(parent) if parent else None, actor_of(request))
+
     @app.get("/api/themes")
     def theme_catalog() -> list[dict[str, Any]]:
         return themes.catalog()

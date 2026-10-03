@@ -345,8 +345,9 @@ class Store:
         removed = sum(1 for t, _, b, a in changes if t == "cards" and a is None)
         edited = sum(1 for t, _, b, a in changes if t == "cards" and b and a)
         boards = sum(1 for t, _, b, a in changes if t == "boards" and (b is None) != (a is None))
+        moved = sum(1 for t, _, b, a in changes if t == "boards" and b and a and b["parent_id"] != a["parent_id"])
         lines = sum(1 for t, *_ in changes if t == "connectors")
-        parts = []
+        parts = [f"moved {_plural(moved, 'board')}"] if moved else []
         if added:
             parts.append(f"added {_plural(added, 'card')}")
         if removed:
@@ -718,6 +719,45 @@ class Store:
                 db.execute("DELETE FROM boards WHERE id = ?", (bid,))
                 self._touch(bid, [], actor)  # reported as deleted (rev -1) once this commits
             return trash_id
+
+    def move_board(self, board_id: str, parent_id: str | None, actor: str = "chris") -> dict[str, Any]:
+        """Nest a board inside ``parent_id``, or make it top-level with None. Its board card goes with
+        it (to the nearest free spot on the new parent; a top-level board has no card, so moving out
+        removes it, undoably). Shortcuts to the board stay where they are."""
+        self._actor(actor)
+        with self._tx() as db:
+            row = self._board_row(board_id)
+            if parent_id:
+                self._board_row(parent_id)
+                if parent_id in self._subtree(board_id):
+                    raise Invalid("a board can't be moved inside itself")
+            homes = [self._card_row(cid) for cid in self._board_card_ids(board_id, shortcuts=False)]
+            if parent_id == row["parent_id"] and all(h["board_id"] == parent_id for h in homes) and (homes or not parent_id):
+                return self._board_dict(row)
+            for home in homes:
+                self._check_unlocked(home, "move")
+            leaving = homes
+            if parent_id and homes:
+                self.move_cards([homes[0]["id"]], parent_id, actor=actor)  # sets parent_id too
+                leaving = homes[1:]
+            elif parent_id:
+                db.execute("UPDATE boards SET parent_id = ? WHERE id = ?", (parent_id, board_id))
+                self._insert_card(parent_id, "board", data={"board_id": board_id}, actor=actor)
+            else:
+                db.execute("UPDATE boards SET parent_id = NULL WHERE id = ?", (board_id,))
+            for home in leaving:
+                db.execute("DELETE FROM connectors WHERE from_id = ? OR to_id = ?", (home["id"], home["id"]))
+                db.execute("DELETE FROM card_labels WHERE card_id = ?", (home["id"],))
+                db.execute("DELETE FROM cards WHERE id = ?", (home["id"],))
+                touched = [home["id"]]
+                if home["column_id"] and db.execute("SELECT 1 FROM cards WHERE id = ?", (home["column_id"],)).fetchone():
+                    self._refit_column(home["column_id"])
+                    touched.append(home["column_id"])
+                self._touch(home["board_id"], touched, actor)
+            self._touch(board_id, [], actor)
+            if row["parent_id"]:
+                self._touch(row["parent_id"], [], actor)
+            return self._board_dict(self._board_row(board_id))
 
     def duplicate_board(self, board_id: str, parent_id: str | None = None, title: str | None = None,
                         actor: str = "chris", as_template: bool = False) -> dict[str, Any]:

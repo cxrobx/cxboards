@@ -6,7 +6,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { api, type Board, type BoardState, type ChangeEvent } from './api'
 import { BoardCanvas, type Toast } from './Board'
 import { BOOKMARKLET, ClipPage } from './Clip'
-import { ContextMenu, type MenuState } from './ContextMenu'
+import { ContextMenu, type MenuItem, type MenuState } from './ContextMenu'
 import { rememberBoard, SearchPalette } from './Search'
 import { applyPalette } from './theme'
 import { ThemePicker } from './ThemePicker'
@@ -20,24 +20,92 @@ function routeFromPath(): { board: string | null; card: string | null } {
   return { board: match ? decodeURIComponent(match[1]) : null, card }
 }
 
-function BoardTree({ boards, current, onOpen }: { boards: Board[]; current: string | null; onOpen: (id: string) => void }) {
-  const kids = useMemo(() => {
-    const out = new Map<string | null, Board[]>()
-    for (const b of boards) {
-      if (b.is_template) continue
-      out.set(b.parent_id, [...(out.get(b.parent_id) ?? []), b])
-    }
-    for (const list of out.values()) list.sort((a, b) => a.title.localeCompare(b.title))
+/** Boards by parent (templates live in their own list), each list sorted by title. */
+function childrenByParent(boards: Board[]): Map<string | null, Board[]> {
+  const out = new Map<string | null, Board[]>()
+  for (const b of boards) {
+    if (b.is_template) continue
+    out.set(b.parent_id, [...(out.get(b.parent_id) ?? []), b])
+  }
+  for (const list of out.values()) list.sort((a, b) => a.title.localeCompare(b.title))
+  return out
+}
+
+/** A board and every board nested in it: the places it can't be moved into. */
+function subtreeOf(kids: Map<string | null, Board[]>, id: string): Set<string> {
+  const out = new Set([id])
+  const walk = (parent: string) => (kids.get(parent) ?? []).forEach((b) => (out.add(b.id), walk(b.id)))
+  walk(id)
+  return out
+}
+
+const TOP = '__top__'
+
+function BoardTree({
+  boards,
+  current,
+  onOpen,
+  onMove,
+}: {
+  boards: Board[]
+  current: string | null
+  onOpen: (id: string) => void
+  onMove: (id: string, parent: string | null) => void
+}) {
+  const kids = useMemo(() => childrenByParent(boards), [boards])
+  // Drag a board onto another to put it inside; onto "Top level" to bring it back out.
+  const [dragging, setDragging] = useState<string | null>(null)
+  const [over, setOver] = useState<string | null>(null)
+  const draggedParent = dragging ? boards.find((b) => b.id === dragging)?.parent_id ?? null : null
+  const blocked = useMemo(() => {
+    if (!dragging) return new Set<string>()
+    const out = subtreeOf(kids, dragging)
+    if (draggedParent) out.add(draggedParent) // already there
     return out
-  }, [boards])
+  }, [dragging, draggedParent, kids])
+  const end = () => {
+    setDragging(null)
+    setOver(null)
+  }
+  const target = (id: string | null) => {
+    const key = id ?? TOP
+    return {
+      onDragOver: (e: React.DragEvent) => {
+        if (!dragging || (id ? blocked.has(id) : !draggedParent)) return
+        e.preventDefault()
+        e.dataTransfer.dropEffect = 'move'
+        setOver(key)
+      },
+      onDragLeave: (e: React.DragEvent) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setOver((o) => (o === key ? null : o))
+      },
+      onDrop: (e: React.DragEvent) => {
+        e.preventDefault()
+        const moving = dragging
+        end()
+        if (moving) onMove(moving, id)
+      },
+    }
+  }
   const render = (parent: string | null, depth: number): React.ReactNode =>
     (kids.get(parent) ?? []).map((b) => (
       <div key={b.id}>
         <button
-          className={`tree-item${b.id === current ? ' current' : ''}`}
+          className={`tree-item${b.id === current ? ' current' : ''}${over === b.id ? ' drop-into' : ''}${
+            b.id === dragging ? ' dragging' : ''
+          }`}
           style={{ paddingLeft: 12 + depth * 14 }}
           onClick={() => onOpen(b.id)}
           title={b.title}
+          draggable
+          onDragStart={(e) => {
+            e.dataTransfer.setData('application/x-cxboards-board', b.id)
+            e.dataTransfer.effectAllowed = 'move'
+            // Next frame: changing the list inside dragstart can cancel the drag.
+            requestAnimationFrame(() => setDragging(b.id))
+          }}
+          onDragEnd={end}
+          {...target(b.id)}
         >
           <span className="tree-glyph" style={b.swatch ? { color: b.swatch.accent } : undefined}>
             {depth ? '└' : '▦'}
@@ -48,7 +116,16 @@ function BoardTree({ boards, current, onOpen }: { boards: Board[]; current: stri
         {render(b.id, depth + 1)}
       </div>
     ))
-  return <nav className="tree">{render(null, 0)}</nav>
+  return (
+    <nav className="tree">
+      {dragging && draggedParent && (
+        <div className={`tree-top${over === TOP ? ' over' : ''}`} {...target(null)}>
+          ↑ Top level
+        </div>
+      )}
+      {render(null, 0)}
+    </nav>
+  )
 }
 
 function NewBoardDialog({
@@ -433,6 +510,7 @@ function Shell() {
               .then((b) => loadBoards().then(() => open(b.id)))
               .catch((e) => showToast((e as Error).message)),
         },
+        ...(board.is_template ? [] : [{ kind: 'sub' as const, label: 'Move board into', items: moveTargets(board) }]),
         board.is_template
           ? { label: 'Stop being a template', run: () => void api.updateBoard(board.id, { is_template: false }).then(loadBoards) }
           : { label: 'Make this a template', run: () => void api.updateBoard(board.id, { is_template: true }).then(loadBoards) },
@@ -448,6 +526,48 @@ function Shell() {
         { label: 'Delete board', danger: true, run: () => void deleteBoard() },
       ],
     })
+  }
+
+  const moveBoard = async (id: string, parent: string | null) => {
+    const title = boards?.find((b) => b.id === id)?.title ?? 'The board'
+    const into = parent ? boards?.find((b) => b.id === parent)?.title ?? 'the board' : null
+    try {
+      await api.moveBoard(id, parent)
+      await loadBoards()
+      showToast(into ? `Moved “${title}” into “${into}”` : `“${title}” is a top-level board now`, {
+        label: 'Undo',
+        run: () =>
+          void api
+            .undo(id)
+            .then(loadBoards)
+            .catch((e) => showToast((e as Error).message)),
+      })
+    } catch (e) {
+      showToast((e as Error).message)
+    }
+  }
+
+  // "Move board into" for the Board menu: every board it can go inside, indented as in the sidebar.
+  const moveTargets = (board: Board): MenuItem[] => {
+    const kids = childrenByParent(boards ?? [])
+    const blocked = subtreeOf(kids, board.id)
+    const items: MenuItem[] = []
+    const walk = (parent: string | null, depth: number) =>
+      (kids.get(parent) ?? []).forEach((b) => {
+        if (blocked.has(b.id)) return
+        items.push({
+          label: `${'   '.repeat(depth)}${depth ? '└ ' : ''}${b.title}`,
+          disabled: b.id === board.parent_id,
+          run: () => void moveBoard(board.id, b.id),
+        })
+        walk(b.id, depth + 1)
+      })
+    walk(null, 0)
+    const top: MenuItem[] = board.parent_id
+      ? [{ label: 'Top level', run: () => void moveBoard(board.id, null) }, ...(items.length ? [{ kind: 'sep' as const }] : [])]
+      : []
+    const all = [...top, ...items]
+    return all.length ? all : [{ label: 'No other boards yet', disabled: true, run: () => {} }]
   }
 
   const deleteBoard = async () => {
@@ -497,7 +617,7 @@ function Shell() {
           <span>Search</span>
           <span className="hint">⌘F</span>
         </button>
-        {boards && <BoardTree boards={boards} current={current} onOpen={(id) => open(id)} />}
+        {boards && <BoardTree boards={boards} current={current} onOpen={(id) => open(id)} onMove={(id, parent) => void moveBoard(id, parent)} />}
         {boards?.some((b) => b.is_template) && (
           <div className="templates">
             <div className="section-label">Templates</div>

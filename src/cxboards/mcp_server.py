@@ -25,7 +25,8 @@ watches it live while you edit, so work in small, readable moves.
 - Never think in coordinates. Place cards with `column` (id or title) or `near` (a card
   id), or leave both out and the board finds the next free spot in reading order.
 - Group related cards into a column (group_into_column), and move a big topic onto its
-  own nested board (make_sub_board) rather than sprawling.
+  own nested board (make_sub_board) rather than sprawling. move_board files a whole
+  board inside another (a board of boards is a folder).
 - Audio cards point at files on disk (bounces in /Volumes/ChrisX/MuZik/...); CXBoards
   only reads them. Never copy or move his music files.
 - Boards are snapshotted into Onyx under Artifacts/Muzik/Boards automatically."""
@@ -313,6 +314,17 @@ def make_sub_board(board: str, card_ids: list[str], title: str) -> str:
     card = _call("POST", f"/api/boards/{board}/sub-board", {"card_ids": card_ids, "title": title})
     child = card["data"]["board_id"]
     return f"Made board {title} ({child}) from {len(card_ids)} cards. Live: {_base()}/b/{child}"
+
+
+@mcp.tool()
+def move_board(board: str, parent: str = "") -> str:
+    """Nest a whole board inside another (`parent`, id or title), or leave `parent` empty to make it
+    top-level. Its board card moves with it. Use it to file boards into a folder-like board."""
+    moved = _call("POST", f"/api/boards/{board}/move", {"parent": parent or None})
+    if not moved["parent_id"]:
+        return f"{moved['title']} ({moved['id']}) is now a top-level board."
+    home = _call("GET", f"/api/boards/{moved['parent_id']}")["board"]
+    return f"Moved {moved['title']} ({moved['id']}) inside {home['title']} ({home['id']})."
 
 
 @mcp.tool()

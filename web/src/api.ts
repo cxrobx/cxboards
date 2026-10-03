@@ -148,6 +148,7 @@ export const api = {
   updateBoard: (id: string, patch: { title?: string; description?: string; is_template?: boolean; theme?: unknown }) =>
     req<Board>('PATCH', `/api/boards/${id}`, patch),
   deleteBoard: (id: string) => req<{ ok: boolean }>('DELETE', `/api/boards/${id}`),
+  moveBoard: (id: string, parent: string | null) => req<Board>('POST', `/api/boards/${id}/move`, { parent }),
   addCard: (boardId: string, spec: Record<string, unknown>) => req<Card>('POST', `/api/boards/${boardId}/cards`, spec),
   updateCard: (id: string, patch: Record<string, unknown>) => req<Card>('PATCH', `/api/cards/${id}`, patch),
   moveCard: (id: string, body: Record<string, unknown>) => req<Card>('POST', `/api/cards/${id}/move`, body),

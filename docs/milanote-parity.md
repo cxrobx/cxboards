@@ -54,7 +54,8 @@ phases (commits aa2b1e6, 4cc5ad8, 435d5a7) and verified in the browser.
 | Delete key | ✅ | Safe once trash + undo exist |
 | Duplicate (⌘D, ⌥-drag), copy / cut / paste across boards | ✅ | |
 | Duplicate a whole board | ✅ | |
-| Move content between boards (drop on a board card, "Move to…") | ✅ | API and MCP have it; UI doesn't |
+| Move content between boards (drop on a board card, "Move to…") | ✅ | Drag onto a board card, cut and paste, or right-click ▸ Move to board |
+| Move a whole board into another (folders) | ✅ | Drag it in the sidebar (onto a board, or onto "Top level" to bring it out), or Board ▸ Move board into. A board of boards is the folder; agents use `move_board` |
 | Lock position | ✅ | |
 | Send back / forward | ✅ | |
 | Unsorted tray per board | ✅ | Where clips and agent drops land without cluttering the canvas |

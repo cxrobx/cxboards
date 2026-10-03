@@ -75,7 +75,7 @@ Data lives in `~/Library/Application Support/CXBoards/` (`cxboards.db`, `uploads
 ## Run / verify
 
 ```bash
-.venv/bin/python -m pytest -q          # 106 tests: invariants, API, export, MCP, chat, themes, phases 1-3
+.venv/bin/python -m pytest -q          # 114 tests: invariants, API, export, MCP, chat, themes, folders, phases 1-3
 app/build-app.sh                       # build + install CXBoards.app (Apple Development signed)
 scripts/selftest-app.sh                # the app's own end-to-end check (drops, dialogs, downloads, links)
 scripts/install.sh                     # build UI, (re)install LaunchAgent, wait for health
