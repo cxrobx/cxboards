@@ -1047,6 +1047,11 @@ textarea.field {
   overflow-y: auto;
 }
 
+.submenu.flip {
+  left: auto;
+  right: 100%;
+}
+
 .menu-colors {
   display: flex;
   gap: 6px;

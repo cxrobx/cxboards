@@ -1,7 +1,7 @@
 // A small right-click menu: items, separators, one level of submenus, and a
 // colour row. Closes on Escape, on a click elsewhere, or after an item runs.
 
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 
 export type MenuItem =
   | { kind?: 'item'; label: string; hint?: string; run: () => void; disabled?: boolean; danger?: boolean }
@@ -13,6 +13,32 @@ export interface MenuState {
   x: number
   y: number
   items: MenuItem[]
+}
+
+// Opens to the right of its row; flips to the left when that would run past the
+// window's edge, and slides up when it would run past the bottom.
+function Submenu({ items, close }: { items: MenuItem[]; close: () => void }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [place, setPlace] = useState<{ flip: boolean; top: number } | null>(null)
+
+  useLayoutEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const r = el.getBoundingClientRect()
+    const flip = r.right > window.innerWidth - 8
+    const over = r.bottom - (window.innerHeight - 8)
+    setPlace({ flip, top: over > 0 ? -6 - over : -6 })
+  }, [])
+
+  return (
+    <div
+      ref={ref}
+      className={`menu submenu${place?.flip ? ' flip' : ''}`}
+      style={{ top: place?.top ?? -6, visibility: place ? undefined : 'hidden' }}
+    >
+      <Items items={items} close={close} />
+    </div>
+  )
 }
 
 function Items({ items, close }: { items: MenuItem[]; close: () => void }) {
@@ -32,11 +58,7 @@ function Items({ items, close }: { items: MenuItem[]; close: () => void }) {
             >
               <span>{item.label}</span>
               <span className="hint">▸</span>
-              {open === i && (
-                <div className="menu submenu">
-                  <Items items={item.items} close={close} />
-                </div>
-              )}
+              {open === i && <Submenu items={item.items} close={close} />}
             </div>
           )
         return (
