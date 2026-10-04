@@ -63,6 +63,19 @@ def test_broken_code_is_refused_before_it_reaches_the_board(client) -> None:
 
 
 @needs_node
+def test_the_guides_examples_run_and_helpers_are_plain_names(client) -> None:
+    board = client.post("/api/boards", json={"title": "Moves"}, headers=W).json()
+    # TAU used bare at the top of setup, as the guide's dandelion does (it failed before).
+    bare = "const k = TAU / 4\nfunction setup({ w }) { return { r: lerp(10, 20, 0.5) + k } }\nfunction draw({ pen, state }) { pen.paper(); pen.dot(10, 10, clamp(state.r, 1, 3)) }"
+    assert client.post(f"/api/boards/{board['id']}/cards", json={"kind": "animation", "code": bare}, headers=AGENT).status_code == 200
+    for example in motionlib.GUIDE.split("    function setup")[1:2]:
+        code = "function setup" + example.split("\nExample, over an image card")[0]
+        code = "\n".join(line[4:] if line.startswith("    ") else line for line in code.splitlines())
+        made = client.post(f"/api/boards/{board['id']}/cards", json={"kind": "animation", "code": code}, headers=AGENT)
+        assert made.status_code == 200, made.json()
+
+
+@needs_node
 def test_an_endless_loop_is_stopped(client, monkeypatch) -> None:
     monkeypatch.setattr(motionlib, "CHECK_SECONDS", 2)
     board = client.post("/api/boards", json={"title": "Moves"}, headers=W).json()

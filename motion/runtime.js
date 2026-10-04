@@ -312,7 +312,9 @@
       '\n;return { setup: typeof setup === "function" ? setup : null, draw: typeof draw === "function" ? draw : null }'
     let made
     try {
-      made = new Function(body)()
+      // The stateless helpers are plain names in the code too, so `TAU` works without taking it
+      // from env (a setup that used it bare failed with "TAU is not defined").
+      made = new Function('TAU', 'lerp', 'clamp', 'rgba', 'ease', 'rand', body)(TAU, lerp, clamp, rgba, ease, rand)
     } catch (e) {
       throw new MotionError(`${e.name}: ${e.message}`, lineOf(e))
     }

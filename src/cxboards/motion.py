@@ -245,6 +245,8 @@ return value is env.state). Frames are drawn at ~30 fps. env holds:
   - pen.paper({color, grain}), pen.grain(amount): paper texture over what's drawn
   - common o: width (1.6), alpha, wobble (1.1 px), passes (2 = a sketchier double line)
 - noise(x, y, z) → -1..1 (smooth), rand(seed) → a seeded 0..1 generator
+- TAU, lerp, clamp, rgba, ease and rand are also plain names anywhere in the code (no need to
+  take them from env); everything else (pen, noise, palette, sizes, time) comes from env
 - ease.inOut / out / in / wave / bounce, TAU, lerp, clamp, rgba(hex, alpha)
 It runs in a sandbox: no DOM, no network, no images except env.image. Keep it under ~150 lines.
 
