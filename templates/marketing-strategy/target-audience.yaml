@@ -13,7 +13,7 @@ cards:
       **Build from evidence**
       Interviews, reviews, support tickets, analytics. Mark anything you're guessing.
   - break
-  - board: "Persona 1 — *name*"
+  - board: "Persona 1 — name"
     cards:
       - note: |
           # *Name*, *age*
@@ -33,7 +33,7 @@ cards:
       - column: Where to reach them
         cards:
           - note: Channels, communities, the people they listen to.
-  - board: "Persona 2 — *name*"
+  - board: "Persona 2 — name"
     cards:
       - note: |
           # *Name*, *age*
@@ -53,7 +53,7 @@ cards:
       - column: Where to reach them
         cards:
           - note: Channels and communities.
-  - board: "Persona 3 — *name*"
+  - board: "Persona 3 — name"
     cards:
       - note: |
           # *Name*, *age*

@@ -1,0 +1,48 @@
+name: Artist pipeline
+use_when: Working with artists as a producer — who you've found, where each conversation is, the next step for every one, and who to come back to later.
+cards:
+  - note: |
+      # Artist pipeline
+      Every card ends with its next step and a date. A beat is never the opener — the goal of a first conversation is a call.
+    color: amber
+    width: 380
+  - note: |
+      **Follow-up rhythm**
+      Said yes, then quiet: a nudge after a day or two, again after a week, then park it.
+      Said maybe: a dated reminder about a month out.
+      No reply: a friendly check-in 6–12 months later.
+  - break
+  - column: Found
+    cards:
+      - note: "*Artist* · where · one line on why them"
+  - column: Messaged
+    cards:
+      - note: What you sent and when. Next step + date.
+  - column: Replied
+    cards:
+      - note: Steer toward a call.
+  - column: Call
+    cards:
+      - note: Their story, the big vision, what's in the way.
+  - column: Proof session
+    cards:
+      - note: Only when they're on the fence. It tests the chemistry; it isn't a free song.
+  - column: Proposal
+    cards:
+      - note: Sent · accepted by reply.
+  - column: Deposit
+    cards:
+      - note: Paid before the first session.
+  - column: Project
+    cards:
+      - note: Make a Client song board for each song.
+  - break
+  - column: Follow up later
+    cards:
+      - note: Maybes, with the date to come back.
+  - column: No reply
+    cards:
+      - note: The 6–12 month check-in list.
+  - column: Gone cold
+    cards:
+      - note: Kept, not chased.

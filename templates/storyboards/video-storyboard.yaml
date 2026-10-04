@@ -14,27 +14,27 @@ cards:
       **For each scene**
       Picture it moving: the action, how the camera sees it, what we hear, and how it cuts to the next.
   - break
-  - column: "Scene 1 — *name*"
+  - column: "Scene 1 — name"
     cards:
       - note: "▣ Sketch or reference frame"
       - note: "**Action:** who does what"
       - note: "**Shot:** wide · mid · close · move"
       - note: "**Dialogue / VO:** "
       - note: "**Sound & FX:** "
-  - column: "Scene 2 — *name*"
+  - column: "Scene 2 — name"
     cards:
       - note: "▣ Sketch or reference frame"
       - note: "**Action:** "
       - note: "**Shot:** "
       - note: "**Dialogue / VO:** "
       - note: "**Sound & FX:** "
-  - column: "Scene 3 — *name*"
+  - column: "Scene 3 — name"
     cards:
       - note: "▣ Sketch or reference frame"
       - note: "**Action:** "
       - note: "**Shot:** "
       - note: "**Dialogue / VO:** "
-  - column: "Scene 4 — *name*"
+  - column: "Scene 4 — name"
     cards:
       - note: "▣ Sketch or reference frame"
       - note: "**Action:** "

@@ -13,19 +13,19 @@ cards:
       **How to read this**
       One column per subject. Tick shots off as they're captured; star the ones the client asked for by name.
   - break
-  - column: "*Subject 1*"
+  - column: "Subject 1"
     cards:
       - note: "▣ Reference image or a quick phone snap"
       - todo: Shots
         items: [Front, Three-quarter, Side, Detail, In use / in context]
       - note: "What to capture about it — e.g. the stitching, the grain, how it catches light."
-  - column: "*Subject 2*"
+  - column: "Subject 2"
     cards:
       - note: "▣ Reference image"
       - todo: Shots
         items: [Front, Three-quarter, Detail, In context]
       - note: "What to capture about it:"
-  - column: "*Subject 3*"
+  - column: "Subject 3"
     cards:
       - note: "▣ Reference image"
       - todo: Shots

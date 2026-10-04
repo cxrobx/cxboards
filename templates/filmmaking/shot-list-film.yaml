@@ -12,17 +12,17 @@ cards:
       **How to write a shot**
       Size · angle · movement · what it shows. e.g. "MCU · low · slow push in — she reads the letter"
   - break
-  - column: Scene 1 — *location*
+  - column: Scene 1 — location
     cards:
       - note: "▣ Drop a reference or a phone photo of the setup"
       - todo: Shots
         items: ["1A · WS · eye level · static — ", "1B · MS · ", "1C · CU · ", "1D · insert · "]
-  - column: Scene 2 — *location*
+  - column: Scene 2 — location
     cards:
       - note: "▣ Reference"
       - todo: Shots
         items: ["2A · ", "2B · ", "2C · "]
-  - column: Scene 3 — *location*
+  - column: Scene 3 — location
     cards:
       - note: "▣ Reference"
       - todo: Shots

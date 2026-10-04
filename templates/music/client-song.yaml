@@ -1,0 +1,61 @@
+name: Client song
+use_when: Producing a song for an artist — the discovery call, the session and debrief, the paperwork in the right order, and a delivery package that doesn't bounce back.
+cards:
+  - note: |
+      # *Artist* — *song*
+      **What it's about / how it should feel:** in their words.
+      **References:**
+      **Revisions:** up to *3–4* rounds, agreed up front.
+    color: amber
+    width: 380
+  - todo: Paperwork, in order
+    items:
+      - Proposal accepted (a reply is enough)
+      - Deposit before the first session
+      - Split sheet at the end of the song
+      - Final payment before final files
+      - Registration with the PRO about two weeks after release
+  - break
+  - column: Discovery call
+    cards:
+      - note: "**Appreciation** — what you genuinely like in their work."
+      - note: "**Their story** and the **big vision**."
+      - note: "**Objectives** and **obstacles** — what's in the way."
+      - note: "**How you'd help** — the proposal follows from this."
+  - column: Session prep
+    cards:
+      - note: Keep prep small — a few drum loops, a few chord progressions, a few starters. Enough to choose from, not a finished beat.
+  - column: Session
+    cards:
+      - note: 45–120 minutes. Record everything; choose after.
+      - note: Booked a debrief call before any files go out?
+  - column: Revisions
+    cards:
+      - note: "Round 1 — notes · date"
+      - note: "Round 2 — notes · date"
+  - column: Delivery package
+    width: 320
+    cards:
+      - todo: Files
+        items: [Master, Instrumental, A cappella, TV mix, Grouped stems]
+      - note: "Name them Song_BPM_Key_Producer."
+      - todo: Before sending
+        items: [Re-import everything into a fresh project, Listen through start to finish, Then send]
+  - break
+  - board: Writer pack
+    cards:
+      - note: |
+          # Writer pack — *for whom*
+          3–7 contrasting instrumentals that leave room for a vocal, for one writer or topliner.
+        color: amber
+      - break
+      - column: The pack
+        cards:
+          - note: "Song_BPM_Key_Producer — lease or exclusive"
+          - note: Drop each bounce here.
+      - column: Starter bank
+        cards:
+          - note: Short starters made in a weekly block, kept ready to send.
+      - column: Send log
+        cards:
+          - note: "Sent · played · replied — date and next step"

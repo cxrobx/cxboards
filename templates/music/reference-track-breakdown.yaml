@@ -29,3 +29,7 @@ cards:
     cards:
       - note: One thing to try in your next session.
       - note: One thing this song does that you don't want to.
+  - note: |
+      **Listening diet**
+      The other records you're living with this month, and what each one is teaching you.
+    color: green

@@ -13,25 +13,25 @@ cards:
       **For each frame**
       A sketch, photo or screen grab, then three lines: what happens · what the camera does · what we hear.
   - break
-  - column: Scene 1 — *name*
+  - column: Scene 1 — name
     cards:
       - note: "▣ Frame 1"
       - note: "Action · camera · sound"
       - note: "▣ Frame 2"
       - note: "Action · camera · sound"
-  - column: Scene 2 — *name*
+  - column: Scene 2 — name
     cards:
       - note: "▣ Frame 1"
       - note: "Action · camera · sound"
       - note: "▣ Frame 2"
       - note: "Action · camera · sound"
-  - column: Scene 3 — *name*
+  - column: Scene 3 — name
     cards:
       - note: "▣ Frame 1"
       - note: "Action · camera · sound"
       - note: "▣ Frame 2"
       - note: "Action · camera · sound"
-  - column: Scene 4 — *name*
+  - column: Scene 4 — name
     cards:
       - note: "▣ Frame 1"
       - note: "Action · camera · sound"

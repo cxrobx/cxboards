@@ -1,0 +1,55 @@
+name: Release (EP or album)
+use_when: Putting out a project — the tracklist of chosen masters, the cover and essay, content shot during the mix week, and the date set once it's all ready.
+theme: film
+cards:
+  - note: |
+      # *Project* — release
+      **Type:** EP · The Arc / album / project
+      **The one-line meaning:**
+      **Release date:** set once the gate is open — about two weeks out.
+    color: amber
+    width: 380
+  - todo: The gate
+    items:
+      - Every master final, mastered as a set
+      - Cover final (expect a second round)
+      - Credits and splits confirmed for every track
+  - break
+  - column: Tracklist
+    width: 340
+    cards:
+      - note: "1. *Title* — the chosen bounce (newest MM by date), file name"
+      - note: "2. *Title* — "
+      - note: "3. *Title* — "
+      - note: Singles already out can close the project — they come along for free.
+  - column: Cover
+    cards:
+      - note: "▣ Drop the raw photos, test covers and the final"
+      - note: Round 1 → round 2. Say what changed.
+  - column: Essay
+    cards:
+      - note: Concept and discussion — where it comes from, what it means to you. Signed with Love — CX.
+  - column: Content
+    cards:
+      - note: Shoot during the mix week. Vertical performance clips per track, film grade, captions.
+      - todo: Formats
+        items: [Vertical clips 9:16, Canvas loops, Square for the feed, One 16:9 piece if there's a video]
+  - break
+  - column: Out the door
+    cards:
+      - todo: ~2 weeks out
+        items: [Upload to the distributor, Pre-save link live, Editorial pitch for the focus track]
+      - todo: Release week
+        items: [chrisx.art page and essay up, Platform links checked, First clip out]
+  - column: Registration
+    cards:
+      - todo: Per track
+        items: [ISRC, PRO, MLC, SoundExchange, Split sheets filed]
+  - column: Parked after release
+    cards:
+      - note: Remasters and alternate versions. Does it replace the version on streaming — yes or no?
+  - note: |
+      **Look back — +30 days**
+      In words: what the project became, what the process taught you, what carries into the next one.
+    color: green
+    width: 340

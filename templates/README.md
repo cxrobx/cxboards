@@ -58,7 +58,7 @@ this index is stale.
 
 <!-- index:start -->
 
-**208 templates in 38 use cases.** Each lives in exactly one folder; a template that serves another use case too is listed there in *italics*.
+**213 templates in 38 use cases.** Each lives in exactly one folder; a template that serves another use case too is listed there in *italics*.
 
 ### Music
 
@@ -66,15 +66,20 @@ Studio sessions, projects and releases — planning the work and getting it out.
 
 | Template | Use it when | Slug |
 |---|---|---|
-| [Album or EP process](music/album-process.yaml) | Running a whole project from the first ideas to release — the thesis, the sound world, every song's board, the sequence and the rollout — in one place. | `album-process` |
-| [Beat pack](music/beat-pack.yaml) | Building a beat pack or a set of beats for an artist — the brief, the reference lane, every beat with its key and tempo, and what goes out the door. | `beat-pack` |
-| [Collaboration outreach](music/collab-outreach.yaml) | Finding and reaching artists or producers to work with — who, why them, the first message, and keeping track of follow-ups. | `collab-outreach` |
+| [Artist pipeline](music/artist-pipeline.yaml) | Working with artists as a producer — who you've found, where each conversation is, the next step for every one, and who to come back to later. | `artist-pipeline` |
+| [Catalog map](music/catalog-map.yaml) | Seeing the whole body of work at once — what's out and what it means, what's loading, what's resting, what's in the vault, and where it all sits in The Arc. | `catalog-map` |
+| [Client song](music/client-song.yaml) | Producing a song for an artist — the discovery call, the session and debrief, the paperwork in the right order, and a delivery package that doesn't bounce back. | `client-song` |
+| [EP or album](music/album-process.yaml) | Running a project from the first seeds to the release — a thesis held loosely, the shelf you pick from, every song's board, the sequence, and the listen that says it's done. | `album-process` |
 | [Live set plan](music/live-set-plan.yaml) | Preparing a show or a DJ / live set — the setlist and its energy, the transitions, the gear and stems, and the run of the day. | `live-set-plan` |
-| [Mix revision notes](music/mix-revision-notes.yaml) | Going back and forth on a mix or master — the notes on each version, by section and by time stamp, until it's signed off. | `mix-revision-notes` |
+| [Mix revision notes](music/mix-revision-notes.yaml) | Going back and forth on a mix or master — notes on each MM pass, by section and time stamp, until the full listen says it's done. | `mix-revision-notes` |
 | [Reference track breakdown](music/reference-track-breakdown.yaml) | Studying a song you want to learn from — its arrangement section by section, the sounds, the mix choices — so you can take one thing into your own work. | `reference-track-breakdown` |
-| [Release calendar](music/release-calendar.yaml) | Laying out a quarter or a year of releases so each one has room — what's coming out when, what it needs, and what's in production behind it. | `release-calendar` |
-| [Single rollout plan](music/single-rollout.yaml) | Releasing one song — the story you tell about it, the assets, the pitch and a week-by-week calendar from four weeks out to two weeks after. | `single-rollout` |
-| [Studio session plan](music/studio-session-plan.yaml) | Planning one studio session so the hours go to making, not deciding — the goal, the references, the setup and what has to be bounced by the end. | `studio-session-plan` |
+| [Release (EP or album)](music/release-project.yaml) | Putting out a project — the tracklist of chosen masters, the cover and essay, content shot during the mix week, and the date set once it's all ready. | `release-project` |
+| [Release (single)](music/release-single.yaml) | Putting out one song — the date opens once the master and cover are done, with about two weeks of runway, then the look back a month later. | `release-single` |
+| [Session plan](music/session-plan.yaml) | Opening a studio session in FL — the goal in one sentence, the references, a stretch of playing before choosing, and a few honest words after. | `session-plan` |
+| [Sketchbook](music/sketchbook.yaml) | Keeping a month of sketches and ideas in one place — what you made, what keeps coming back, and which ideas went into which song. | `sketchbook` |
+| [Song](music/song.yaml) | Carrying one song from the first sketch to the master — the feeling it's after, its versions, the lyrics, the credits, and how you'll know it's done. | `song` |
+| [Songs in progress](music/songs-in-progress.yaml) | Seeing every song you're carrying at once — where each one is, which are resting, and which are done — without counting anything. | `songs-in-progress` |
+| [Songwriting session](music/songwriting-session.yaml) | Writing toward a song — get everything out first, choose afterwards, then shape the keepers into verse, hook and bridge. | `songwriting-session` |
 
 ### Moodboards
 

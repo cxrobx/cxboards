@@ -12,22 +12,22 @@ cards:
   - todo: Team priorities
     items: [Priority 1, Priority 2, Priority 3]
   - break
-  - column: "*Name*"
+  - column: "Name"
     cards:
       - todo: ""
         items: ["Task · due date"]
       - note: Out of office or limited time.
-  - column: "*Name*"
+  - column: "Name"
     cards:
       - todo: ""
         items: ["Task · due date"]
       - note: Out of office or limited time.
-  - column: "*Name*"
+  - column: "Name"
     cards:
       - todo: ""
         items: ["Task · due date"]
       - note: Out of office or limited time.
-  - column: "*Name*"
+  - column: "Name"
     cards:
       - todo: ""
         items: ["Task · due date"]

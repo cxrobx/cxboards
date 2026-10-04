@@ -1,0 +1,29 @@
+name: Session plan
+use_when: Opening a studio session in FL — the goal in one sentence, the references, a stretch of playing before choosing, and a few honest words after.
+theme: studio
+cards:
+  - note: |
+      # Session — *date*
+      **What this song is about:**
+      **How each section should feel:**
+    color: amber
+    width: 340
+  - break
+  - column: Before FL
+    cards:
+      - todo: Set up
+        items: [Say the goal in one sentence, Pick a reference (optional), Open last session's card]
+  - column: References
+    cards:
+      - note: Drop bounces, links and images here.
+  - column: Play
+    cards:
+      - note: Record everything. No editing, no judging. A session counts at about 25 minutes at an instrument.
+  - column: Choose
+    cards:
+      - note: After the playing stops — move the keepers here. One idea per card.
+  - column: After the session
+    cards:
+      - todo: Close out
+        items: [Bounce and drop it here, What changed in one line, Next session starts with]
+      - note: A few words on how it felt — what helped, what didn't. No counts.

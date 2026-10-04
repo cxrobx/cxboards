@@ -10,29 +10,29 @@ cards:
     color: amber
     width: 360
   - break
-  - column: Design · *dates*
+  - column: Design · dates
     cards:
       - todo: ""
         items: [Sketch the range, Pick colours and materials, Price each piece]
-  - column: Prototype · *dates*
+  - column: Prototype · dates
     cards:
       - todo: ""
         items: [Make one of each, Use it or wear it for a week, Fix what's wrong]
-  - column: Source · *dates*
+  - column: Source · dates
     cards:
       - todo: ""
         items: [Order materials, Order packaging and labels, Check delivery times]
-  - column: Make · *dates*
+  - column: Make · dates
     cards:
       - todo: ""
         items: [Batch one, Batch two, Quality check]
       - note: Pieces finished so far.
   - break
-  - column: List · *dates*
+  - column: List · dates
     cards:
       - todo: ""
         items: [Photograph everything, Write descriptions, Set up listings, Shipping prices]
-  - column: Launch · *date*
+  - column: Launch · date
     cards:
       - todo: ""
         items: [Tell your list, Post the launch, Pack and ship orders]

@@ -1,62 +1,105 @@
-name: Album or EP process
-use_when: Running a whole project from the first ideas to release — the thesis, the sound world, every song's board, the sequence and the rollout — in one place.
+name: EP or album
+use_when: Running a project from the first seeds to the release — a thesis held loosely, the shelf you pick from, every song's board, the sequence, and the listen that says it's done.
+theme: film
 cards:
   - note: |
       # *Project title*
-      **The thesis:** what this body of work is *about*, in one sentence you'd say out loud.
-      **Done means:** *n* songs, mixed and mastered, sequenced, released on *date*.
+      **Thesis, in pencil:** one line. It's allowed to change.
+      **Place in The Arc:** the stage this one is (Awakening · Darkness · Healing · Catharsis · Metamorphosis), or outside it.
+      **The one constraint:** a rule for this project only (no guitar, one room, one drum kit…).
     color: amber
-    width: 360
+    width: 380
   - note: |
-      **Where it sits in the catalog**
-      What came before it, and what this one does that the last one didn't.
+      **Thesis changed →**
+      *date* — from … to … — because …
+  - note: "▣ Drop the cover (and its test rounds) here"
+  - swatch: "#E8A04F"
+    text: amber
+  - swatch: "#D57A4C"
+    text: terra
+  - swatch: "#7FA06A"
+    text: forest
   - break
-  - column: Themes & thesis
+  - board: Seeds & shelf
     cards:
-      - note: The two or three ideas every song circles back to.
-      - note: Lines, phrases or images that keep coming up in your notes.
-      - note: What you're afraid to say on this one (that's usually the record).
-  - column: Sound world
+      - note: |
+          # Seeds & shelf
+          Make far more than you keep. Everything that might belong — old sketches off the shelf and new ones — goes here first. No counts.
+        color: amber
+      - break
+      - column: Seeds
+        cards:
+          - note: Sketches, demos and ideas in contention. One card each.
+      - column: Keeps coming back
+        cards:
+          - note: The ones you can't stop returning to.
+      - column: On the record
+        cards:
+          - note: Picked. One line on why it belongs to this record's feeling.
+      - column: Cut, and why
+        cards:
+          - note: Cut for the record's feel, not because it's bad. Say why, and move it to the vault for another life.
+  - board: Where it comes from
     cards:
-      - note: Palette — instruments, textures, the room it lives in.
-      - note: Reference records, one line each on what you're taking.
-      - note: "Rules: what this project never does."
-  - column: Collaborators
+      - note: The season of your life this comes out of. Write it plainly; it may become the essay.
+      - column: Mood board
+        cards:
+          - note: "▣ Drop photos, film stills, colours, places"
+      - column: Listening diet
+        cards:
+          - note: What you're listening to while you make this, and why.
+  - board: Sound world & collaborators
     cards:
-      - note: Who's on it and what each one brings.
-      - todo: Asks
-        items:
-          - Features
-          - Engineer / mix
-          - Artwork
-  - break
-  - board: The songs
+      - column: Palette
+        cards:
+          - note: Instruments, textures, the room it lives in.
+          - note: "Rules: what this project never does."
+      - column: Collaborators
+        cards:
+          - note: Who, what they bring, and the brief you sent them.
+          - todo: Paperwork
+            items: [Brief sent, Split sheet agreed, Credits confirmed]
+  - board: Songs
     folder: true
     cards:
-      - note: One board per song. Duplicate *Song template* for each new one and move it in here.
-      - board: Song template
+      - note: One Song board each (New board from template ▸ Music ▸ Song), moved in here. Or duplicate the starter below.
+      - board: Song starter
         cards:
           - note: |
-              # *Song title*
-              **Key / BPM:**  **Status:** idea · writing · tracking · mixing · done
-          - column: Lyrics
+              # *Title*
+              **What it's about:**
+              **How each section should feel:**
+              **Key moment:**
+          - column: Versions
             cards:
-              - note: Verse / hook drafts.
-          - column: Production notes
-            cards:
-              - note: What the beat is doing and where it's going.
-          - todo: To finish
-            items: [Vocals tracked, Arrangement locked, Mix approved, Master approved]
-  - column: Sequencing & arc
+              - note: Sketch → demo / unfin → rough mix → MM passes (keeper = newest MM) → master
+          - note: "**Hands off to →** the next track"
+  - break
+  - column: Sequencing (before mixing)
+    width: 320
     cards:
-      - note: The order, and the feeling you want between each pair of songs.
+      - note: The order, while you still have every option. The feeling between each pair of songs.
       - note: Opener — what it promises. Closer — what it leaves behind.
-  - column: Rollout
+      - todo: Still to finish
+        items: [Every song has a demo, Every song has a final vocal, Every song mixed, Mastered as a set]
+  - column: The ending
     cards:
-      - note: The single(s), and why those.
-      - todo: Release checklist
-        items:
-          - Distribution and splits set up
-          - Artwork and credits final
-          - Pre-save live
-          - Content plan for the four weeks around release
+      - note: How it all ties together. What the last song answers.
+  - column: Done when
+    cards:
+      - note: The drive listen — the whole thing, front to back, no skipping. If it doesn't move you, it isn't it yet.
+      - note: Good enough beats another polish loop.
+  - column: Budget
+    width: 340
+    cards:
+      - note: |
+          | Item | Estimate | Actual |
+          |---|---|---|
+          | Mixing / mastering | | |
+          | Features | | |
+          | Cover / photos | | |
+          | Video / content | | |
+          | Distribution | | |
+  - board: Release
+    cards:
+      - note: When it's done, make a board from Music ▸ Release (EP or album) and move it in here.

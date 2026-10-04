@@ -12,19 +12,19 @@ cards:
       **When you review**
       Talk about colour, composition, mood and texture. Say what you'd keep from the options you don't pick.
   - break
-  - column: Option A — *name*
+  - column: Option A — name
     cards:
       - note: "▣ Drop the frame (render, illustration or GIF)"
       - note: The thinking, in two or three lines. What makes it different?
       - swatch: "#1D3557"
         text: Main colour
-  - column: Option B — *name*
+  - column: Option B — name
     cards:
       - note: "▣ Drop the frame"
       - note: The thinking, in two or three lines.
       - swatch: "#E76F51"
         text: Main colour
-  - column: Option C — *name*
+  - column: Option C — name
     cards:
       - note: "▣ Drop the frame"
       - note: The thinking, in two or three lines.

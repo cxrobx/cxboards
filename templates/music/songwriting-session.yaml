@@ -1,0 +1,37 @@
+name: Songwriting session
+use_when: Writing toward a song — get everything out first, choose afterwards, then shape the keepers into verse, hook and bridge.
+cards:
+  - note: |
+      # Writing — *date*
+      **The question that started it:**
+      **What it's about / the feeling:**
+      **Constraint for today (optional):** one word, one sound, one rule.
+    color: amber
+    width: 360
+  - note: |
+      **Working rules**
+      Don't edit while you play. Fragments are fine. Nothing gets rated today.
+  - break
+  - column: Play (record everything)
+    width: 320
+    cards:
+      - note: Lines, phrases, images. As fast as they come.
+      - note: Freestyle takes and voice memos — drop them here, name them after the line that stuck.
+      - note: Object writing — ten minutes on one thing you can see, hear, smell, touch.
+  - column: Choose
+    cards:
+      - note: Move the keepers here after the playing stops. Mark the ones that keep coming back.
+  - column: Shape
+    cards:
+      - note: "**Hook** — the line it's built on."
+      - note: "**Verse 1**"
+      - note: "**Verse 2**"
+      - note: "**Bridge / switch-up**"
+  - column: Rejected directions
+    cards:
+      - note: What you tried and dropped, and why. Saves you trying it again next week.
+  - break
+  - note: |
+      **After**
+      In words, not counts: what came easily, what didn't, and the line to start from next time.
+    color: green

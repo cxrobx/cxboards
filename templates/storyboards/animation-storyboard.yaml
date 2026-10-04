@@ -13,28 +13,28 @@ cards:
       **Read each frame as motion**
       A frame is a still — write how it moves, how long it holds, and how it hands to the next one.
   - break
-  - column: "Scene 1 — *name*"
+  - column: "Scene 1 — name"
     cards:
       - note: "▣ Sketch or reference frame"
       - note: "**Action:** what moves, and how the character behaves"
       - note: "**Camera:** framing and any move · **Time:** *s*"
       - note: "**Sound / VO:** "
       - note: "**Into next:** cut, match, wipe, morph"
-  - column: "Scene 2 — *name*"
+  - column: "Scene 2 — name"
     cards:
       - note: "▣ Sketch or reference frame"
       - note: "**Action:** "
       - note: "**Camera:**  **Time:** "
       - note: "**Sound / VO:** "
       - note: "**Into next:** "
-  - column: "Scene 3 — *name*"
+  - column: "Scene 3 — name"
     cards:
       - note: "▣ Sketch or reference frame"
       - note: "**Action:** "
       - note: "**Camera:**  **Time:** "
       - note: "**Sound / VO:** "
       - note: "**Into next:** "
-  - column: "Scene 4 — *name*"
+  - column: "Scene 4 — name"
     cards:
       - note: "▣ Sketch or reference frame"
       - note: "**Action:** "

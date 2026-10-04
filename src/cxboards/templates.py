@@ -167,10 +167,14 @@ def _check_cards(cards: Any, where: str, depth: int = 0, in_column: bool = False
         elif kind == "column":
             if not isinstance(card["column"], str) or not card["column"].strip():
                 raise TemplateError(f"{here}: a column needs a title")
+            if re.search(r"\*\S", card["column"]):
+                raise TemplateError(f"{here}: a column title is plain text; the board doesn't render markdown in it")
             _check_cards(card.get("cards") or [], f"{here}.cards", depth, in_column=True)
         elif kind == "board":
             if not isinstance(card["board"], str) or not card["board"].strip():
                 raise TemplateError(f"{here}: a board needs a title")
+            if re.search(r"\*\S", card["board"]):
+                raise TemplateError(f"{here}: a board title is plain text; the board doesn't render markdown in it")
             if depth + 1 > MAX_DEPTH:
                 raise TemplateError(f"{here}: boards nest at most {MAX_DEPTH} deep in a template")
             _check_cards(card.get("cards") or [], f"{here}.cards", depth + 1)

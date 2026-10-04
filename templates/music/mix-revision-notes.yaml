@@ -1,28 +1,34 @@
 name: Mix revision notes
-use_when: Going back and forth on a mix or master — the notes on each version, by section and by time stamp, until it's signed off.
+use_when: Going back and forth on a mix or master — notes on each MM pass, by section and time stamp, until the full listen says it's done.
 cards:
   - note: |
       # *Song* — mix notes
-      **Mixer / engineer:**
+      **Mixing / mastering:** you, or *engineer*
       **Reference to match:**
-      **Signed off when:** you'd play it next to the reference without flinching.
+      **The keeper:** the newest MM export by date — MMX can still be a pass in progress.
     color: amber
-    width: 340
+    width: 360
   - todo: Listen on
     items: [Studio monitors, Headphones, Phone speaker, Car, Earbuds at low volume]
+  - note: |
+      **Loudness**
+      Integrated LUFS · true peak — note it in the file name of the master, as you did on Catharsis.
   - break
-  - column: v1
+  - column: Rough mix
     cards:
-      - note: Drop the bounce here.
+      - note: Drop the bounce. What it needs most, in one line.
+  - column: MM1
+    cards:
+      - note: Drop the export.
       - note: "0:00 — note"
-  - column: v2
+  - column: MM2
     cards:
-      - note: Drop the bounce here.
-      - note: "What changed since v1:"
-  - column: v3
+      - note: Drop the export.
+      - note: "What changed since MM1:"
+  - column: Next MM
     cards:
-      - note: Drop the bounce here.
-  - column: Signed off
+      - note: Add a column per pass. Stop when a full listen feels right — another loop rarely makes it better.
+  - column: Master
     cards:
       - todo: Final
-        items: [Mix approved, Master approved, Instrumental and clean versions, Stems archived]
+        items: [Master approved, Instrumental, Clean version, Stems archived]

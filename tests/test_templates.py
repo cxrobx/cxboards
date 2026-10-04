@@ -83,6 +83,7 @@ GOOD = "name: {name}\nuse_when: Testing.\ncards:\n  - note: Hello\n"
         ({"c/one.yaml": GOOD.format(name="One")}, "not a category"),
         ({"a/One.yaml": GOOD.format(name="One")}, "lowercase-with-dashes"),
         ({"a/one.yaml": "name: One\nuse_when: x\ncards:\n  - todo: T\n    items: ['*bold* step']\n"}, "plain text"),
+        ({"a/one.yaml": "name: One\nuse_when: x\ncards:\n  - column: Scene *name*\n"}, "column title is plain text"),
     ],
 )
 def test_format_mistakes_name_the_file_and_the_problem(tmp_path: Path, files: dict, message: str) -> None:
@@ -103,7 +104,7 @@ def test_rows_break_and_wrap() -> None:
 
 def test_search_puts_name_matches_first() -> None:
     hits = lib.search(LIBRARY, "session plan")
-    assert hits and hits[0].slug == "studio-session-plan"
+    assert hits and hits[0].slug == "session-plan"
     assert all(t.category == "music" or "music" in t.also for t in lib.search(LIBRARY, category="music"))
     assert lib.search(LIBRARY, "zzzz-nothing") == []
     # Filler words don't count, and "mood board" finds the moodboards.
@@ -128,14 +129,14 @@ def test_api_lists_and_builds_from_the_library(client) -> None:
     assert found[0]["slug"] == "mix-revision-notes" and found[0]["preview"]
     assert client.get("/api/templates/nope").status_code == 404
 
-    made = client.post("/api/boards", json={"title": "", "template": "single-rollout"}, headers=W).json()
-    assert made["title"] == "Single rollout plan"
+    made = client.post("/api/boards", json={"title": "", "template": "release-single"}, headers=W).json()
+    assert made["title"] == "Release (single)"
     state = client.get(f"/api/boards/{made['id']}").json()
-    assert len(state["cards"]) == lib.count_cards(LIBRARY.templates["single-rollout"].cards)
+    assert len(state["cards"]) == lib.count_cards(LIBRARY.templates["release-single"].cards)
 
     folder = client.post("/api/boards", json={"title": "Sessions"}, headers=W).json()
     inside = client.post(
-        "/api/boards", json={"title": "Oct 4", "template": "studio-session-plan", "parent": folder["id"]}, headers=AGENT
+        "/api/boards", json={"title": "Oct 4", "template": "session-plan", "parent": folder["id"]}, headers=AGENT
     ).json()
     assert inside["parent_id"] == folder["id"] and inside["theme"] == {"preset": "studio"}
 
@@ -145,10 +146,10 @@ def test_agents_find_and_use_templates(client) -> None:
     try:
         overview = m.list_templates()
         assert "categories" in overview and "- music · Music" in overview
-        assert "studio-session-plan" in m.list_templates(category="music")
-        assert m.list_templates(query="beat pack").startswith("- beat-pack")
-        assert "Created Beat pack" in m.create_board("", template="beat-pack")
-        assert "Beat pack" in m.list_boards()
+        assert "session-plan" in m.list_templates(category="music")
+        assert m.list_templates(query="artist pipeline").startswith("- artist-pipeline")
+        assert "Created Song" in m.create_board("", template="song")
+        assert "Song (" in m.list_boards()
     finally:
         m.set_client(None)  # type: ignore[arg-type]
 

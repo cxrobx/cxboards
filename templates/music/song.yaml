@@ -1,0 +1,53 @@
+name: Song
+use_when: Carrying one song from the first sketch to the master — the feeling it's after, its versions, the lyrics, the credits, and how you'll know it's done.
+cards:
+  - note: |
+      # *Release title*
+      **Working title:** *untitled0703*
+      **What it's about:**
+      **How each section should feel:** intro · verse · hook · bridge · outro
+      **Goal in one sentence:**
+      **Reference (optional):**
+    color: amber
+    width: 380
+  - note: |
+      **Facts**
+      BPM · key · CX × *collaborators*
+      **My role:** producer · featured · both
+      **Folder:** MuZik/*year*/*Mon year*/
+  - note: |
+      **Key moment**
+      The four seconds this song exists for. Protect them in every version.
+  - break
+  - column: Versions
+    width: 320
+    cards:
+      - note: "**Sketch** — the first bounce. Drop it here."
+      - note: "**Demo / unfin** — topline and vocals over it."
+      - note: "**Rough mix**"
+      - note: "**MM passes** — drop each export. The keeper is the newest MM by date; MMX can still be a pass in progress."
+      - note: "**Master** — the .wav that ships."
+  - column: Lyrics
+    width: 320
+    cards:
+      - note: Drafts, newest on top. Keep the lines you cut at the bottom; they come back.
+  - column: Session notes
+    cards:
+      - note: One line per session — what changed, and where the next one starts.
+  - column: Resting
+    cards:
+      - note: Parked on purpose. A song resting for months isn't stalled — say what it's waiting for, if you know.
+  - break
+  - todo: Credits & splits (when it's written, not when it's released)
+    items:
+      - Who wrote, played, sang, produced
+      - Split sheet agreed — composition and master
+      - Samples noted and clearance asked as soon as one is kept
+      - Registered with the PRO and MLC
+  - note: |
+      **Done when**
+      A full listen, start to finish, and it gives you the feeling in the first card. Good enough beats another polish loop.
+    color: green
+  - note: |
+      **Hands off to →**
+      What this song leaves the listener with, and what comes next (on a project, the next track).

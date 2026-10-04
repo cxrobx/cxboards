@@ -1,0 +1,34 @@
+name: Sketchbook
+use_when: Keeping a month of sketches and ideas in one place — what you made, what keeps coming back, and which ideas went into which song.
+cards:
+  - note: |
+      # Sketchbook — *Month year*
+      Mirrors the month folder: MuZik/*year*/*Mon year*/.
+      Nothing here is rated. Flag what keeps coming back.
+    color: amber
+    width: 360
+  - break
+  - column: This month's sketches
+    width: 320
+    cards:
+      - note: Drop each bounce here (untitled0703, 102125…) with one line on what it is.
+  - column: Keeps coming back
+    cards:
+      - note: The sketches you keep reopening or humming. Move them here; no scores.
+  - column: Shortlist
+    cards:
+      - note: The ones getting a Song board. Note the board, and the folder they moved to.
+  - break
+  - column: Idea bank
+    width: 320
+    cards:
+      - note: Titles.
+      - note: Hooks and lines.
+      - note: Voice memos — the memo and its words on the same card.
+      - note: Sounds, samples, chord shapes.
+  - column: Used
+    cards:
+      - note: "An idea that went into a song: move it here and add → *song*."
+  - column: Listening this month
+    cards:
+      - note: What you're listening to, and the one thing you're taking from each.

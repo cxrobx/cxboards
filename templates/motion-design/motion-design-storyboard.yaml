@@ -13,19 +13,19 @@ cards:
       **Under each frame**
       What moves · how it hands to the next frame · the VO line or sound.
   - break
-  - column: Open — *name*
+  - column: Open — name
     cards:
       - note: "▣ Frame — sketch, render or GIF"
       - note: "Motion · transition · VO / sound"
-  - column: Set-up — *name*
+  - column: Set-up — name
     cards:
       - note: "▣ Frame"
       - note: "Motion · transition · VO / sound"
-  - column: Turn — *name*
+  - column: Turn — name
     cards:
       - note: "▣ Frame"
       - note: "Motion · transition · VO / sound"
-  - column: Payoff — *name*
+  - column: Payoff — name
     cards:
       - note: "▣ Frame"
       - note: "Motion · transition · VO / sound"

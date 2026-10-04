@@ -45,12 +45,12 @@ cards:
   - board: Shot list
     cards:
       - note: "One column per subject. ▣ A reference image on top, the shots underneath."
-      - column: "*Subject 1*"
+      - column: "Subject 1"
         cards:
           - note: "▣ Reference"
           - todo: Shots
             items: [Wide, Mid, Detail]
-      - column: "*Subject 2*"
+      - column: "Subject 2"
         cards:
           - note: "▣ Reference"
           - todo: Shots

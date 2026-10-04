@@ -1,0 +1,44 @@
+name: Release (single)
+use_when: Putting out one song — the date opens once the master and cover are done, with about two weeks of runway, then the look back a month later.
+theme: film
+cards:
+  - note: |
+      # *Song* — single
+      **The one-line meaning:** the line that goes on the site under the title.
+      **Release date:** set it once the gate below is open — about two weeks out.
+    color: amber
+    width: 380
+  - todo: The gate
+    items:
+      - Final master (the keeper — newest MM by date, exported as .wav)
+      - Cover final (expect a second round)
+      - Credits and splits confirmed
+  - break
+  - column: Cover
+    cards:
+      - note: "▣ Drop the raw photo and the edit"
+      - note: Round 1 → round 2. Say what changed.
+  - column: Content
+    cards:
+      - note: Shoot it during the mix week, not after. Vertical performance clips — guitar, keys, a section of the song — with the film grade and captions.
+      - todo: Formats
+        items: [Vertical clips 9:16, Canvas loop, Square for the feed]
+  - column: Out the door
+    cards:
+      - todo: ~2 weeks out
+        items: [Upload to the distributor, Pre-save link live, Editorial pitch sent]
+      - todo: Release week
+        items: [chrisx.art page up, Platform links checked, Post the first clip]
+  - column: Registration
+    cards:
+      - todo: ""
+        items: [ISRC, PRO, MLC, SoundExchange, Split sheet filed]
+  - break
+  - column: Parked after release
+    cards:
+      - note: Remaster ideas and old mixes go here. One question decides them — does it replace the version on streaming, yes or no?
+  - note: |
+      **Look back — +30 days**
+      In words, not numbers: what felt good to put out, what you'd do differently, and what this song taught the next one.
+    color: green
+    width: 340

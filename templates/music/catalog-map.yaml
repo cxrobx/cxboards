@@ -1,0 +1,31 @@
+name: Catalog map
+use_when: Seeing the whole body of work at once — what's out and what it means, what's loading, what's resting, what's in the vault, and where it all sits in The Arc.
+theme: film
+cards:
+  - note: |
+      # Catalog
+      No dates and no pacing here — a release date never drives the sessions.
+    color: amber
+    width: 340
+  - break
+  - column: The Arc
+    width: 320
+    cards:
+      - note: "**Awakening** — *one-line meaning*"
+      - note: "**Darkness** — "
+      - note: "**Healing** — "
+      - note: "**Catharsis** — "
+      - note: "**Metamorphosis** — "
+  - column: Out
+    width: 320
+    cards:
+      - note: "*Release* · single / EP · its one-line meaning"
+  - column: Loading
+    cards:
+      - note: In progress, and the project it's heading for, if any.
+  - column: Resting
+    cards:
+      - note: Parked on purpose.
+  - column: Vault
+    cards:
+      - note: Kept for another life.

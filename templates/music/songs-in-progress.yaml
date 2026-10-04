@@ -1,0 +1,38 @@
+name: Songs in progress
+use_when: Seeing every song you're carrying at once — where each one is, which are resting, and which are done — without counting anything.
+cards:
+  - note: |
+      # Songs in progress
+      One card per song (a Song board or a note). Move it when it moves.
+      No targets, no counts — just where each one is.
+    color: amber
+    width: 360
+  - note: |
+      **Stages**
+      Sketch → Demo / unfin → Rough mix → MM passes (keeper = newest MM by date) → Master → Done.
+  - break
+  - column: Sketch
+    cards:
+      - note: "*Working title* — one line"
+  - column: Demo / unfin
+    cards:
+      - note: "*Working title*"
+  - column: Rough mix
+    cards:
+      - note: "*Working title*"
+  - column: Mixing (MM)
+    cards:
+      - note: "*Working title* — newest MM"
+  - column: Master
+    cards:
+      - note: "*Release title*"
+  - break
+  - column: Resting
+    cards:
+      - note: Parked on purpose, no stale warning. What it's waiting for, if you know.
+  - column: Done
+    cards:
+      - note: Passed the full listen. Ready for a release board.
+  - column: Vault
+    cards:
+      - note: Kept for another life. Cut from a project isn't cut forever.

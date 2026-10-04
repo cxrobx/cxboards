@@ -19,22 +19,22 @@ cards:
     cards:
       - note: Show name, who you are, what this episode is about.
       - note: "▣ Drop the theme music here"
-  - column: Segment 1 · *time*
+  - column: Segment 1 · time
     cards:
       - note: Narration.
       - note: "**Sound / clip:** what plays, and where"
-  - column: Segment 2 · *time*
+  - column: Segment 2 · time
     cards:
       - note: Narration.
       - note: "**Transition:** the line that hands to the next segment"
   - break
-  - column: Break · *time*
+  - column: Break · time
     cards:
       - note: Sponsor read or a call to action.
-  - column: Segment 3 · *time*
+  - column: Segment 3 · time
     cards:
       - note: Narration.
-  - column: Outro · *time*
+  - column: Outro · time
     cards:
       - note: The takeaway in a sentence.
       - note: Thanks, credits, what's next week.
