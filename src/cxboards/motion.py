@@ -141,7 +141,7 @@ def poster(card: dict[str, Any], palette: dict[str, str], image: Path | None, ou
 
 
 def sheet(card: dict[str, Any], palette: dict[str, str], image: Path | None) -> bytes:
-    """Four frames (0, ¼, ½, ¾ of the loop) in one PNG: what an agent looks at to judge its work."""
+    """Four frames (0, 27%, 55%, 84% of the loop; uneven, see render.mjs) in one PNG: what an agent looks at to judge its work."""
     with tempfile.TemporaryDirectory() as tmp:
         out = Path(tmp) / "sheet.png"
         _run({**_job(card, palette, image, width=min(float(card.get("w") or 360), 420)), "mode": "sheet", "scale": 1.5, "out": str(out)}, RENDER_SECONDS)

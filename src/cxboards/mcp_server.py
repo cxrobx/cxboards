@@ -231,7 +231,7 @@ def animation_code(card_id: str) -> str:
 
 @mcp.tool(structured_output=False)  # a picture, not JSON (the default tried to serialize it)
 def preview_animation(card_id: str) -> list[Any]:
-    """Four frames of an animated card (at 0, ¼, ½ and ¾ of its loop) in one picture, rendered from
+    """Four frames of an animated card (at 0, 27%, 55% and 84% of its loop: uneven, so a beat-locked motion still shows) in one picture, rendered from
     its code with the board's colours. Look at it before telling Chris it's done: is the subject
     clear, does it fit the board, does the last frame lead back into the first?"""
     try:
@@ -244,7 +244,7 @@ def preview_animation(card_id: str) -> list[Any]:
         except ValueError:
             message = resp.text
         raise ValueError(f"CXBoards said: {message}")
-    return [Image(data=resp.content, format="png"), f"{card_id}: frames at 0, ¼, ½ and ¾ of the loop."]
+    return [Image(data=resp.content, format="png"), f"{card_id}: frames at 0, 27%, 55% and 84% of the loop."]
 
 
 @mcp.tool()

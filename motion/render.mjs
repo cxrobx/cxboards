@@ -3,7 +3,7 @@
 //
 //   mode "check"   run setup and a dozen frames across the loop; report the first error
 //   mode "poster"  one PNG at phase `at` (default 0.25) → out
-//   mode "sheet"   a 2×2 contact sheet at phases 0, ¼, ½, ¾ → out (what an agent looks at)
+//   mode "sheet"   a 2×2 contact sheet at uneven phases (see SHEET) → out (what an agent looks at)
 //   mode "frames"  every frame of one loop at `fps` → out/frame-0001.png… (for ffmpeg)
 //
 // job: { mode, code, loop, width, height, scale, palette, image (a file path or null), out, at, fps }
@@ -15,6 +15,11 @@ import { join } from 'node:path'
 import './runtime.js'
 
 const { CXMotion } = globalThis
+
+// Where the contact sheet samples the loop. Uneven on purpose: evenly spaced frames all catch the
+// same point of anything that repeats 2, 4 or 8 times per loop (a beat), so it looks frozen. These
+// fall on different points of a beat that divides the loop by 2, 3, 4, 8 or 16.
+const SHEET = [0, 0.27, 0.55, 0.84]
 
 function reply(result) {
   process.stdout.write(JSON.stringify(result))
@@ -68,7 +73,7 @@ async function main() {
       s.fillStyle = '#2b2b2b'
       s.fillRect(0, 0, sheet.width, sheet.height)
       s.font = `${13 * scale}px sans-serif`
-      const phases = [0, 0.25, 0.5, 0.75]
+      const phases = SHEET
       phases.forEach((p, i) => {
         motion.frame(motion.loop * p)
         const x = pad + (i % 2) * (cw + pad)
