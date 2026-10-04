@@ -30,6 +30,9 @@ def card_line(card: dict[str, Any]) -> str:
         body = f"{data.get('name')} ({data.get('path')}){copied}" + (f" — {_one_line(card['text'], 100)}" if card["text"] else "")
     elif kind == "swatch":
         body = data.get("hex", "") + (f" — {_one_line(card['text'], 100)}" if card["text"] else "")
+    elif kind == "animation":
+        motion = data.get("motion") or {}
+        body = f"{_one_line(card['text'], 100) or 'untitled'} ({motion.get('loop', 6):g}s loop)"
     elif kind == "sketch":
         body = f"sketch, {len(data.get('paths', []))} strokes" + (f" — {_one_line(card['text'], 100)}" if card["text"] else "")
     elif kind == "board":
@@ -37,6 +40,11 @@ def card_line(card: dict[str, Any]) -> str:
         body = f"→ {child.get('title', '?')} ({child.get('id', data.get('board_id'))}, {child.get('card_count', 0)} cards)"
     else:
         body = _one_line(card["text"])
+    motion = data.get("motion")
+    if kind == "image" and motion:
+        body += f" ·animated ({motion.get('loop', 6):g}s loop)"
+    if motion and motion.get("error"):
+        body += f" ·ANIMATION ERROR: {motion['error']}"
     by = " ·agent" if card.get("updated_by") == "agent" else ""
     by += " ·locked" if card.get("locked") else ""
     return f"[{kind} {cid}{by}] {body}"

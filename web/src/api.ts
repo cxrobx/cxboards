@@ -16,6 +16,7 @@ export type Kind =
   | 'board'
   | 'swatch'
   | 'sketch'
+  | 'animation'
 
 export interface TodoItem {
   text: string
@@ -235,6 +236,7 @@ export const api = {
       'GET',
       `/api/templates?q=${encodeURIComponent(q)}&category=${encodeURIComponent(category)}`,
     ),
+  setMotion: (id: string, code: string, loop?: number) => req<Card>('POST', `/api/cards/${id}/motion`, { code, loop }),
   thumbnailFromPath: (id: string, path: string) => req<Card>('POST', `/api/cards/${id}/thumbnail`, { path }),
 }
 

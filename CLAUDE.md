@@ -71,6 +71,21 @@ user, never deployed. Built 2026-10-02 to plan creative sessions next to the art
   `create_board(template=slug)`. Check new files with `scripts/check-template.py`. Boards Chris
   makes into templates are still DB boards (`is_template`), shown under *Yours*.
 
+- **Animations** (`motion/`, `src/cxboards/motion.py`, `web/src/Motion.tsx`): a picture that moves,
+  every frame drawn with JavaScript (Kevin Ngo's style; Milanote's "Head in the Clouds" cover): an
+  `animation` card, or an `image` card with `data.motion = {code, loop}` drawing over its picture.
+  `motion/runtime.js` is the one drawing runtime (a hand-drawn `pen`, noise, easing, `cover()`),
+  run in two places: the board's `<iframe sandbox="allow-scripts">` at `/motion/runner` (served
+  with a CSP that allows no loads or connections; a worker on an OffscreenCanvas, a 2-second
+  watchdog), and `motion/render.mjs` in Node with `@napi-rs/canvas` (`motion/node_modules`, run
+  `npm install` there) for the check before every save (broken or endless code is refused),
+  previews for agents, the poster frame snapshots show, and mp4/gif export. Node is found even
+  under nvm (`motion.find_node`). The board plays only what's on screen, not zoomed far out, six
+  at once, and under Reduce Motion only on hover. Made from Ask or agents: `motion_guide` (the
+  questions to ask first, the style, the API), `add_cards` kind animation, `animate`,
+  `animation_code`, `preview_animation` (an image: it must stay `structured_output=False`). By
+  hand: right-click ▸ Animate… (Ask) / Animation code / Export.
+
 Data lives in `~/Library/Application Support/CXBoards/` (`cxboards.db`, `uploads/`,
 `export/`). `CXBOARDS_HOME` / `CXBOARDS_PORT` override both (the tests do).
 
@@ -92,13 +107,14 @@ Data lives in `~/Library/Application Support/CXBoards/` (`cxboards.db`, `uploads
    `:4870/api/cards/<id>/file`. Onyx refuses symlinks outside its folders (tried: 404).
 6. Local-only guard: Host must be 127.0.0.1/localhost, and every write needs the
    `X-CXBoards: 1` header (cross-site forms/fetches can't send it without a preflight).
-7. Snapshots never carry `<script>`: note HTML is escaped, and drawing strokes are stored
-   only as path commands + numbers with hex colours.
+7. Snapshots never carry `<script>`: note HTML is escaped, drawing strokes are stored
+   only as path commands + numbers with hex colours, and an animation shows its poster frame.
+   Animation code runs only in the sandbox (no same-origin, no network) or server-side in Node.
 
 ## Run / verify
 
 ```bash
-.venv/bin/python -m pytest -q          # 343 tests: invariants, API, export, MCP, chat, themes, folders, templates (each built), phases 1-3
+.venv/bin/python -m pytest -q          # 357 tests: invariants, API, export, MCP, chat, themes, folders, templates (each built), animations, phases 1-3
 app/build-app.sh                       # build + install CXBoards.app (Apple Development signed)
 scripts/selftest-app.sh                # the app's own end-to-end check (drops, dialogs, sidebar, downloads, links)
 scripts/install.sh                     # build UI, (re)install LaunchAgent, wait for health

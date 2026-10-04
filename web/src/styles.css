@@ -2514,3 +2514,87 @@ body,
   border-radius: 6px;
   padding: 6px;
 }
+
+/* ---------- animations (Motion.tsx): drawing code played in a sandboxed frame over the card ---------- */
+
+.moving {
+  position: relative;
+}
+
+.animation-card .moving {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 6px;
+  background: var(--canvas);
+}
+
+.motion {
+  position: absolute;
+  inset: 0;
+}
+
+/* Clicks go through to the card: the frame only draws. */
+.motion-frame,
+.motion-poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  pointer-events: none;
+  background: transparent;
+}
+
+.motion-poster {
+  object-fit: cover;
+}
+
+.motion-error {
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  bottom: 6px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: var(--clay);
+  color: #fff;
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dialog.motion-editor {
+  width: min(900px, 94vw);
+}
+
+.motion-editor header {
+  align-items: center;
+}
+
+.motion-editor .loop {
+  display: inline-block;
+  width: 64px;
+  min-height: 0;
+  padding: 2px 6px;
+}
+
+.motion-editor .code {
+  height: 46vh;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre;
+  tab-size: 2;
+}
+
+.motion-error-text {
+  margin: 0;
+  color: var(--clay);
+  font-size: 12px;
+}
+
+.motion-frames {
+  max-width: 100%;
+  border-radius: 6px;
+}

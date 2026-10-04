@@ -1,0 +1,9 @@
+{
+  "name": "cxboards-motion",
+  "private": true,
+  "description": "Renders CXBoards animation cards on the server: checks, previews, posters and video export (render.mjs). The same runtime.js runs in the board's sandboxed frames.",
+  "type": "module",
+  "dependencies": {
+    "@napi-rs/canvas": "^1.0.10"
+  }
+}

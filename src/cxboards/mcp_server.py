@@ -13,7 +13,7 @@ from typing import Any
 from urllib.parse import quote
 
 import httpx
-from mcp.server.fastmcp import FastMCP
+from mcp.server.fastmcp import FastMCP, Image
 
 from .config import load_config
 
@@ -29,7 +29,10 @@ watches it live while you edit, so work in small, readable moves.
   board inside another (a board of boards is a folder).
 - Audio cards point at files on disk (bounces in /Volumes/ChrisX/MuZik/...); CXBoards
   only reads them. Never copy or move his music files.
-- Boards are snapshotted into Onyx under Artifacts/Muzik/Boards automatically."""
+- Boards are snapshotted into Onyx under Artifacts/Muzik/Boards automatically.
+- Animations (motion graphics drawn with JavaScript, on their own card or over an image):
+  call motion_guide(board) first. It says what to ask Chris before you write any code, how to
+  fit the board's look, and how to check your work with preview_animation."""
 
 mcp = FastMCP("cxboards", instructions=INSTRUCTIONS)
 
@@ -163,6 +166,9 @@ def add_cards(
       media  {path, text?}                  any file on disk: becomes an audio, video or file card;
                                             only ever read (a .flp can then be opened in FL)
       swatch {hex, text?}                   a colour swatch
+      animation {code, loop?, aspect?, text?}  a picture that moves, drawn with JavaScript; read
+                                            motion_guide first (it says what to ask Chris), then
+                                            look at it with preview_animation
       column {title, cards?: [...]}         a column, optionally with its own cards
       color  optional on any card: a CSS colour for its accent stripe
     Placement (applies to the whole call): `column` puts every card into that column (id or
@@ -183,6 +189,62 @@ def add_cards(
         specs[0]["side"] = side
     created = _call("POST", f"/api/boards/{board}/cards/batch", {"cards": specs})
     return "Added:\n" + "\n".join(f"- {_brief(c)}" for c in created)
+
+
+@mcp.tool()
+def motion_guide(board: str = "") -> str:
+    """READ THIS BEFORE MAKING AN ANIMATION. How animations work on CXBoards (a picture that moves,
+    every frame drawn with JavaScript, on its own card or over an image card): the questions to ask
+    Chris first, the style that works, the drawing API, examples, and how to check the result. With
+    `board`, also that board's colours and the pictures on it you could bring to life."""
+    return _call("GET", "/api/motion/guide" + (f"?board={quote(board)}" if board else ""))
+
+
+@mcp.tool()
+def animate(card_id: str, code: str, loop: float = 0, aspect: float = 0) -> str:
+    """Set an animation's drawing code: bring an image card to life (the picture stays and the code
+    draws over it, or redraws it with cover()), or change an animation card. `loop` is the loop's
+    length in seconds (keeps the current one if 0); `aspect` (height / width) reshapes an animation
+    card. Empty `code` takes the animation off an image card. The code is run before it's saved: if
+    it fails you get the error, and nothing changes. Then look at it with preview_animation."""
+    body: dict[str, Any] = {"code": code}
+    if loop:
+        body["loop"] = loop
+    if aspect:
+        body["aspect"] = aspect
+    card = _call("POST", f"/api/cards/{card_id}/motion", body)
+    if not card["data"].get("motion"):
+        return f"Took the animation off {_brief(card)}."
+    return f"Animated {_brief(card)} ({card['data']['motion']['loop']:g}s loop). Look at it with preview_animation."
+
+
+@mcp.tool()
+def animation_code(card_id: str) -> str:
+    """The drawing code of an animated card, with its loop length and any error the board hit."""
+    card = _call("GET", f"/api/cards/{card_id}")
+    motion = card["data"].get("motion")
+    if not motion:
+        return f"{_brief(card)} doesn't move."
+    error = f"\nThe board reported an error: {motion['error']}" if motion.get("error") else ""
+    return f"{_brief(card)} · {motion['loop']:g}s loop{error}\n\n{motion['code']}"
+
+
+@mcp.tool(structured_output=False)  # a picture, not JSON (the default tried to serialize it)
+def preview_animation(card_id: str) -> list[Any]:
+    """Four frames of an animated card (at 0, ¼, ½ and ¾ of its loop) in one picture, rendered from
+    its code with the board's colours. Look at it before telling Chris it's done: is the subject
+    clear, does it fit the board, does the last frame lead back into the first?"""
+    try:
+        resp = _http().get(f"/api/cards/{card_id}/motion/preview", headers=HEADERS)
+    except httpx.ConnectError as exc:
+        raise ValueError("CXBoards isn't running.") from exc
+    if resp.status_code >= 400:
+        try:
+            message = resp.json().get("error") or resp.text
+        except ValueError:
+            message = resp.text
+        raise ValueError(f"CXBoards said: {message}")
+    return [Image(data=resp.content, format="png"), f"{card_id}: frames at 0, ¼, ½ and ¾ of the loop."]
 
 
 @mcp.tool()

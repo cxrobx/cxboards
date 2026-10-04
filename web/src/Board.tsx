@@ -22,9 +22,10 @@ import { toPng } from 'html-to-image'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { api, type Board, type BoardState, type Card, type Connector, type Place } from './api'
 import { ContextMenu, type MenuItem, type MenuState } from './ContextMenu'
-import { ChatPanel } from './ChatPanel'
+import { askWith, ChatPanel } from './ChatPanel'
 import { BoardContext, COLORS, type BoardContextValue } from './context'
 import { FloatingEdge, type LineData } from './edges'
+import { MotionEditor } from './Motion'
 import { CardNode, ColumnNode } from './nodes'
 import { CropModal, FocusEditor, LabelPicker, Lightbox } from './Overlays'
 import { SketchEditor } from './Sketch'
@@ -139,6 +140,7 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
   const [picking, setPicking] = useState<{ cards: Card[]; at: { x: number; y: number } } | null>(null)
   const [trayOpen, setTrayOpen] = useState(false)
   const [sketching, setSketching] = useState<Card | null>(null)
+  const [motionCard, setMotionCard] = useState<Card | null>(null)
   const wrapper = useRef<HTMLDivElement>(null)
   const dragging = useRef(false)
   const dragStart = useRef<{ alt: boolean; positions: Map<string, { x: number; y: number }> } | null>(null)
@@ -452,7 +454,7 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
       const canvas = list.filter((c) => !c.column_id && c.kind !== 'column')
       const allLocked = list.every((c) => c.locked)
       const items: MenuItem[] = []
-      if (one && !['board', 'audio', 'video', 'file'].includes(one.kind)) items.push({ label: 'Edit', hint: '↵', run: () => setEditId(one.id) })
+      if (one && !['board', 'audio', 'video', 'file', 'animation'].includes(one.kind)) items.push({ label: 'Edit', hint: '↵', run: () => setEditId(one.id) })
       if (one?.kind === 'board' && one.board) items.push({ label: 'Open board', run: () => onOpenBoard(one.board!.id) })
       if (one && PATH_KINDS.has(one.kind)) {
         items.push({ label: 'Open in its app', run: () => void guarded(() => api.openFile(one.id)) })
@@ -467,6 +469,30 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
           { label: one.data.annotations?.paths?.length ? 'Draw on it again' : 'Draw on the image', run: () => setSketching(one) },
           { label: 'Edit caption', run: () => setEditId(one.id) },
         )
+      }
+      // Animations: Ask makes and changes them (it asks what it needs to first); the code is here too.
+      const askAbout = (card: Card, text: string) => {
+        setNodes((ns) => ns.map((n) => ({ ...n, selected: n.id === card.id })))
+        askWith(text)
+      }
+      if (one?.kind === 'image' && !one.data.motion) {
+        items.push({ label: 'Animate… (Ask)', run: () => askAbout(one, 'Bring this picture to life: ') })
+      }
+      if (one && one.data.motion) {
+        items.push(
+          { label: 'Change how it moves… (Ask)', run: () => askAbout(one, 'Change how this moves: ') },
+          { label: 'Animation code', run: () => setMotionCard(one) },
+          {
+            kind: 'sub',
+            label: 'Export the animation',
+            items: [
+              { label: 'Video (.mp4)', run: () => window.open(`/api/cards/${one.id}/motion/export.mp4`, '_blank') },
+              { label: 'GIF', run: () => window.open(`/api/cards/${one.id}/motion/export.gif`, '_blank') },
+            ],
+          },
+        )
+        if (one.kind === 'image') items.push({ label: 'Stop it moving', run: () => void guarded(() => api.setMotion(one.id, '')) })
+        else items.push({ label: 'Edit caption', run: () => setEditId(one.id) })
       }
       if (one?.kind === 'note') {
         items.push(
@@ -580,6 +606,7 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
       { label: 'New to-do here', run: () => void add({ kind: 'todo', title: '', items: [] }, true, at) },
       { label: 'New column here', run: () => void add({ kind: 'column', title: '' }, true, at) },
       { label: 'New colour swatch here', run: () => void add({ kind: 'swatch', hex: '#E0A33A' }, true, at) },
+      { label: 'New animation… (Ask)', run: () => askWith('Make an animation for this board: ') },
       {
         kind: 'sub',
         label: 'Add a shortcut to a board',
@@ -633,6 +660,7 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
       lightbox: (card) => setLightbox(card),
       focusEdit: (card) => setFocusing(card),
       sketch: (card) => sketchRef.current(card),
+      motion: (card) => setMotionCard(card),
     }),
     [guarded, childrenOf, deleteIds, onOpenBoard, addAfter, openMenu, cardMenu],
   )
@@ -1080,6 +1108,7 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
         {focusing && <FocusEditor card={focusing} onClose={() => setFocusing(null)} />}
         {picking && <LabelPicker cards={picking.cards} at={picking.at} onClose={() => setPicking(null)} onError={onError} />}
         {sketching && <SketchEditor card={sketching} onClose={() => setSketching(null)} onError={onError} />}
+        {motionCard && <MotionEditor card={motionCard} onClose={() => setMotionCard(null)} onSaved={(c) => setMotionCard(c)} />}
       </div>
     </BoardContext.Provider>
   )

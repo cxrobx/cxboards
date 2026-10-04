@@ -76,6 +76,12 @@ class BoardDocument:
             return f"{glyph} **{data.get('name')}** — `{data.get('path')}`" + (f"\n{text}" if text else "")
         if kind == "swatch":
             return f"■ `{data.get('hex')}`" + (f" {text}" if text else "")
+        if kind == "animation":
+            poster = (data.get("motion") or {}).get("poster")
+            if poster:
+                self.images.append(poster)
+                return self._embed(self.image_ref(poster), (text or "animation") + " (moves in CXBoards)")
+            return f"▶ animation: {text or 'untitled'} (moves in CXBoards)"
         if kind == "sketch":
             name = f"{card['id']}.svg"
             self.sketches[name] = _sketch_svg(data)

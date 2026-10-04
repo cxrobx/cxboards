@@ -1,0 +1,144 @@
+<!doctype html>
+<!--
+  Where an animation card plays. The board loads this page in an <iframe sandbox="allow-scripts">
+  (no same-origin), and the server sends it with a Content-Security-Policy that allows no loads and
+  no connections (motion.py RUNNER_CSP): the drawing code can draw and nothing else. It runs in a
+  worker on an OffscreenCanvas where the browser allows, with a watchdog that stops it if a frame
+  takes more than two seconds (an endless loop can't freeze the board). The board talks to it with
+  postMessage: load / play / size / palette in; ready / error out.
+-->
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      html, body { margin: 0; height: 100%; background: transparent; overflow: hidden; }
+      canvas { display: block; width: 100%; height: 100%; }
+    </style>
+  </head>
+  <body>
+    <canvas id="c"></canvas>
+    <script id="runtime" type="text/plain">/*RUNTIME*/</script>
+    <script>
+      'use strict'
+      const RUNTIME = document.getElementById('runtime').textContent
+      const FPS = 30
+      const STALL_MS = 2000
+
+      // The frame loop, the same in a worker and on this page (the fallback).
+      const LOOP = `
+        let motion = null, playing = false, t = 0, last = 0, timer = 0, lastTick = 0
+        const send = (m) => post(m)
+        function makeCanvas(w, h) { return new OffscreenCanvas(w, h) }
+        function step(now) {
+          if (!playing || !motion) return
+          if (last) t += Math.min(0.1, (now - last) / 1000)
+          last = now
+          try { motion.frame(t) } catch (e) { playing = false; send({ type: 'error', message: e.message, line: e.line ?? null }); return }
+          if (now - lastTick > 500) { lastTick = now; send({ type: 'tick' }) }
+          timer = setTimeout(() => step(performance.now()), 1000 / ${FPS})
+        }
+        function handle(m) {
+          if (m.type === 'load') {
+            try {
+              const ctx = m.canvas.getContext('2d')
+              m.canvas.width = Math.round(m.width * m.scale); m.canvas.height = Math.round(m.height * m.scale)
+              motion = CXMotion.create({ ctx, width: m.width, height: m.height, scale: m.scale, palette: m.palette,
+                image: m.image || null, code: m.code, loop: m.loop, makeCanvas })
+              self.__canvas = m.canvas
+              t = (m.at || 0) * motion.loop
+              motion.frame(t)
+              send({ type: 'ready' })
+            } catch (e) { motion = null; send({ type: 'error', message: e.message, line: e.line ?? null }) }
+            setPlaying(!!m.play)
+          } else if (m.type === 'play') {
+            setPlaying(m.play)
+          } else if (m.type === 'size' && motion) {
+            self.__canvas.width = Math.round(m.width * m.scale); self.__canvas.height = Math.round(m.height * m.scale)
+            try { motion.resize(m.width, m.height, m.scale); motion.frame(t) } catch (e) { send({ type: 'error', message: e.message, line: e.line ?? null }) }
+          } else if (m.type === 'palette' && motion) {
+            motion.setPalette(m.palette)
+            if (!playing) try { motion.frame(t) } catch (e) {}
+          }
+        }
+        function setPlaying(on) {
+          clearTimeout(timer)
+          playing = on && !!motion
+          last = 0
+          if (playing) step(performance.now())
+        }
+      `
+
+      const canvas = document.getElementById('c')
+      let worker = null, inline = null, lastTick = performance.now(), playing = false, stopped = false
+      const toBoard = (m) => parent.postMessage({ cxmotion: true, ...m }, '*')
+
+      function fromRunner(m) {
+        if (m.type === 'tick') lastTick = performance.now()
+        else toBoard(m)
+        if (m.type === 'ready') lastTick = performance.now()
+      }
+
+      function start() {
+        const canOffscreen = typeof canvas.transferControlToOffscreen === 'function' && typeof Worker === 'function'
+        if (canOffscreen) {
+          try {
+            const src = RUNTIME + '\nconst post = (m) => self.postMessage(m)\n' + LOOP +
+              '\nself.onmessage = (e) => handle(e.data)\n'
+            worker = new Worker(URL.createObjectURL(new Blob([src], { type: 'text/javascript' })))
+            worker.onmessage = (e) => fromRunner(e.data)
+            worker.onerror = (e) => { e.preventDefault(); toBoard({ type: 'error', message: e.message || 'The animation failed to start.' }) }
+            return 'worker'
+          } catch (e) {
+            worker = null
+          }
+        }
+        // No worker here: run on this page (no watchdog can interrupt a stuck frame).
+        inline = new Function('post', RUNTIME + '\n' + LOOP.replace('function makeCanvas(w, h) { return new OffscreenCanvas(w, h) }',
+          'function makeCanvas(w, h) { const c = document.createElement("canvas"); c.width = w; c.height = h; return c }') + '\nreturn handle')(fromRunner)
+        return 'inline'
+      }
+      const mode = start()
+
+      let transferred = false
+      function forward(m) {
+        if (m.type === 'load') {
+          playing = !!m.play
+          lastTick = performance.now()
+          if (worker) {
+            if (transferred) { toBoard({ type: 'reload' }); return } // a canvas transfers once: the board reloads the frame
+            const off = canvas.transferControlToOffscreen()
+            transferred = true
+            const transfer = [off]
+            if (m.image) transfer.push(m.image)
+            worker.postMessage({ ...m, canvas: off }, transfer)
+          } else {
+            inline({ ...m, canvas })
+          }
+          return
+        }
+        if (m.type === 'play') {
+          if (m.play && !playing) lastTick = performance.now() // a pause isn't a stall
+          playing = !!m.play
+        }
+        if (worker) worker.postMessage(m)
+        else inline(m)
+      }
+
+      // The watchdog: a playing worker that hasn't finished a frame in two seconds is stopped.
+      setInterval(() => {
+        if (!worker || !playing || stopped) return
+        if (performance.now() - lastTick > STALL_MS) {
+          stopped = true
+          worker.terminate()
+          toBoard({ type: 'error', message: 'Stopped: one frame took more than two seconds (an endless loop?).', stalled: true })
+        }
+      }, 500)
+
+      addEventListener('message', (e) => {
+        if (e.source !== parent || !e.data || !e.data.cxmotion) return
+        forward(e.data)
+      })
+      toBoard({ type: 'hello', mode })
+    </script>
+  </body>
+</html>

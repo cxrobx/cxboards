@@ -93,6 +93,11 @@ function Shell() {
     }
   })
   useEffect(() => {
+    const open = () => setChatOpen(true)
+    window.addEventListener('cxboards:ask', open)
+    return () => window.removeEventListener('cxboards:ask', open)
+  }, [])
+  useEffect(() => {
     try {
       localStorage.setItem('cxboards.chat-open', chatOpen ? '1' : '0')
     } catch {

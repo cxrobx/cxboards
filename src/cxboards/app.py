@@ -32,11 +32,13 @@ from fastapi.staticfiles import StaticFiles
 from . import chat as chatlib
 from . import formats, outline, themes
 from . import templates as library
+from . import motion as motionlib
+from .layout import DEFAULT_WIDTH
 from .config import AUDIO_EXTENSIONS, MAX_FILE_BYTES, MAX_IMAGE_BYTES, VIDEO_EXTENSIONS, Config, load_config
 from .events import Broadcaster
 from .export import Exporter
 from .locate import locate as default_locate
-from .store import PATH_KINDS, Invalid, NotFound, Store
+from .store import PATH_KINDS, Invalid, NotFound, Store, slugify
 from .unfurl import unfurl as default_unfurl
 
 WEB_DIST = Path(__file__).resolve().parents[2] / "web" / "dist"
@@ -184,7 +186,62 @@ def create_app(
             out["tray"] = True
         if spec.get("avoid"):
             out["avoid"] = True
+        if kind == "animation" or (kind == "image" and (spec.get("code") or data.get("motion"))):
+            if spec.get("code") is not None:
+                data["motion"] = {"code": spec.get("code"), "loop": spec.get("loop") or 6}
+            if spec.get("aspect") is not None:
+                data["aspect"] = spec["aspect"]
+            if kind == "animation" and not data.get("motion"):
+                raise Invalid("an animation card needs code (a function draw(env))")
+            check_motion({"kind": kind, "data": data, "w": out.get("w") or DEFAULT_WIDTH[kind], "board_id": board_id})
         return out
+
+    # ------------------------------------------------------------------ animations (motion.py)
+
+    def motion_context(card: dict[str, Any]) -> tuple[dict[str, str], Path | None]:
+        board = store.board(card["board_id"])
+        image = store.upload_path(card["data"]["file"]) if card["kind"] == "image" else None
+        return motionlib.board_palette(board.get("theme")), image
+
+    def check_motion(card: dict[str, Any]) -> None:
+        """Run new drawing code before it's saved, so a broken animation never reaches the board."""
+        motion = card["data"].get("motion")
+        if not motion:
+            return
+        normalized = {**card, "data": {**card["data"], "motion": store._motion(motion)}}
+        palette, image = motion_context(normalized)
+        try:
+            motionlib.check(normalized, palette, image)
+        except motionlib.MotionFailed as exc:
+            raise Invalid(f"the animation doesn't run: {exc}") from exc
+
+    def make_poster(card_id: str) -> None:
+        """The still that Onyx snapshots, exports and the print view show for an animation."""
+        try:
+            card = store.card(card_id)
+            motion = card["data"].get("motion")
+            if not motion or not motionlib.available():
+                return
+            palette, image = motion_context(card)
+            key = motionlib.code_hash(motion["code"] + json.dumps(palette, sort_keys=True), motion["loop"])
+            if motion.get("poster_of") == key:
+                return
+            out = config.home / f".poster-{card_id}.png"
+            try:
+                motionlib.poster(card, palette, image, out)
+                name = store.save_image_bytes(out.read_bytes(), "poster.png")
+            finally:
+                out.unlink(missing_ok=True)
+            fresh = store.card(card_id)["data"].get("motion") or {}
+            if fresh.get("code") == motion["code"]:  # unless it was changed meanwhile
+                store.update_card(card_id, data={"motion": {**fresh, "poster": name, "poster_of": key}}, actor="system")
+        except (NotFound, Invalid, motionlib.MotionFailed, OSError):
+            pass
+
+    def after_motion(cards: list[dict[str, Any]]) -> None:
+        for card in cards:
+            if card["data"].get("motion"):
+                threading.Thread(target=make_poster, args=(card["id"],), daemon=True).start()
 
     def import_image_url(url: str) -> str:
         try:
@@ -205,6 +262,7 @@ def create_app(
         for card in cards:
             if card["kind"] == "link" and not card["data"].get("title"):
                 threading.Thread(target=fill_preview, args=(card["id"], card["data"]["url"]), daemon=True).start()
+        after_motion(cards)
 
     def fill_preview(card_id: str, url: str) -> None:
         preview = unfurl(url)
@@ -467,6 +525,10 @@ def create_app(
         after_add(created)
         return [store.card(c["id"]) for c in created]
 
+    @app.get("/api/cards/{card_id}")
+    def get_card(card_id: str) -> dict[str, Any]:
+        return store.card(card_id)
+
     @app.patch("/api/cards/{card_id}")
     def update_card(card_id: str, request: Request, body: dict[str, Any] = Body(...)) -> dict[str, Any]:
         data = dict(body.get("data") or {})
@@ -477,6 +539,9 @@ def create_app(
             data.update(title=None, description=None, image=None, site=None, embed=None)
         kind = body.get("kind")
         text = body.get("text")
+        if data.get("motion"):
+            current = store.card(card_id)
+            check_motion({**current, "data": {**current["data"], **data}})
         if text is not None and HEX.match(text) and store.card(card_id)["kind"] == "note":
             kind, data, text = "swatch", {**data, "hex": text.strip()}, ""
         card = store.update_card(
@@ -495,6 +560,8 @@ def create_app(
         )
         if "url" in data:
             after_add([card])
+        if data.get("motion"):
+            after_motion([card])
         return card
 
     @app.post("/api/cards/{card_id}/move")
@@ -691,6 +758,94 @@ def create_app(
         finally:
             target.unlink(missing_ok=True)
         return store.update_card(card_id, data={"file": name, "crop": None}, actor=actor_of(request))
+
+    @app.post("/api/cards/{card_id}/motion")
+    def set_motion(card_id: str, request: Request, body: dict[str, Any] = Body(...)) -> dict[str, Any]:
+        """Bring an image card to life, or change an animation: {code, loop}. Empty code takes the
+        animation off an image card. The code is run first, and refused if it doesn't run."""
+        card = store.card(card_id)
+        if card["kind"] not in ("image", "animation"):
+            raise Invalid("only an image card or an animation card can move")
+        code = str(body.get("code") or "")
+        if not code.strip():
+            if card["kind"] == "animation":
+                raise Invalid("an animation card needs code; delete the card to remove it")
+            return store.update_card(card_id, data={"motion": None}, actor=actor_of(request))
+        old = card["data"].get("motion") or {}
+        motion = {"code": code, "loop": body.get("loop") or old.get("loop") or 6}
+        data: dict[str, Any] = {"motion": motion}
+        if card["kind"] == "animation" and body.get("aspect"):
+            data["aspect"] = body["aspect"]
+        check_motion({**card, "data": {**card["data"], **data}})
+        updated = store.update_card(card_id, data=data, actor=actor_of(request))
+        after_motion([updated])
+        return updated
+
+    @app.post("/api/cards/{card_id}/motion/error")
+    def motion_error(card_id: str, body: dict[str, Any] = Body(...)) -> dict[str, Any]:
+        """The board's sandbox hit an error the server's check didn't (kept on the card, so Ask
+        and agents can see and fix it). Not an edit of Chris's: it folds into the step before."""
+        card = store.card(card_id)
+        motion = card["data"].get("motion")
+        message = str(body.get("message") or "")[:500]
+        if not motion or motion.get("error") == message or (motion.get("error") is None and not message):
+            return card
+        return store.update_card(card_id, data={"motion": {**motion, "error": message or None}}, actor="system")
+
+    previews: dict[str, bytes] = {}
+
+    @app.get("/api/cards/{card_id}/motion/preview")
+    def motion_preview(card_id: str) -> Response:
+        """Four frames of the animation in one PNG (what an agent looks at to judge its work)."""
+        card = store.card(card_id)
+        if not card["data"].get("motion"):
+            raise Invalid("this card doesn't move")
+        palette, image = motion_context(card)
+        key = card_id + motionlib.code_hash(card["data"]["motion"]["code"] + json.dumps(palette, sort_keys=True) + str(card["w"]), card["data"]["motion"]["loop"])
+        if key not in previews:
+            try:
+                previews[key] = motionlib.sheet(card, palette, image)
+            except motionlib.MotionFailed as exc:
+                raise Invalid(f"the animation doesn't run: {exc}") from exc
+            while len(previews) > 32:
+                previews.pop(next(iter(previews)))
+        return Response(previews[key], media_type="image/png", headers={"Cache-Control": "no-cache"})
+
+    @app.get("/api/cards/{card_id}/motion/export.{fmt}")
+    def motion_export(card_id: str, fmt: str) -> FileResponse:
+        """The animation as a video to post: mp4, or a gif. Made once per version of the code."""
+        if fmt not in ("mp4", "gif"):
+            raise Invalid("export an animation as mp4 or gif")
+        card = store.card(card_id)
+        motion = card["data"].get("motion")
+        if not motion:
+            raise Invalid("this card doesn't move")
+        palette, image = motion_context(card)
+        renders = config.home / "renders"
+        renders.mkdir(exist_ok=True)
+        stem = slugify(card["text"] or store.board(card["board_id"])["title"])[:60] or "animation"
+        out = renders / f"{stem}-{motionlib.code_hash(motion['code'] + json.dumps(palette, sort_keys=True), motion['loop'])}.{fmt}"
+        if not out.is_file():
+            try:
+                motionlib.video(card, palette, image, fmt, out)
+            except motionlib.MotionFailed as exc:
+                raise Invalid(f"couldn't make the video: {exc}") from exc
+        return FileResponse(out, filename=f"{stem}.{fmt}", media_type="video/mp4" if fmt == "mp4" else "image/gif")
+
+    @app.get("/api/motion/guide", response_class=PlainTextResponse)
+    def motion_guide(board: str = "") -> str:
+        if not board:
+            return motionlib.guide()
+        board_id = board_id_of(board)
+        return motionlib.guide(store.board(board_id), store.cards(board_id))
+
+    @app.get("/motion/runner", response_class=HTMLResponse)
+    def motion_runner() -> HTMLResponse:
+        """Where an animation plays: sandboxed by the board's iframe, and by this policy."""
+        return HTMLResponse(
+            motionlib.runner_html(),
+            headers={"Content-Security-Policy": motionlib.RUNNER_CSP, "Cache-Control": "no-cache", "X-Content-Type-Options": "nosniff"},
+        )
 
     @app.post("/api/cards/{card_id}/thumbnail")
     def thumbnail(card_id: str, request: Request, body: dict[str, Any] = Body(...)) -> dict[str, Any]:

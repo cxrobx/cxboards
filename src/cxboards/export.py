@@ -199,7 +199,8 @@ class Exporter:
                     f'left:{-crop["x"] * sw:.2f}%;top:{-crop["y"] * sh:.2f}%"></div>'
                 )
             sketch = self._sketch_svg(data.get("annotations")) if data.get("annotations") else ""
-            body = f'<div class="pic">{img}{sketch}</div>{caption}'
+            moves = '<div class="plays">▶ moves in CXBoards</div>' if data.get("motion") else ""
+            body = f'<div class="pic">{img}{sketch}</div>{caption}{moves}'
         elif kind == "audio":
             src = self._audio_src(card)
             note = f'<div class="md">{render_markdown(card["text"])}</div>' if card["text"] else ""
@@ -224,6 +225,16 @@ class Exporter:
         elif kind == "sketch":
             caption = f'<div class="caption">{_e(card["text"])}</div>' if card["text"] else ""
             body = self._sketch_svg(data) + caption
+        elif kind == "animation":
+            # A snapshot never carries scripts: an animation shows its poster frame (motion.py).
+            caption = f'<div class="caption">{_e(card["text"])}</div>' if card["text"] else ""
+            poster = (data.get("motion") or {}).get("poster")
+            if poster:
+                self.store.copy_upload(poster, media)
+                still = f'<img class="picture" src="media/{_e(poster)}" alt="{_e(card["text"])}">'
+            else:
+                still = f'<div class="still" style="aspect-ratio:{1 / float(data.get("aspect") or 0.75):.4f}"></div>'
+            body = f'<div class="pic">{still}</div>{caption}<div class="plays">▶ moves in CXBoards</div>'
         elif kind == "board":
             child = card.get("board") or {}
             slug = self._slug_of(child.get("id", ""))
@@ -431,6 +442,7 @@ mark {{ background:color-mix(in srgb, var(--amber) 35%, transparent); color:inhe
 .labels {{ display:flex; flex-wrap:wrap; gap:4px; margin-top:8px; }}
 .label {{ font-size:10px; padding:1px 7px; border-radius:10px; background:color-mix(in srgb, var(--label) 22%, transparent); border:1px solid color-mix(in srgb, var(--label) 50%, transparent); }}
 .plays {{ font-size:11px; color:var(--amber); margin:-4px 0 6px; }}
+.still {{ width:100%; background:var(--fill, #ede8d6); border-radius:6px; }}
 .ext {{ font-size:10px; font-weight:600; padding:2px 5px; border-radius:4px; background:var(--amber); color:#1a1a1a; }}
 .chip-color {{ height:90px; margin:-12px -14px 8px; border-radius:7px 7px 0 0; }}
 .hex {{ font-weight:600; }}

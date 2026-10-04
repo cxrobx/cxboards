@@ -8,6 +8,7 @@ import type { Card, TodoItem } from './api'
 import { COLORS, humanSize, inkOn, swatchValue, useBoard } from './context'
 import { ConnectHandles } from './edges'
 import { formatKey } from './format'
+import { MotionLayer } from './Motion'
 
 marked.setOptions({ breaks: true, gfm: true })
 
@@ -446,7 +447,19 @@ export function CardBody({ card }: { card: Card }) {
     case 'image':
       return (
         <div className="image">
-          <CroppedImage card={card} />
+          <div className="moving">
+            <CroppedImage card={card} />
+            {d.motion && <MotionLayer card={card} />}
+          </div>
+          {card.text && <div className="caption">{card.text}</div>}
+        </div>
+      )
+    case 'animation':
+      return (
+        <div className="animation-card">
+          <div className="moving" style={{ aspectRatio: String(1 / (d.aspect ?? 0.75)) }}>
+            <MotionLayer card={card} />
+          </div>
           {card.text && <div className="caption">{card.text}</div>}
         </div>
       )
@@ -597,6 +610,7 @@ function useOpen() {
     if (presenting) return
     if (card.kind === 'image') actions.lightbox(card)
     else if (card.kind === 'sketch') actions.sketch(card)
+    else if (card.kind === 'animation') actions.motion(card)
     else if (card.kind === 'note' && card.data.doc) actions.focusEdit(card)
     else if (!NO_DOUBLE_CLICK_EDIT.has(card.kind)) setEditId(card.id)
   }

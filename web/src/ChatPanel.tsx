@@ -39,6 +39,14 @@ const STARTERS = [
   'Summarise this board in three lines',
 ]
 
+// A question started elsewhere (a card's "Animate…"): Ask opens with it typed in, for Chris to
+// finish and send. The shell opens the panel on the event; the panel takes the draft when it's up.
+let draft: string | null = null
+export function askWith(text: string) {
+  draft = text
+  window.dispatchEvent(new CustomEvent('cxboards:ask'))
+}
+
 function readModel(fallback: string): string {
   try {
     return localStorage.getItem(MODEL_KEY) || fallback
@@ -106,6 +114,23 @@ export function ChatPanel({
   }, [messages])
 
   useEffect(() => box.current?.focus(), [chatId])
+
+  useEffect(() => {
+    const take = () => {
+      if (draft === null) return
+      setInput(draft)
+      draft = null
+      window.setTimeout(() => {
+        const el = box.current
+        if (!el) return
+        el.focus()
+        el.setSelectionRange(el.value.length, el.value.length)
+      }, 50)
+    }
+    take()
+    window.addEventListener('cxboards:ask', take)
+    return () => window.removeEventListener('cxboards:ask', take)
+  }, [])
 
   const patchLast = (fn: (m: Message) => Message) =>
     setMessages((ms) => (ms.length ? [...ms.slice(0, -1), fn(ms[ms.length - 1])] : ms))

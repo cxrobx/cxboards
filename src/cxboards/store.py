@@ -44,7 +44,8 @@ from . import layout, themes
 from .config import AUDIO_EXTENSIONS, IMAGE_EXTENSIONS, MAX_IMAGE_BYTES, VIDEO_EXTENSIONS, Config
 from .layout import Rect
 
-KINDS = ("note", "todo", "link", "image", "audio", "video", "file", "column", "board", "swatch", "sketch")
+KINDS = ("note", "todo", "link", "image", "audio", "video", "file", "column", "board", "swatch", "sketch", "animation")
+MAX_MOTION_CODE = 60_000  # characters of drawing code on one card
 PATH_KINDS = ("audio", "video", "file")
 ACTORS = ("chris", "agent", "system")
 TRASH_DAYS = 90
@@ -1045,7 +1046,36 @@ class Store:
                 data["format"] = "hex"
         elif kind == "sketch":
             data.update(self._strokes(data))
+        if kind == "animation":
+            if not data.get("motion"):
+                raise Invalid("an animation card needs motion: {code, loop}")
+            aspect = float(data.get("aspect") or 0.75)
+            data["aspect"] = round(max(0.2, min(3.0, aspect)), 4)  # height / width
+        if "motion" in data:
+            if kind in ("animation", "image") and data["motion"]:
+                data["motion"] = self._motion(data["motion"])
+            else:  # taken off (None), or on a kind that can't move
+                del data["motion"]
         return data
+
+    def _motion(self, motion: Any) -> dict[str, Any]:
+        """A card's animation: its drawing code (motion/runtime.js runs it in a sandbox), the loop's
+        length, and what the server derived from it (a poster frame, the last error)."""
+        if not isinstance(motion, dict):
+            raise Invalid("motion is {code, loop}")
+        code = motion.get("code")
+        if not isinstance(code, str) or not code.strip():
+            raise Invalid("an animation needs code that defines draw(env)")
+        if len(code) > MAX_MOTION_CODE:
+            raise Invalid(f"an animation's code is at most {MAX_MOTION_CODE} characters")
+        out: dict[str, Any] = {"code": code, "loop": round(max(1.0, min(60.0, float(motion.get("loop") or 6))), 3)}
+        poster = motion.get("poster")
+        if poster and "/" not in str(poster) and (self.config.uploads_dir / str(poster)).is_file():
+            out["poster"] = str(poster)
+            out["poster_of"] = str(motion.get("poster_of") or "")
+        if motion.get("error"):
+            out["error"] = str(motion["error"])[:500]
+        return out
 
     @staticmethod
     def _strokes(data: dict[str, Any]) -> dict[str, Any]:

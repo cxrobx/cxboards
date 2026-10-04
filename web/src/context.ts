@@ -17,6 +17,8 @@ export interface BoardActions {
   lightbox: (card: Card) => void
   focusEdit: (card: Card) => void
   sketch: (card: Card) => void
+  /** Open an animated card's drawing code. */
+  motion: (card: Card) => void
 }
 
 export interface BoardContextValue {

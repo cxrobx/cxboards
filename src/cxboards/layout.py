@@ -32,6 +32,7 @@ DEFAULT_WIDTH = {
     "file": 260.0,
     "swatch": 170.0,
     "sketch": 400.0,
+    "animation": 360.0,
 }
 
 
@@ -74,6 +75,8 @@ def estimate_height(kind: str, text: str, data: dict, width: float) -> float:
         return (330.0 if data.get("ext") == "pdf" else 96.0) + (21 if text else 0)
     if kind == "swatch":
         return 150.0
+    if kind == "animation":
+        return width * float(data.get("aspect") or 0.75) + 2 + (24 if text else 0)
     if kind == "sketch":
         box = data.get("box") or [400, 300]
         return float(box[1]) * width / max(1.0, float(box[0])) + 2
