@@ -258,6 +258,34 @@ class Exporter:
         return f'<article class="card card-{kind}{fill}" id="{card["id"]}"{style_attr}>{body}</article>'
 
     @staticmethod
+    def _theme_head(pal: dict[str, str] | None, base: str) -> str:
+        """The theme's fonts, loaded from CXBoards' own cached copy (like the snapshot's audio)."""
+        if not pal or not pal.get("fontsHref"):
+            return ""
+        return f'<link rel="stylesheet" href="{_e(base + pal["fontsHref"])}">\n'
+
+    @staticmethod
+    def _theme_extras(pal: dict[str, str] | None, base: str) -> str:
+        """Backdrop under a tinted scrim, display type, and grain. Values come from themes.palette
+        (hex colours, numbers, a /media/<checked file name> path), never from anything typed."""
+        if not pal:
+            return ""
+        out = ""
+        if pal.get("displayWeight"):
+            out += (f"h1,.column h3,.card-title{{{{font-style:{pal['displayStyle']};"
+                    f"font-weight:{pal['displayWeight']}}}}}\n")
+        if pal.get("backdrop"):
+            alpha = f"{round(float(pal['backdropDim']) * 255):02x}"
+            scrim = pal["backdropScrim"] + alpha
+            out += (f"body{{{{background:linear-gradient({scrim},{scrim}),url({base}{pal['backdrop']}) "
+                    "center/cover fixed no-repeat;}}\n")
+        if pal.get("grain") in ("print", "film"):
+            amount = "0.10" if pal["grain"] == "print" else "0.07"
+            out += ("body::after{{content:'';position:fixed;inset:0;pointer-events:none;z-index:50;"
+                    f"opacity:{amount};mix-blend-mode:overlay;background-image:url({GRAIN_SVG})}}}}\n")
+        return out
+
+    @staticmethod
     def _theme_css(pal: dict[str, str] | None) -> str:
         """A themed board's palette over the page's default tokens. It comes last, so it wins in light and
         dark alike: a theme is fixed, only Vault follows the reader's setting. Values come from themes.palette
@@ -361,7 +389,9 @@ class Exporter:
         when = datetime.now().strftime("%Y-%m-%d %H:%M")
         live = f"{self.store.config.base_url}/b/{board['id']}"
         description = f'<p class="subtitle">{_e(board["description"])}</p>' if board["description"] else ""
-        return TEMPLATE.replace("</style>", self._theme_css(state.get("palette")) + "</style>", 1).format(
+        pal, base = state.get("palette"), self.store.config.base_url
+        page = TEMPLATE.replace("</style>", self._theme_css(pal) + self._theme_extras(pal, base) + "</style>", 1)
+        return page.replace("</head>", self._theme_head(pal, base) + "</head>", 1).format(
             title=_e(board["title"]),
             trail=f'<p class="eyebrow">{trail} /</p>' if trail else '<p class="eyebrow">CXBoards</p>',
             description=description,
@@ -374,6 +404,11 @@ class Exporter:
             data=_e(json.dumps({"board": board["id"], "rev": board["rev"]})),
         )
 
+
+# Film / print grain: a tile of fractal noise (no braces, no quotes that clash with the CSS around it).
+GRAIN_SVG = ("\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'>"
+             "<filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/>"
+             "<feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>\"")
 
 TEMPLATE = """<!doctype html>
 <html lang="en">

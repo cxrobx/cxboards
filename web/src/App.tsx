@@ -757,7 +757,15 @@ function Shell() {
       )}
       {clipperOpen && <ClipperPanel onClose={() => setClipperOpen(false)} />}
       {theming && state && (
-        <ThemePicker board={state.board} current={state.palette ?? null} onClose={() => setTheming(false)} onError={onError} />
+        <ThemePicker
+          board={state.board}
+          current={state.palette ?? null}
+          parent={state.board.parent_id ? boards?.find((b) => b.id === state.board.parent_id)?.title ?? 'the parent board' : null}
+          inherited={state.theme_from ? boards?.find((b) => b.id === state.theme_from)?.title ?? 'a parent board' : null}
+          images={state.cards.filter((c) => c.kind === 'image' && c.data.file).map((c) => ({ file: c.data.file as string, text: c.text }))}
+          onClose={() => setTheming(false)}
+          onError={onError}
+        />
       )}
       {trashOpen && (
         <TrashPanel

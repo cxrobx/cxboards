@@ -104,6 +104,7 @@ export interface BoardState {
   connectors: Connector[]
   breadcrumbs: { id: string; title: string }[]
   palette?: Palette | null
+  theme_from?: string | null
 }
 
 export interface LibraryCategory {

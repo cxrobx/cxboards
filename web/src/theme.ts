@@ -23,6 +23,15 @@ export interface Palette {
   fontWeight: string
   radius: string
   radiusLg: string
+  accent2?: string
+  fontsHref?: string
+  displayStyle?: string
+  displayWeight?: string
+  grain?: string
+  backdrop?: string
+  backdropDim?: string
+  backdropBlur?: string
+  backdropScrim?: string
 }
 
 const TOKENS: [keyof Palette, string[]][] = [
@@ -41,7 +50,29 @@ const TOKENS: [keyof Palette, string[]][] = [
   ['font', ['--font']],
   ['fontDisplay', ['--font-display']],
   ['fontWeight', ['--font-weight']],
+  ['accent2', ['--accent-2']],
+  ['displayStyle', ['--font-display-style']],
+  ['displayWeight', ['--font-display-weight']],
+  ['backdropDim', ['--backdrop-dim']],
+  ['backdropBlur', ['--backdrop-blur']],
+  ['backdropScrim', ['--backdrop-scrim']],
 ]
+
+/** The theme's Google fonts, served from CXBoards' own cache (src/cxboards/fonts.py). */
+function loadFonts(href: string | undefined) {
+  let link = document.getElementById('theme-fonts') as HTMLLinkElement | null
+  if (!href) {
+    link?.remove()
+    return
+  }
+  if (!link) {
+    link = document.createElement('link')
+    link.id = 'theme-fonts'
+    link.rel = 'stylesheet'
+    document.head.appendChild(link)
+  }
+  if (link.getAttribute('href') !== href) link.href = href
+}
 
 type Bridge = { postMessage: (body: unknown) => void }
 const native: Bridge | undefined = (window as unknown as { webkit?: { messageHandlers?: { cxTheme?: Bridge } } }).webkit
@@ -56,10 +87,24 @@ export function applyPalette(palette: Palette | null | undefined) {
   const root = document.documentElement
   for (const [field, vars] of TOKENS) {
     for (const v of vars) {
-      if (palette) root.style.setProperty(v, palette[field])
+      const value = palette?.[field]
+      if (value) root.style.setProperty(v, value)
       else root.style.removeProperty(v)
     }
   }
+  loadFonts(palette?.fontsHref)
+  // The backdrop (an uploaded image under a scrim) and the grain are drawn by styles.css from these.
+  if (palette?.backdrop) {
+    root.style.setProperty('--backdrop-image', `url("${palette.backdrop}")`)
+    root.dataset.backdrop = ''
+  } else {
+    root.style.removeProperty('--backdrop-image')
+    delete root.dataset.backdrop
+  }
+  if (palette?.grain && palette.grain !== 'none') root.dataset.grain = palette.grain
+  else delete root.dataset.grain
+  if (palette?.displayWeight) root.dataset.displayFont = ''
+  else delete root.dataset.displayFont
   root.style.colorScheme = palette ? palette.scheme : ''
   if (palette) root.dataset.scheme = palette.scheme
   else delete root.dataset.scheme

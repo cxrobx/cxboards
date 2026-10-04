@@ -22,8 +22,9 @@ def test_every_preset_is_readable(name: str) -> None:
 
 
 def test_vault_is_the_apps_own_look() -> None:
-    assert themes.normalize("vault") is None and themes.normalize(None) is None
-    assert themes.palette(None) is None
+    # No theme of its own (None) wears the parent's; "vault" said on purpose is kept, and is the app's look.
+    assert themes.normalize(None) is None and themes.normalize("vault") == {"preset": "vault"}
+    assert themes.palette(None) is None and themes.palette({"preset": "vault"}) is None
 
 
 def test_custom_colours_are_corrected_not_refused() -> None:
@@ -100,3 +101,90 @@ def test_api_catalog_preview_and_mcp(client) -> None:
             m.set_board_theme("moodboard")
     finally:
         m.set_client(None)  # type: ignore[arg-type]
+
+
+PROJECT = {
+    "preset": "custom", "ground": "#0E0E0E", "ink": "#EDEBE6", "accent": "#B23A2E", "accent2": "#9A9893",
+    "corners": "square", "grain": "print",
+    "fonts": {"display": "Anton", "body": "Courier Prime"},
+}
+
+
+def test_a_project_theme_carries_fonts_grain_and_a_second_accent() -> None:
+    pal = themes.palette(themes.normalize(PROJECT))
+    assert pal["fontDisplay"].startswith('"Anton"') and "Impact" in pal["fontDisplay"]
+    assert pal["font"].startswith('"Courier Prime"') and "monospace" in pal["font"]
+    assert pal["fontsHref"] == "/fonts/css?family=Anton&family=Courier%20Prime"
+    assert pal["grain"] == "print" and pal["accent2"] == "#9A9893"
+    for bad in ({"fonts": {"display": "<script>"}}, {"grain": "glitter"}, {"backdrop": {"file": "../etc/passwd"}},
+                {"backdrop": {"file": "a.jpg", "dim": 3}}, {"card": "teal"}):
+        with pytest.raises(themes.ThemeError):
+            themes.normalize({**PROJECT, **bad})
+    # Its own card colour is used only if the text reads on it.
+    assert themes.palette(themes.normalize({**PROJECT, "card": "#E9E9E9"}))["card"] != "#E9E9E9"
+    assert themes.palette(themes.normalize({**PROJECT, "card": "#1B1B1B"}))["card"] == "#1B1B1B"
+
+
+def test_boards_inside_wear_the_projects_theme(store: Store) -> None:
+    album = store.create_board("Album")
+    part = store.create_board("Part 1", parent_id=album["id"])
+    song = store.create_board("Song", parent_id=part["id"])
+    store.update_board(album["id"], theme="film")
+    state = store.board_state(song["id"])
+    assert state["board"]["theme"] is None and state["palette"]["accent"] == "#E8A04F" and state["theme_from"] == album["id"]
+    store.update_board(part["id"], theme="midnight")  # a half of its own
+    assert store.board_state(song["id"])["theme_from"] == part["id"]
+    store.update_board(song["id"], theme="vault")      # the app's own look, on purpose, inside a themed project
+    assert store.board_state(song["id"])["palette"] is None
+    store.update_board(song["id"], theme=None)         # back to wearing the parent's
+    assert store.board_state(song["id"])["palette"]["accent"] == "#7CC4FA"
+    listed = {b["id"]: b["swatch"] for b in store.list_boards()}
+    assert listed[song["id"]]["accent"] == "#7CC4FA"
+
+
+def test_a_backdrop_is_an_uploaded_image(store: Store, tmp_path) -> None:
+    board = store.create_board("Cover")
+    with pytest.raises(Invalid, match="no uploaded image"):
+        store.update_board(board["id"], theme={**PROJECT, "backdrop": {"file": "missing.jpg"}})
+    store.config.uploads_dir.mkdir(parents=True, exist_ok=True)
+    (store.config.uploads_dir / "cover.jpg").write_bytes(b"jpg")
+    store.update_board(board["id"], theme={**PROJECT, "backdrop": {"file": "cover.jpg", "dim": 0.8, "tint": "#B23A2E", "tint_strength": 0.2}})
+    pal = store.board_state(board["id"])["palette"]
+    assert pal["backdrop"] == "/media/cover.jpg" and pal["backdropDim"] == "0.800"
+    assert pal["backdropScrim"] == themes.mix("#0E0E0E", "#B23A2E", 0.2)
+    page = Exporter(store).export_board(board["id"]).read_text()
+    assert "http://127.0.0.1:4870/media/cover.jpg" in page and "http://127.0.0.1:4870/fonts/css?family=Anton" in page
+    assert "<script" not in page
+
+
+CSS = b"@font-face{font-family:'Anton';src:url(https://fonts.gstatic.com/s/anton/v25/abc.woff2) format('woff2')}"
+
+
+def fake_google(seen: list):
+    def fetch(url: str):
+        seen.append(url)
+        if "fonts.gstatic.com" in url:
+            return 200, b"wOF2"
+        if "family=Anton" in url and "ital" not in url:
+            return 200, CSS
+        return 400, b""
+    return fetch
+
+
+def test_fonts_are_fetched_once_and_served_locally(config) -> None:
+    from fastapi.testclient import TestClient
+    from cxboards.app import create_app
+    seen: list = []
+    with TestClient(create_app(config, font_fetch=fake_google(seen))) as c:
+        board = c.post("/api/boards", json={"title": "Poster"}, headers=W).json()
+        assert c.patch(f"/api/boards/{board['id']}", json={"theme": {**PROJECT, "fonts": {"display": "Anton"}}}, headers=W).status_code == 200
+        css = c.get("/fonts/css", params={"family": "Anton"}).text
+        assert "fonts.gstatic.com" not in css and "/fonts/file/" in css
+        name = css.split("/fonts/file/")[1].split(")")[0]
+        assert c.get(f"/fonts/file/{name}").content == b"wOF2"
+        fetched = len(seen)
+        c.get("/fonts/css", params={"family": "Anton"})
+        assert len(seen) == fetched  # cached: Google isn't asked again
+        refused = c.patch(f"/api/boards/{board['id']}", json={"theme": {**PROJECT, "fonts": {"display": "Not A Font"}}}, headers=W)
+        assert refused.status_code == 400 and "no family called" in refused.json()["error"]
+        assert c.get("/fonts/file/../../etc.woff2").status_code == 404

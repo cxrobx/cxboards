@@ -12,7 +12,42 @@ interface Preset {
   palette: Palette | null
 }
 
-type Custom = { ground: string; ink: string; accent: string; font: string; corners: string }
+type Custom = {
+  ground: string
+  ink: string
+  accent: string
+  font: string
+  corners: string
+  accent2: string
+  display: string
+  body: string
+  italic: boolean
+  backdrop: string
+  dim: number
+  blur: number
+  tint: string
+  tintStrength: number
+  grain: string
+}
+
+type Stored = { preset?: string; ground?: string; ink?: string; accent?: string; font?: string; corners?: string
+  accent2?: string; grain?: string; fonts?: { display?: string; body?: string; display_style?: string }
+  backdrop?: { file: string; dim?: number; blur?: number; tint?: string; tint_strength?: number } }
+
+// A few Google families that suit different records; any Google Fonts family name works.
+const SUGGESTED = ['Anton', 'Bebas Neue', 'Oswald', 'Playfair Display', 'Cormorant Garamond', 'Fraunces', 'Libre Baskerville',
+  'DM Serif Display', 'Abril Fatface', 'Courier Prime', 'Special Elite', 'IBM Plex Mono', 'DM Sans', 'Inter', 'Work Sans', 'Karla',
+  'Space Grotesk', 'Syne', 'Unbounded', 'Permanent Marker']
+
+function toTheme(c: Custom): Record<string, unknown> {
+  const out: Record<string, unknown> = { preset: 'custom', ground: c.ground, ink: c.ink, accent: c.accent, font: c.font, corners: c.corners, grain: c.grain }
+  if (c.accent2) out.accent2 = c.accent2
+  if (c.display.trim() || c.body.trim())
+    out.fonts = { display: c.display.trim(), body: c.body.trim(), display_style: c.italic ? 'italic' : 'normal' }
+  if (c.backdrop)
+    out.backdrop = { file: c.backdrop, dim: c.dim, blur: c.blur, ...(c.tintStrength > 0 ? { tint: c.tint, tint_strength: c.tintStrength } : {}) }
+  return out
+}
 
 const FONTS: [string, string][] = [
   ['mono', 'Mono (JetBrains)'],
@@ -24,23 +59,40 @@ const FONTS: [string, string][] = [
 export function ThemePicker({
   board,
   current,
+  parent,
+  inherited,
+  images,
   onClose,
   onError,
 }: {
   board: Board
   current: Palette | null
+  parent: string | null // the parent board's title, when there is one
+  inherited: string | null // the board this one's theme comes from, when it has none of its own
+  images: { file: string; text: string }[]
   onClose: () => void
   onError: (m: string) => void
 }) {
   const [presets, setPresets] = useState<Preset[]>([])
-  const theme = board.theme as { preset?: string } & Partial<Custom> | null
-  const chosen = theme?.preset ?? 'vault'
+  const theme = board.theme as Stored | null
+  const chosen = theme ? theme.preset ?? 'vault' : 'inherit'
+  const own = theme?.preset === 'custom' ? theme : null
   const [custom, setCustom] = useState<Custom>({
-    ground: theme?.preset === 'custom' ? theme.ground! : current?.canvas ?? '#15171A',
-    ink: theme?.preset === 'custom' ? theme.ink! : current?.ink ?? '#D9D4C7',
-    accent: theme?.preset === 'custom' ? theme.accent! : current?.accent ?? '#E0A33A',
-    font: theme?.preset === 'custom' ? theme.font! : 'mono',
-    corners: theme?.preset === 'custom' ? theme.corners! : 'round',
+    ground: own?.ground ?? current?.canvas ?? '#15171A',
+    ink: own?.ink ?? current?.ink ?? '#D9D4C7',
+    accent: own?.accent ?? current?.accent ?? '#E0A33A',
+    font: own?.font ?? 'mono',
+    corners: own?.corners ?? 'round',
+    accent2: own?.accent2 ?? '',
+    display: own?.fonts?.display ?? '',
+    body: own?.fonts?.body ?? '',
+    italic: own?.fonts?.display_style === 'italic',
+    backdrop: own?.backdrop?.file ?? '',
+    dim: own?.backdrop?.dim ?? 0.72,
+    blur: own?.backdrop?.blur ?? 0,
+    tint: own?.backdrop?.tint ?? '#000000',
+    tintStrength: own?.backdrop?.tint_strength ?? 0,
+    grain: own?.grain ?? 'none',
   })
   const [customOn, setCustomOn] = useState(chosen === 'custom')
   const previewTimer = useRef(0)
@@ -76,10 +128,10 @@ export function ThemePicker({
     window.clearTimeout(previewTimer.current)
     previewTimer.current = window.setTimeout(() => {
       api
-        .previewTheme({ preset: 'custom', ...next })
+        .previewTheme(toTheme(next))
         .then((r) => applyPalette(r.palette))
         .catch(() => {})
-    }, 120)
+    }, 250)
   }
 
   return (
@@ -95,10 +147,21 @@ export function ThemePicker({
       <div className="panel dialog theme-picker">
         <header>
           <h2>Theme for {board.title}</h2>
-          <span className="muted">The whole app takes it on while this board is open</span>
+          <span className="muted">
+            {inherited && !theme ? `Wearing ${inherited}'s theme. ` : ''}The whole app takes it on while this board is open, and so do the boards inside it
+          </span>
         </header>
         <div className="dialog-body">
           <div className="theme-grid" onMouseLeave={restore}>
+            {parent && (
+              <button className={`theme-tile vault${chosen === 'inherit' ? ' on' : ''}`} onClick={() => void save(null)}>
+                <div className="mini">
+                  <span>↑</span>
+                </div>
+                <span className="name">Same as {parent}</span>
+                <span className="note">Wear the parent board's theme</span>
+              </button>
+            )}
             {presets.map((p) => {
               const pal = p.palette
               return (
@@ -107,7 +170,7 @@ export function ThemePicker({
                   className={`theme-tile${p.name === chosen ? ' on' : ''}${pal ? '' : ' vault'}`}
                   style={pal ? { background: pal.canvas, color: pal.ink, borderColor: pal.line, fontFamily: pal.font } : undefined}
                   onMouseEnter={() => applyPalette(pal)}
-                  onClick={() => void save(p.name === 'vault' ? null : p.name)}
+                  onClick={() => void save(p.name)}
                 >
                   <div
                     className="mini"
@@ -149,6 +212,73 @@ export function ThemePicker({
                 <option value="square">Square</option>
               </select>
             </label>
+            <label>
+              Second accent
+              <input type="color" value={custom.accent2 || custom.accent} onChange={(e) => previewCustom({ ...custom, accent2: e.target.value })} />
+            </label>
+          </div>
+          <datalist id="google-fonts">
+            {SUGGESTED.map((f) => (
+              <option key={f} value={f} />
+            ))}
+          </datalist>
+          <div className="custom-theme">
+            <label>
+              Heading font
+              <input className="field" list="google-fonts" placeholder="Any Google font" value={custom.display}
+                onChange={(e) => setCustom({ ...custom, display: e.target.value })} onBlur={() => previewCustom(custom)} />
+            </label>
+            <label>
+              Body font
+              <input className="field" list="google-fonts" placeholder="Any Google font" value={custom.body}
+                onChange={(e) => setCustom({ ...custom, body: e.target.value })} onBlur={() => previewCustom(custom)} />
+            </label>
+            <label className="check">
+              <input type="checkbox" checked={custom.italic} onChange={(e) => previewCustom({ ...custom, italic: e.target.checked })} />
+              Italic headings
+            </label>
+            <label>
+              Grain
+              <select value={custom.grain} onChange={(e) => previewCustom({ ...custom, grain: e.target.value })}>
+                <option value="none">None</option>
+                <option value="print">Print</option>
+                <option value="film">Film</option>
+              </select>
+            </label>
+          </div>
+          <div className="custom-theme">
+            <label>
+              Background image
+              <select value={custom.backdrop} onChange={(e) => previewCustom({ ...custom, backdrop: e.target.value })}>
+                <option value="">None</option>
+                {images.map((im) => (
+                  <option key={im.file} value={im.file}>
+                    {(im.text || im.file).slice(0, 48)}
+                  </option>
+                ))}
+              </select>
+            </label>
+            {custom.backdrop && (
+              <>
+                <label>
+                  Darken
+                  <input type="range" min={0.4} max={0.95} step={0.01} value={custom.dim} onChange={(e) => previewCustom({ ...custom, dim: +e.target.value })} />
+                </label>
+                <label>
+                  Blur
+                  <input type="range" min={0} max={16} step={1} value={custom.blur} onChange={(e) => previewCustom({ ...custom, blur: +e.target.value })} />
+                </label>
+                <label>
+                  Tint
+                  <input type="color" value={custom.tint} onChange={(e) => previewCustom({ ...custom, tint: e.target.value, tintStrength: custom.tintStrength || 0.25 })} />
+                </label>
+                <label>
+                  Tint strength
+                  <input type="range" min={0} max={0.8} step={0.01} value={custom.tintStrength} onChange={(e) => previewCustom({ ...custom, tintStrength: +e.target.value })} />
+                </label>
+              </>
+            )}
+            {!images.length && <span className="muted">Add an image to this board to use it as the background.</span>}
           </div>
           <p className="muted">Colours that would be hard to read are adjusted, so text always stays legible.</p>
         </div>
@@ -162,7 +292,7 @@ export function ThemePicker({
           >
             Cancel
           </button>
-          <button className="primary" disabled={!customOn} onClick={() => void save({ preset: 'custom', ...custom })}>
+          <button className="primary" disabled={!customOn} onClick={() => void save(toTheme(custom))}>
             Use these colours
           </button>
         </footer>

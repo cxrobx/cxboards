@@ -1,6 +1,9 @@
 """Per-board themes: a preset or custom colours, and the full palette the app wears for it.
 
-A theme names three colours (ground, ink, accent), a font and corners. Everything
+A theme names three colours (ground, ink, accent), a font and corners, and can go further: a
+second accent, its own card and line colours, any Google Fonts family for headings and for body
+text (fetched once and served locally by fonts.py), a background image from the board's uploads
+under a tinted scrim, and print or film grain. Everything
 else the app paints with (card, fill, lines, muted text, glow, shadow) is derived
 here, the same way Onyx derives its chrome from a vault theme: muted text is mixed
 from the ink toward the ground only as far as it stays readable, and an accent too
@@ -9,8 +12,10 @@ label unreadable.
 
 The server is the one place palettes are computed: the board state carries its
 palette, the picker previews presets and custom choices through it, and the Onyx
-snapshot is coloured from it. "vault" (no theme) keeps the app's own look, which
-follows the Mac's light/dark setting; every other theme is fixed light or dark.
+snapshot is coloured from it. A board with no theme of its own wears its nearest parent's
+(Store.effective_theme), so one theme dresses a whole project. "vault" said explicitly is the app's
+own look even inside a themed project; it follows the Mac's light/dark setting, and every other
+theme is fixed light or dark.
 """
 
 from __future__ import annotations
@@ -19,6 +24,9 @@ import re
 from typing import Any
 
 HEX = re.compile(r"^#?([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$")
+FAMILY = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 ]{0,40}$")  # a Google Fonts family name
+UPLOAD = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,120}$")  # a file in the uploads folder
+GRAIN = ("none", "print", "film")
 
 FONTS = {
     "mono": {"body": '"JetBrains Mono", "SF Mono", ui-monospace, Menlo, monospace', "display": None, "weight": 400},
@@ -77,10 +85,73 @@ def _hex(value: Any, what: str) -> str:
     return "#" + h.upper()
 
 
-def normalize(theme: Any) -> dict[str, Any] | None:
-    """A stored theme: None (vault), {"preset": name}, or a custom {ground, ink, accent, font, corners}."""
-    if theme in (None, "", "vault") or (isinstance(theme, dict) and theme.get("preset") == "vault"):
+def _number(value: Any, what: str, lo: float, hi: float, default: float) -> float:
+    if value in (None, ""):
+        return default
+    try:
+        n = float(value)
+    except (TypeError, ValueError):
+        raise ThemeError(f"{what} is a number from {lo} to {hi}") from None
+    if not lo <= n <= hi:
+        raise ThemeError(f"{what} is a number from {lo} to {hi}")
+    return round(n, 3)
+
+
+def _fonts(value: Any) -> dict[str, Any] | None:
+    """{display, body, display_style, display_weight, body_weight}: Google Fonts families."""
+    if not value:
         return None
+    if not isinstance(value, dict):
+        raise ThemeError("fonts is {display, body} with Google Fonts family names")
+    out: dict[str, Any] = {}
+    for key in ("display", "body"):
+        name = " ".join(str(value.get(key) or "").split())
+        if name:
+            if not FAMILY.match(name):
+                raise ThemeError(f"{key} font {name!r} isn't a font family name")
+            out[key] = name
+    if not out:
+        return None
+    style = value.get("display_style", "normal")
+    if style not in ("normal", "italic"):
+        raise ThemeError("display_style is normal or italic")
+    out["display_style"] = style
+    out["display_weight"] = int(_number(value.get("display_weight"), "display_weight", 100, 900, 400))
+    out["body_weight"] = int(_number(value.get("body_weight"), "body_weight", 100, 900, 400))
+    return out
+
+
+def _backdrop(value: Any) -> dict[str, Any] | None:
+    """{file, dim, blur, tint, tint_strength}: an uploaded image under the canvas."""
+    if not value:
+        return None
+    if not isinstance(value, dict) or not UPLOAD.match(str(value.get("file") or "")):
+        raise ThemeError("backdrop is {file: an uploaded image's file name, dim, blur, tint}")
+    out = {
+        "file": value["file"],
+        "dim": _number(value.get("dim"), "backdrop dim", 0, 0.95, 0.72),
+        "blur": _number(value.get("blur"), "backdrop blur", 0, 24, 0),
+        "tint_strength": _number(value.get("tint_strength"), "tint_strength", 0, 0.8, 0),
+    }
+    if value.get("tint"):
+        out["tint"] = _hex(value["tint"], "backdrop tint")
+    return out
+
+
+def families(theme: dict[str, Any] | None) -> list[str]:
+    """The Google Fonts families a theme needs."""
+    fonts = (theme or {}).get("fonts") or {}
+    return list(dict.fromkeys(f for f in (fonts.get("display"), fonts.get("body")) if f))
+
+
+def normalize(theme: Any) -> dict[str, Any] | None:
+    """A stored theme: None (no theme of its own: wear the parent's), {"preset": "vault"} (the app's own
+    look, said on purpose), {"preset": name}, or custom {ground, ink, accent, font, corners} with the
+    optional accent2, card, line, fonts, backdrop and grain."""
+    if theme in (None, ""):
+        return None
+    if theme == "vault" or (isinstance(theme, dict) and theme.get("preset") == "vault"):
+        return {"preset": "vault"}
     if isinstance(theme, str):
         theme = {"preset": theme}
     if not isinstance(theme, dict):
@@ -96,7 +167,7 @@ def normalize(theme: Any) -> dict[str, Any] | None:
         raise ThemeError(f"font is one of {', '.join(FONTS)}")
     if corners not in CORNERS:
         raise ThemeError("corners are round or square")
-    return {
+    out: dict[str, Any] = {
         "preset": "custom",
         "ground": _hex(theme.get("ground"), "ground"),
         "ink": _hex(theme.get("ink"), "ink"),
@@ -104,6 +175,21 @@ def normalize(theme: Any) -> dict[str, Any] | None:
         "font": font,
         "corners": corners,
     }
+    for key in ("accent2", "card", "line"):
+        if theme.get(key):
+            out[key] = _hex(theme[key], key)
+    fonts = _fonts(theme.get("fonts"))
+    if fonts:
+        out["fonts"] = fonts
+    backdrop = _backdrop(theme.get("backdrop"))
+    if backdrop:
+        out["backdrop"] = backdrop
+    grain = theme.get("grain") or "none"
+    if grain not in GRAIN:
+        raise ThemeError(f"grain is one of {', '.join(GRAIN)}")
+    if grain != "none":
+        out["grain"] = grain
+    return out
 
 
 # ---------------------------------------------------------------- colour maths
@@ -148,9 +234,29 @@ def _readable_toward(ink: str, ground: str, minimum: float) -> str:
 
 # ---------------------------------------------------------------- the palette
 
+def _stack(family: str, role: str) -> str:
+    """A Google family with a fallback of its own kind, so the page reads the same while it loads."""
+    low = family.lower()
+    if any(k in low for k in ("mono", "courier", "code", "typewriter", "elite")):
+        tail = '"Courier New", ui-monospace, monospace'
+    elif any(k in low for k in ("serif", "garamond", "playfair", "fraunces", "lora", "baskerville", "bodoni", "caslon", "didot", "spectral", "cormorant", "crimson", "libre")) and "sans" not in low:
+        tail = "Georgia, serif"
+    elif role == "display" and any(k in low for k in ("anton", "bebas", "oswald", "league gothic", "condensed")):
+        tail = '"Impact", "Arial Narrow", sans-serif'
+    else:
+        tail = "system-ui, -apple-system, sans-serif"
+    return f'"{family}", {tail}'
+
+
+def fonts_href(names: list[str]) -> str:
+    """Where the page loads a theme's fonts from: our own cached copy (fonts.py), never Google directly."""
+    from urllib.parse import quote
+    return "/fonts/css?" + "&".join("family=" + quote(n) for n in names) if names else ""
+
+
 def palette(theme: dict[str, Any] | None) -> dict[str, str] | None:
     """The app's CSS tokens for a theme; None for vault (the app's own look)."""
-    if theme is None:
+    if theme is None or theme.get("preset") == "vault":
         return None
     if theme.get("preset") == "custom":
         spec = theme
@@ -172,7 +278,15 @@ def palette(theme: dict[str, Any] | None) -> dict[str, str] | None:
             ground = mix(spec["ground"], away, step / 10)
     dark = luminance(ground) < luminance(ink)
     accent = spec["accent"] if contrast(spec["accent"], ground) >= 2.2 else ink
-    font = FONTS[spec["font"]]
+    accent2 = spec.get("accent2") or accent
+    accent2 = accent2 if contrast(accent2, ground) >= 2.2 else accent
+    font = dict(FONTS[spec["font"]])
+    google = spec.get("fonts") or {}
+    if google.get("body"):
+        font["body"] = _stack(google["body"], "body")
+        font["weight"] = google.get("body_weight", 400)
+    if google.get("display"):
+        font["display"] = _stack(google["display"], "display")
     radius, radius_lg = CORNERS[spec["corners"]]
     tokens = {
         "scheme": "dark" if dark else "light",
@@ -194,7 +308,31 @@ def palette(theme: dict[str, Any] | None) -> dict[str, str] | None:
         "fontWeight": str(font["weight"]),
         "radius": radius,
         "radiusLg": radius_lg,
+        "accent2": accent2,
+        "fontsHref": fonts_href(families(spec)),
+        # Only a theme with its own heading font sets how headings sit; others keep the app's.
+        "displayStyle": google.get("display_style", "normal") if google.get("display") else "",
+        "displayWeight": str(google.get("display_weight", 400)) if google.get("display") else "",
+        "grain": spec.get("grain", "none"),
+        "backdrop": "",
+        "backdropDim": "0",
+        "backdropBlur": "0px",
+        "backdropScrim": ground,
     }
+    # Its own card and line colours, if it names them; a card the text can't be read on is ignored.
+    if spec.get("card") and contrast(spec["card"], ink) >= 4.5:
+        tokens["card"] = spec["card"]
+    if spec.get("line"):
+        tokens["line"] = spec["line"]
+    backdrop = spec.get("backdrop")
+    if backdrop:
+        tint = backdrop.get("tint")
+        tokens.update(
+            backdrop="/media/" + backdrop["file"],
+            backdropDim=f"{backdrop['dim']:.3f}",
+            backdropBlur=f"{backdrop['blur']:g}px",
+            backdropScrim=mix(ground, tint, backdrop["tint_strength"]) if tint else ground,
+        )
     tokens.update(fixed)
     return tokens
 
@@ -209,7 +347,7 @@ def catalog() -> list[dict[str, Any]]:
 
 
 def label(theme: dict[str, Any] | None) -> str:
-    if theme is None:
+    if theme is None or theme.get("preset") == "vault":
         return "Vault"
     if theme.get("preset") == "custom":
         return f"Custom ({theme['ground']} / {theme['ink']} / {theme['accent']})"

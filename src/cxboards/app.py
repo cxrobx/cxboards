@@ -25,13 +25,14 @@ from pathlib import Path
 from typing import Any, Callable
 
 import httpx
-from fastapi import Body, FastAPI, File, Form, Request, UploadFile
+from fastapi import Body, FastAPI, File, Form, Query, Request, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, PlainTextResponse, Response, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
 from . import chat as chatlib
 from . import formats, outline, themes
 from . import templates as library
+from .fonts import FontCache, FontError, google_fetch
 from . import motion as motionlib
 from .layout import DEFAULT_WIDTH
 from .config import AUDIO_EXTENSIONS, MAX_FILE_BYTES, MAX_IMAGE_BYTES, VIDEO_EXTENSIONS, Config, load_config
@@ -64,6 +65,7 @@ def create_app(
     rotator: Callable[[Path, Path, int], None] | None = None,
     claude: Callable[[], str | None] = chatlib.find_claude,
     templates_root: Path | None = None,
+    font_fetch: Callable[[str], tuple[int, bytes]] = google_fetch,
 ) -> FastAPI:
     config = config or load_config()
     store = Store(config)
@@ -124,6 +126,33 @@ def create_app(
     @app.exception_handler(library.TemplateError)
     async def broken_library(request: Request, exc: library.TemplateError) -> JSONResponse:
         return JSONResponse({"error": f"the template library has a problem: {exc}"}, status_code=500)
+
+    fonts = FontCache(config.home, font_fetch)
+
+    @app.exception_handler(FontError)
+    async def bad_font(request: Request, exc: FontError) -> JSONResponse:
+        return JSONResponse({"error": str(exc)}, status_code=400)
+
+    def with_fonts(theme: Any) -> Any:
+        """Fetch a theme's Google fonts before it's saved or previewed: a font that doesn't exist is refused."""
+        try:
+            normalized = themes.normalize(theme)
+        except themes.ThemeError as exc:
+            raise Invalid(str(exc)) from exc
+        for family in themes.families(normalized):
+            fonts.ensure(family)
+        return theme
+
+    @app.get("/fonts/css")
+    def font_css(family: list[str] = Query(default=[])) -> Response:
+        return Response(fonts.css(family[:4]), media_type="text/css", headers={"Cache-Control": "max-age=86400"})
+
+    @app.get("/fonts/file/{name}")
+    def font_file(name: str) -> Response:
+        path = fonts.file(name)
+        if path is None:
+            raise NotFound("no such font file")
+        return FileResponse(path, headers={"Cache-Control": "max-age=31536000, immutable", "Access-Control-Allow-Origin": "*"})
 
     def templates_now() -> library.Catalog:
         return library.catalog(templates_root or library.ROOT)
@@ -328,7 +357,7 @@ def create_app(
     def update_board(board_id: str, request: Request, body: dict[str, Any] = Body(...)) -> dict[str, Any]:
         return store.update_board(
             board_id_of(board_id), body.get("title"), body.get("description"), actor_of(request),
-            is_template=body.get("is_template"), theme=body["theme"] if "theme" in body else ...,
+            is_template=body.get("is_template"), theme=with_fonts(body["theme"]) if "theme" in body else ...,
         )
 
     @app.post("/api/boards/{board_id}/move")
@@ -344,7 +373,7 @@ def create_app(
     @app.post("/api/themes/preview")
     def theme_preview(body: dict[str, Any] = Body(...)) -> dict[str, Any]:
         try:
-            return {"palette": themes.palette(themes.normalize(body.get("theme")))}
+            return {"palette": themes.palette(themes.normalize(with_fonts(body.get("theme"))))}
         except themes.ThemeError as exc:
             raise Invalid(str(exc)) from exc
 

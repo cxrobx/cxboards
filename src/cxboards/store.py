@@ -542,6 +542,21 @@ class Store:
         with self._lock:
             return self._board_dict(self._board_row(board_id))
 
+    def effective_theme(self, board_id: str) -> tuple[dict[str, Any] | None, str | None]:
+        """The theme a board wears and the board it comes from: its own, else its nearest parent's,
+        so one theme dresses a whole project. (None, None) when nothing up the tree has one."""
+        seen: set[str] = set()
+        current: str | None = board_id
+        while current and current not in seen:
+            seen.add(current)
+            row = self._db.execute("SELECT parent_id, theme FROM boards WHERE id = ?", (current,)).fetchone()
+            if row is None:
+                break
+            if row["theme"]:
+                return json.loads(row["theme"]), current
+            current = row["parent_id"]
+        return None, None
+
     def list_boards(self) -> list[dict[str, Any]]:
         with self._lock:
             rows = self._db.execute(
@@ -551,7 +566,7 @@ class Store:
             out = []
             for r in rows:
                 board = self._board_dict(r)
-                out.append({**board, "card_count": r["n"], "swatch": self._swatch(board["theme"])})
+                out.append({**board, "card_count": r["n"], "swatch": self._swatch(self.effective_theme(board["id"])[0])})
             return out
 
     def resolve_board(self, ref: str) -> dict[str, Any]:
@@ -694,6 +709,9 @@ class Store:
                 normalized = themes.normalize(theme)
             except themes.ThemeError as exc:
                 raise Invalid(str(exc)) from exc
+            backdrop = (normalized or {}).get("backdrop")
+            if backdrop and not (self.config.uploads_dir / backdrop["file"]).is_file():
+                raise Invalid(f"there's no uploaded image called {backdrop['file']} for the backdrop")
             stored = json.dumps(normalized) if normalized else None
         with self._tx() as db:
             row = self._board_row(board_id)
@@ -878,6 +896,7 @@ class Store:
     def board_state(self, board_id: str) -> dict[str, Any]:
         with self._lock:
             board = self._board_dict(self._board_row(board_id))
+            worn, source = self.effective_theme(board_id)
             cards = self.cards(board_id)
             labels = self._labels_for([c["id"] for c in cards])
             for card in cards:
@@ -891,7 +910,7 @@ class Store:
                     ).fetchone()
                     card["board"] = (
                         {"id": child_id, "title": child["title"], "card_count": child["n"],
-                         "swatch": self._swatch(json.loads(child["theme"]) if child["theme"] else None)}
+                         "swatch": self._swatch(self.effective_theme(child_id)[0])}
                         if child else None
                     )
             connectors = [dict(r) for r in self._db.execute(
@@ -904,7 +923,8 @@ class Store:
                 "cards": cards,
                 "connectors": connectors,
                 "breadcrumbs": self.breadcrumbs(board_id),
-                "palette": themes.palette(board["theme"]),
+                "palette": themes.palette(worn),
+                "theme_from": source if source != board_id else None,  # inherited from this board
             }
 
     def reading_order(self, board_id: str) -> list[dict[str, Any]]:

@@ -369,18 +369,56 @@ def set_board_theme(
     accent: str = "",
     font: str = "mono",
     corners: str = "round",
+    accent2: str = "",
+    display_font: str = "",
+    body_font: str = "",
+    display_style: str = "normal",
+    display_weight: int = 400,
+    backdrop: str = "",
+    backdrop_dim: float = 0.72,
+    backdrop_blur: float = 0,
+    backdrop_tint: str = "",
+    tint_strength: float = 0,
+    grain: str = "none",
+    inherit: bool = False,
 ) -> str:
-    """Theme a board (the whole app takes it on while the board is open, and its Onyx page too).
-    Either a `preset`: vault (the default look), chrisx, film, studio, paper, midnight, sage, rose;
-    or custom hex colours `ground` (background), `ink` (text), `accent`, with `font` mono|sans|serif|chrisx
-    and `corners` round|square. Unreadable custom colours are corrected, not refused."""
-    if preset:
-        theme: Any = preset
+    """Theme a board: the whole app takes it on while the board is open, its Onyx page too, and so does
+    every board inside it that has no theme of its own (theme the project's top board once).
+    Either a `preset`: vault (the default look, even inside a themed project), chrisx, film, studio,
+    paper, midnight, sage, rose; or custom hex colours `ground` (background), `ink` (text), `accent`,
+    optional `accent2`, `font` mono|sans|serif|chrisx and `corners` round|square. Going further:
+    `display_font` / `body_font` are any Google Fonts family names (e.g. "Anton", "Cormorant Garamond"),
+    `display_style` normal|italic, `display_weight` 100–900; `backdrop` is an image card's id (or an
+    uploaded file name) shown behind the canvas under a scrim of the ground colour at `backdrop_dim`
+    (0–0.95; higher = darker, keep ≥0.6 so notes read), blurred by `backdrop_blur` px and tinted toward
+    `backdrop_tint` by `tint_strength` (0–0.8); `grain` none|print|film. `inherit=True` removes the
+    board's own theme so it wears its parent's again. Unreadable colours are corrected, not refused."""
+    if inherit:
+        theme: Any = None
+    elif preset:
+        theme = preset
     elif ground and ink:
-        theme = {"preset": "custom", "ground": ground, "ink": ink, "accent": accent or ink, "font": font, "corners": corners}
+        theme = {"preset": "custom", "ground": ground, "ink": ink, "accent": accent or ink, "font": font,
+                 "corners": corners, "grain": grain}
+        if accent2:
+            theme["accent2"] = accent2
+        if display_font or body_font:
+            theme["fonts"] = {"display": display_font, "body": body_font, "display_style": display_style,
+                              "display_weight": display_weight}
+        if backdrop:
+            file = backdrop
+            if backdrop.startswith("c_"):
+                card = _call("GET", f"/api/cards/{backdrop}")
+                file = (card.get("data") or {}).get("file") or ""
+                if not file:
+                    raise ValueError(f"{backdrop} isn't an image card")
+            theme["backdrop"] = {"file": file, "dim": backdrop_dim, "blur": backdrop_blur,
+                                 "tint": backdrop_tint or None, "tint_strength": tint_strength}
     else:
-        raise ValueError("give a preset, or ground and ink colours")
+        raise ValueError("give a preset, or ground and ink colours (or inherit=True)")
     result = _call("PATCH", f"/api/boards/{board}", {"theme": theme})
+    if theme is None:
+        return f"{result['title']} wears its parent's theme again."
     picked = result.get("theme") or {"preset": "vault"}
     return f"{result['title']} now uses the {picked.get('preset')} theme."
 

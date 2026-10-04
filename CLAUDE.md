@@ -47,6 +47,13 @@ user, never deployed. Built 2026-10-02 to plan creative sessions next to the art
   the page and tells CXBoards.app (`cxTheme`), whose window appearance and background follow
   and are remembered for the next launch. Chris X takes chrisx.art's DESIGN.md literally:
   #000 cards on #000, cream ink and accent, Fraunces + Poppins 300, square everything.
+  A custom theme can go further: a second accent, its own card and line colours, any Google Fonts
+  family for headings and body (`src/cxboards/fonts.py` fetches each once into the home's `fonts/`
+  and serves it at `/fonts/css` + `/fonts/file/`, so it works offline and in Onyx; an unknown
+  family is refused), a backdrop (an uploaded image under a tinted scrim of the ground) and print or
+  film grain. A board with no theme of its own wears its nearest parent's (`Store.effective_theme`;
+  board state says `theme_from`), so theme a project's top board once; "vault" said explicitly is
+  stored and overrides a themed parent.
 
 - **Sidebar** (`web/src/Sidebar.tsx`): a folder is a board for keeping boards in, so its boards
   are cards on its canvas and agents file into it with `move_board`. `boards.is_folder` only gives
