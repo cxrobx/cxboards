@@ -1,0 +1,43 @@
+name: Marketing content plan
+use_when: Planning the written and visual content for a campaign — the pillars, every piece and its channel, and each one moving from idea to published.
+source: https://milanote.com/templates/marketing-campaign/marketing-content-plan
+cards:
+  - note: |
+      # *Campaign* content plan
+      **The story across all of it:** one sentence.
+      **Runs:** *start* → *end*
+      **Who signs off content:**
+    color: amber
+    width: 340
+  - column: Content pillars
+    cards:
+      - note: "Pillar 1 · what it covers · why the audience cares"
+      - note: "Pillar 2 · "
+      - note: "Pillar 3 · "
+  - break
+  - column: Ideas
+    cards:
+      - note: Every idea, unjudged. *Title* · pillar · format.
+  - column: Writing
+    cards:
+      - note: "*Piece* · channel · writer · due"
+      - note: Headline options and the call to action.
+  - column: Design
+    cards:
+      - note: "*Piece* · sizes needed · designer · due"
+      - note: "▣ Drop drafts and visuals here"
+  - column: Review
+    cards:
+      - todo: Each piece
+        items: [Fits the brief, On-brand, Facts and links checked, Approved]
+  - column: Published
+    cards:
+      - note: "*Piece* · date · where · first-week numbers"
+  - break
+  - column: Formats & channels
+    cards:
+      - note: "Blog · email · social · video · ads — which formats fit which pillar."
+      - note: How one piece gets cut down for every channel.
+  - column: Notes from the team
+    cards:
+      - note: Feedback, questions and things to fold in.

@@ -1,0 +1,55 @@
+name: Design exploration
+use_when: Trying out a few visual directions for a new project side by side, using existing images, colour and type, before opening a design tool.
+source: https://milanote.com/templates/brainstorming/design-exploration
+cards:
+  - note: |
+      # *Project* — directions
+      **What it has to feel like:** three words.
+      **What it can't be:** the look you're steering away from.
+    color: amber
+    width: 340
+  - note: |
+      **How to use it**
+      Build each direction from things that already exist. Keep them genuinely different — three versions of one idea isn't an exploration.
+  - break
+  - column: Direction A
+    cards:
+      - note: "**Name it:** *a short handle people can remember*"
+      - note: "▣ Drop images, screenshots and clips here"
+      - swatch: "#1F2A44"
+        text: Primary
+      - swatch: "#E8DCC4"
+        text: Ground
+      - note: "Type: *headline face* / *body face*"
+  - column: Direction B
+    cards:
+      - note: "**Name it:**"
+      - note: "▣ Drop images, screenshots and clips here"
+      - swatch: "#C8553D"
+        text: Primary
+      - swatch: "#F4F1EA"
+        text: Ground
+      - note: "Type:"
+  - column: Direction C
+    cards:
+      - note: "**Name it:**"
+      - note: "▣ Drop images, screenshots and clips here"
+      - swatch: "#2E5E4E"
+        text: Primary
+      - swatch: "#EDE8DF"
+        text: Ground
+      - note: "Type:"
+  - break
+  - column: Compare
+    cards:
+      - note: For each direction, the one thing it does best and the risk it carries.
+      - note: Which one fits the brief? Which one is the most interesting? Are they the same?
+  - column: Decision
+    color: green
+    cards:
+      - note: The direction you're taking forward, and anything you're borrowing from the others.
+      - todo: Next
+        items:
+          - Share the directions and collect reactions
+          - Pick one (or a merge)
+          - Start a moodboard for the chosen direction

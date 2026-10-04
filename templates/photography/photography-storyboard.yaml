@@ -1,0 +1,49 @@
+name: Photography storyboard
+use_when: Planning a shoot set-up by set-up — the scene, the light, the camera and the feeling of each image — so the day stays on track and the set looks consistent.
+also: [storyboards]
+source: https://milanote.com/templates/photography/photography-storyboard
+cards:
+  - note: |
+      # *Shoot* — storyboard
+      **The story across the set:** what the images say when they sit side by side.
+      **Consistent across every frame:** the grade, the lens, the light direction…
+    color: amber
+    width: 360
+  - note: |
+      **Atmosphere**
+      Time of day, weather, the temperature of the light, how it should feel to stand in the scene.
+  - break
+  - column: Set-up 1
+    cards:
+      - note: "▣ Sketch or reference frame"
+      - note: "**Scene:** where, who, what's happening"
+      - note: "**Light:** key, fill, modifiers"
+      - note: "**Camera:** body, lens, angle, aperture"
+  - column: Set-up 2
+    cards:
+      - note: "▣ Sketch or reference frame"
+      - note: "**Scene:** "
+      - note: "**Light:** "
+      - note: "**Camera:** "
+  - column: Set-up 3
+    cards:
+      - note: "▣ Sketch or reference frame"
+      - note: "**Scene:** "
+      - note: "**Light:** "
+      - note: "**Camera:** "
+  - column: Set-up 4
+    cards:
+      - note: "▣ Sketch or reference frame"
+      - note: "**Scene:** "
+      - note: "**Light:** "
+      - note: "**Camera:** "
+  - break
+  - column: Locations
+    cards:
+      - note: "▣ Scout photos for each set-up"
+      - note: Access, power, when the sun hits it.
+  - column: Techniques
+    cards:
+      - note: Long exposure, gels, haze, tethered — whatever needs testing before the day.
+  - todo: Gear for this board
+    items: [Bodies and backup, Lenses, Lights and modifiers, Stands and sandbags, Cards and batteries]

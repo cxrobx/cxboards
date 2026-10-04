@@ -1,0 +1,47 @@
+name: Technical architecture
+use_when: Laying out how a system is built — the pieces, the stack, the outside services and the decisions behind them — so the whole team shares one picture.
+source: https://milanote.com/templates/software-development/technical-architecture
+cards:
+  - note: |
+      # *System* — architecture
+      **What it does:** one paragraph, for someone joining next week.
+      **The hard part:** scale, latency, money, privacy — which one shapes the design?
+    color: amber
+    width: 360
+  - note: "▣ Drop the system diagram here — boxes, arrows, where the data goes"
+  - break
+  - column: Frontend
+    cards:
+      - note: Clients — web, mobile, desktop — and their frameworks.
+      - note: How they talk to the backend.
+  - column: Backend
+    cards:
+      - note: Services and what each one owns.
+      - note: Languages, frameworks, background jobs.
+  - column: Data
+    cards:
+      - note: Databases, caches, queues, file storage.
+      - note: What's the source of truth for each kind of data.
+  - column: Infrastructure
+    cards:
+      - note: Where it runs — hosting, regions, environments.
+      - note: Build, deploy and rollback.
+  - column: Third-party services
+    cards:
+      - note: "Service · what it does for you · what happens if it's down."
+  - break
+  - column: Security
+    cards:
+      - note: How people sign in, and what each role can do.
+      - note: Where secrets live. What data is sensitive.
+  - column: Observability
+    cards:
+      - note: Logs, metrics, alerts — and who gets woken up.
+  - column: Decisions
+    width: 320
+    cards:
+      - note: "*Date* · the decision · what you chose against · why."
+  - column: Open questions
+    cards:
+      - todo: ""
+        items: [Question · owner]

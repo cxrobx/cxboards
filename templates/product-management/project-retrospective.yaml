@@ -1,0 +1,43 @@
+name: Project retrospective
+use_when: Looking back at a finished project with the team — what went well, what didn't, what you learned — and leaving with a short list of changes.
+also: [software-development]
+source: https://milanote.com/templates/product-management/project-retrospective
+cards:
+  - note: |
+      # *Project* retro
+      **Date:**  **Who's here:**
+      **The project in one line:** what it set out to do, and what happened.
+      **Rule for today:** about the work, not the people.
+    color: amber
+    width: 340
+  - note: |
+      **How to run it**
+      Ten quiet minutes, everyone adds notes to all three columns. Then read them out, group the repeats, and vote on what to act on.
+  - break
+  - column: Went well
+    color: green
+    cards:
+      - note: What should we do again?
+      - note: Who or what made the difference?
+  - column: Didn't go well
+    color: clay
+    cards:
+      - note: Where did time, money or morale leak?
+      - note: What did we see coming and not act on?
+  - column: Learned
+    color: cyan
+    cards:
+      - note: What do we know now that we wish we'd known at the start?
+  - column: Puzzles
+    cards:
+      - note: Things nobody can explain yet.
+  - break
+  - column: Actions
+    width: 340
+    cards:
+      - todo: Changes we'll make
+        items: ["Action · owner · by date", "Action · owner · by date", "Action · owner · by date"]
+      - note: Three at most. A long list is a list nobody does.
+  - column: Numbers
+    cards:
+      - note: "Planned vs actual — time, budget, scope."

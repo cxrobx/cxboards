@@ -1,0 +1,58 @@
+name: Customer journey map
+use_when: Walking through a customer's experience stage by stage — what they do, think and feel, where it hurts — to find what to fix or build next.
+source: https://milanote.com/templates/product-management/customer-journey-map
+cards:
+  - note: |
+      # *Customer* → *goal*
+      **Whose journey:** the persona or real customer you're following.
+      **Scope:** the whole relationship, or one feature?
+      **What you'll do with it:** the decision this map should inform.
+    color: amber
+    width: 340
+  - note: |
+      **For each stage, fill in**
+      What they *do* · what they *think* · how they *feel* · the touchpoint · the pain · the opportunity.
+  - break
+  - column: Awareness
+    cards:
+      - note: How they first hear about you, and what they're doing at the time.
+      - note: "Thinking:"
+      - note: "Pain:"
+  - column: Consideration
+    cards:
+      - note: How they compare you with the alternatives.
+      - note: "Thinking:"
+      - note: "Pain:"
+  - column: Purchase / sign-up
+    cards:
+      - note: The steps to become a customer. Count them.
+      - note: "Thinking:"
+      - note: "Pain:"
+  - column: First use
+    cards:
+      - note: The first time they try to get the job done.
+      - note: "Thinking:"
+      - note: "Pain:"
+  - column: Ongoing use
+    cards:
+      - note: What brings them back, or doesn't.
+      - note: "Thinking:"
+      - note: "Pain:"
+  - column: Advocacy
+    cards:
+      - note: What would make them tell someone else?
+      - note: "Pain:"
+  - break
+  - column: Emotional curve
+    cards:
+      - note: The highs and lows across the stages. Where's the worst moment?
+      - note: "▣ Drop a sketch of the curve here"
+  - column: Opportunities
+    color: green
+    cards:
+      - note: One idea per pain point. Biggest pain first.
+  - column: Evidence
+    cards:
+      - note: Interviews, support tickets, analytics. Where each claim on this map came from.
+  - todo: Next steps
+    items: [Validate the worst pain with three customers, Pick one opportunity to test, Share the map with the team]

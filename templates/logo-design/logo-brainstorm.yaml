@@ -1,0 +1,50 @@
+name: Logo brainstorming
+use_when: Generating a wide spread of logo ideas — words, symbols, images and sketches — before narrowing to a few directions.
+source: https://milanote.com/templates/logo-design/logo-brainstorm
+cards:
+  - note: |
+      # *Brand* — logo ideas
+      **The brand in a sentence:** what it does and what it stands for.
+      **From the brief:** the lines everyone should keep in view.
+    color: amber
+    width: 340
+  - todo: How to run it
+    items:
+      - Five minutes per theme on a timer
+      - Quantity first — no judging yet
+      - Sketch twenty marks before picking any
+      - Then sort, then test against the brief
+  - break
+  - column: Personality
+    cards:
+      - note: Words the brand should feel like, and their opposites.
+      - note: If it were a person, a car, a song — which one?
+  - column: Shapes & symbols
+    cards:
+      - note: Objects, letters or forms that hint at what the company does.
+      - note: Metaphors — what could stand in for the product?
+  - column: Type
+    cards:
+      - note: Wordmark, monogram, or a symbol with the name?
+      - note: Letters in the name worth playing with.
+  - column: Colour
+    cards:
+      - note: Colours that fit the personality, and the ones competitors already own.
+  - break
+  - column: Images & sound
+    cards:
+      - note: "▣ Drop photos, clips or audio that carry the mood"
+  - column: Sketches
+    width: 320
+    cards:
+      - note: "▣ Drop photos or scans of your thumbnail sketches"
+      - note: Go wide — letterforms, symbols, combinations. Polish comes later.
+  - column: Shortlist
+    cards:
+      - note: The three directions worth taking further, one line each on why.
+      - todo: Test each against the brief
+        items:
+          - Fits the personality
+          - Reads tiny and huge
+          - Works in one colour
+          - Doesn't look like a competitor

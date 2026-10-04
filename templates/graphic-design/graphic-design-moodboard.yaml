@@ -1,0 +1,55 @@
+name: Graphic design moodboard
+use_when: Setting the visual direction for a design project — imagery, colour, type, texture and layout — from existing references before you design anything new.
+source: https://milanote.com/templates/graphic-design/graphic-design-moodboard
+also: [moodboards]
+cards:
+  - note: |
+      # *Project* — mood
+      **Three words:** *word* · *word* · *word*
+      **The feeling:** what someone should feel in the first second.
+    color: amber
+    width: 340
+  - note: "▣ Drop the single image that sums it up here"
+    width: 300
+  - break
+  - column: Imagery
+    width: 320
+    cards:
+      - note: "▣ Drop photography and illustration here"
+      - note: One line on what each one contributes — the light, the crop, the subject.
+  - column: Colour
+    cards:
+      - swatch: "#264653"
+        text: Lead
+      - swatch: "#E9C46A"
+        text: Accent
+      - swatch: "#F4A261"
+        text: Support
+      - swatch: "#FAF3E3"
+        text: Ground
+      - note: Pull colours from the images, not from a colour picker.
+  - column: Typography
+    cards:
+      - note: "▣ Drop type specimens and lettering here"
+      - note: "**Display:**  **Text:**"
+  - column: Texture & detail
+    cards:
+      - note: Paper, grain, pattern, edges, iconography.
+      - note: "▣ Drop close-ups here"
+  - column: Layout
+    cards:
+      - note: Grids, spacing and compositions to borrow.
+      - note: "▣ Drop layouts here"
+  - break
+  - column: Not this
+    color: clay
+    cards:
+      - note: References that are close but wrong, and why.
+  - column: Takeaway
+    cards:
+      - note: The direction in two sentences you could hand to another designer.
+      - todo: ""
+        items:
+          - Share with the client
+          - Note their reactions on the images
+          - Lock the direction before concepts

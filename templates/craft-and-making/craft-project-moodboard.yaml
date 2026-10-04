@@ -1,0 +1,40 @@
+name: Craft project moodboard
+use_when: Settling the look of something you're making — the pictures, the colours, the materials and textures — before you cut or stitch anything.
+source: https://milanote.com/templates/craft-and-making/craft-project-moodboard
+cards:
+  - note: |
+      # *Project* — moodboard
+      **The feel in three words:**
+      **It should look like:** something you'd find where?
+    color: amber
+    width: 340
+  - break
+  - column: Inspiration
+    width: 320
+    cards:
+      - note: "▣ Drop images here — finished pieces, places, objects, anything with the mood"
+      - note: "▣ Drop more images here"
+      - note: The one picture that's closest to what's in your head.
+  - column: Palette
+    cards:
+      - swatch: "#E0A33A"
+        text: Main colour
+      - swatch: "#CB4B16"
+        text: Second colour
+      - swatch: "#2AA198"
+        text: Accent
+      - swatch: "#F3ECDD"
+        text: Neutral
+      - note: Change the swatches to your colours. Hold real samples up to the screen.
+  - column: Materials & textures
+    cards:
+      - note: "▣ Drop photos of fabric, yarn, wood, paper or clay you're considering"
+      - note: How it should feel in the hand.
+  - column: Sketches
+    cards:
+      - note: "▣ Drop sketches and test pieces here"
+      - note: Details to get right — edges, joins, finish.
+  - column: Supplies
+    cards:
+      - note: Where each material comes from, with the exact name or code.
+      - note: Anything you can't find yet.

@@ -1,0 +1,46 @@
+name: Logo design presentation
+also: [graphic-design]
+use_when: Presenting two or three logo concepts so the client sees each one in use, follows the thinking, and settles on a direction.
+source: https://milanote.com/templates/logo-design/logo-design-presentation
+cards:
+  - note: |
+      # *Client* — logo concepts
+      **What we set out to do:** the goal from the brief, in one line.
+      **Judge them on:** the goals and the audience, not personal taste.
+    color: amber
+    width: 360
+  - note: |
+      **How we got here**
+      The personality from the brief and the direction from the moodboard, in two lines.
+  - break
+  - column: Concept A
+    width: 320
+    cards:
+      - note: "▣ Drop the logo on its own"
+      - note: "▣ Drop it in use — sign, card, screen, packaging"
+      - note: The idea behind it, and how it carries the brand's personality.
+  - column: Concept B
+    width: 320
+    cards:
+      - note: "▣ Drop the logo on its own"
+      - note: "▣ Drop it in use"
+      - note: The idea behind it, and who it'll appeal to.
+  - column: Concept C
+    width: 320
+    cards:
+      - note: "▣ Drop the logo on its own"
+      - note: "▣ Drop it in use"
+      - note: The idea behind it, and what sets it apart.
+  - break
+  - column: Feedback
+    cards:
+      - note: What the client and team said about each, in their words.
+      - note: Questions that keep it on strategy — which one does the job in the brief? Which still works smallest?
+  - column: Decision
+    cards:
+      - note: The direction chosen, and the changes asked for.
+      - todo: Next
+        items:
+          - Everyone agrees on the direction
+          - Refinements listed
+          - Date set for final artwork

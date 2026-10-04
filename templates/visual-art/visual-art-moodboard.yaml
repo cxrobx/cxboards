@@ -1,0 +1,45 @@
+name: Visual art moodboard
+use_when: Collecting the inspiration for a piece — images, colours, textures and themes — and shaping them into a look you can work from.
+source: https://milanote.com/templates/visual-art/visual-art-moodboard
+cards:
+  - note: |
+      # *Project* moodboard
+      **Mood in three words:**
+      **The image that started it:** put it next to this note.
+    color: amber
+    width: 340
+  - note: "▣ Drop your key image here, the one everything else answers to."
+  - break
+  - column: Inspiration
+    width: 340
+    cards:
+      - note: "▣ Drop images, artworks, photos and screenshots here"
+      - note: Group the ones that belong together. Notice which group keeps growing.
+  - column: Palette
+    cards:
+      - swatch: "#2B2A33"
+        text: Darkest
+      - swatch: "#8C6A4F"
+        text: Mid
+      - swatch: "#D8C9B0"
+        text: Light
+      - swatch: "#B5462E"
+        text: Accent
+      - note: Pick these from your images. What's the ratio between them?
+  - column: Texture & surface
+    cards:
+      - note: "▣ Drop close-ups of materials, marks and surfaces here"
+      - note: Smooth or rough, flat or built up?
+  - column: Themes
+    cards:
+      - note: Ideas, words and symbols the piece circles around.
+      - note: Lines from books, songs or conversations that fit.
+  - break
+  - column: Not this
+    color: clay
+    cards:
+      - note: Images that are close but wrong, and why.
+  - column: Ideas from the board
+    color: green
+    cards:
+      - note: What you'll try first in the studio.

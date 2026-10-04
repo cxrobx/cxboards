@@ -248,6 +248,7 @@ def create_app(
         return {
             "categories": [{**c, "count": len(cat.in_category(c["slug"]))} for c in cat.categories],
             "templates": [t.summary() for t in library.search(cat, q, category)],
+            "problems": cat.problems,  # files left out until they're fixed
         }
 
     @app.get("/api/templates/{slug}")

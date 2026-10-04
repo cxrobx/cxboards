@@ -1,0 +1,43 @@
+name: Social media campaign brief
+use_when: Planning a social campaign — the goal, the voice, the channels and the content — so everyone posting it pulls the same way.
+source: https://milanote.com/templates/creative-briefs/social-media-campaign-brief
+cards:
+  - note: |
+      # *Campaign*
+      **The goal:** grow the community, drive leads, launch something — choose the main one.
+      **The idea people should share:** one line.
+    color: amber
+    width: 340
+  - break
+  - column: Brand story
+    cards:
+      - note: Who you are and what you stand for, in the way you'd say it in a caption.
+  - column: Objectives
+    cards:
+      - note: The main KPI, and the target.
+      - note: The two numbers that explain it — reach, saves, comments, clicks.
+  - column: Voice
+    cards:
+      - note: Three words for how you sound.
+      - note: An example post that's on voice, and one that isn't.
+  - column: Audience
+    cards:
+      - note: Who you want to reach, and what they already follow.
+      - note: What they'd comment on, and what they'd send to a friend.
+  - break
+  - column: Where you are now
+    cards:
+      - note: Current channels and what's working on each.
+      - note: Past campaigns — what landed, what didn't.
+  - column: Channels
+    cards:
+      - note: The platforms for this campaign and the job each one does.
+      - note: "▣ Drop reference posts and creators here"
+  - column: Deliverables
+    cards:
+      - todo: ""
+        items: [Content calendar, Hero video, Cutdowns per platform, Static posts and carousels, Captions and hashtags, Community replies plan]
+  - column: Budget & timing
+    cards:
+      - note: Production and paid budget.
+      - note: "Start · peak · wrap-up, with dates."

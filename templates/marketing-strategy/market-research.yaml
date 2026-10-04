@@ -1,0 +1,44 @@
+name: Market research
+use_when: Building a picture of a market before a brand, a launch or a rebrand — the competitors, the customers, the trends and where there's room for you.
+also: [branding, market-research]
+source: https://milanote.com/templates/marketing-strategy/market-research
+cards:
+  - note: |
+      # *Market* — research
+      **The question this answers:** e.g. where should we position the new product?
+      **Decision it feeds:**  **Due:**
+    color: amber
+    width: 360
+  - note: |
+      **Sources**
+      Where each insight came from — interviews, reports, reviews, search data. Note the date.
+  - break
+  - column: The market
+    cards:
+      - note: How big, how fast it's growing, and who has most of it.
+      - note: How customers buy today.
+  - column: Competitors
+    cards:
+      - note: "*Name* — who they serve, how they price, what they're known for"
+      - note: "*Name* — "
+      - note: "▣ Drop screenshots of their sites, ads and packaging"
+  - column: Customers
+    cards:
+      - note: What they need, in their own words.
+      - note: What frustrates them about what's out there.
+      - note: Quotes worth repeating.
+  - column: Trends
+    cards:
+      - note: Shifts in behaviour, technology or regulation that will change the market.
+  - break
+  - column: Gaps
+    cards:
+      - note: Needs nobody serves well.
+      - note: Places competitors all look the same.
+  - column: Positioning
+    cards:
+      - note: Where you could stand — for whom, against whom, and why you'd win.
+  - column: Next steps
+    cards:
+      - todo: ""
+        items: [Interview five customers, Check pricing across the top three competitors, Share the findings, Agree the position]

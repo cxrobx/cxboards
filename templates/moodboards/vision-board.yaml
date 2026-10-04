@@ -1,0 +1,52 @@
+name: Vision board
+use_when: Picturing the year or the life you're working toward — goals in detail, images that stand for them, and words to come back to every day.
+source: https://milanote.com/templates/moodboards/vision-board
+cards:
+  - note: |
+      # *Year* — what I'm going for
+      **How I want to feel most days:**
+      **The goal that matters most:** give it the biggest space on the board.
+    color: amber
+    width: 340
+  - note: |
+      **Write goals you can see**
+      Not "travel more" — the place, the month, who's with you. Detail makes it real, and keep it to what you can actually reach.
+  - break
+  - column: Brain dump
+    width: 300
+    cards:
+      - note: Everything you want, unfiltered. Sort it into the areas next door afterwards.
+      - note: Stuck? What would make work better? What do you want to learn? Where have you always wanted to go?
+  - column: Work
+    cards:
+      - note: The role, the project, the thing you want to be known for.
+      - note: "▣ Drop an image that stands for it"
+  - column: Health
+    cards:
+      - note: Body and mind — what you'll do, not what you'll stop.
+      - note: "▣ Drop an image"
+  - column: Money & home
+    cards:
+      - note: The number, the purchase, the place — in detail.
+      - note: "▣ Drop an image"
+  - column: People
+    cards:
+      - note: Partner, family, friends — what you want those relationships to feel like.
+      - note: "▣ Drop an image"
+  - break
+  - column: Adventures & learning
+    cards:
+      - note: Places to go, skills to pick up, things to try once.
+      - note: "▣ Drop images, books, places"
+  - column: Words
+    cards:
+      - note: Affirmations, written as what you will do ("I call a friend every week"), not what you won't.
+      - note: A quote that steadies you.
+  - column: Keep it in sight
+    cards:
+      - todo: ""
+        items:
+          - Arrange it — biggest goal biggest, themes grouped
+          - Caption each image with why you picked it
+          - Set it as a wallpaper or print it
+          - Look at it again in three months

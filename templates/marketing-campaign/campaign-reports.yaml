@@ -1,0 +1,45 @@
+name: Campaign reports
+use_when: Wrapping up a campaign — what it set out to do, how each channel performed, what it cost and returned, and what to carry into the next one.
+source: https://milanote.com/templates/marketing-campaign/campaign-reports
+cards:
+  - note: |
+      # *Campaign* — report
+      **Ran:** *start* → *end*
+      **The goal was:** the number you committed to.
+      **The verdict:** hit · missed · beat it — in one line.
+    color: amber
+    width: 360
+  - note: |
+      **For whoever reads this first**
+      Three sentences: what happened, why, and what you'd do next.
+  - break
+  - column: Results
+    cards:
+      - note: "Reach: *n* · Engagement: *n* · Conversions: *n*"
+      - note: Against the target, and against the last campaign.
+      - note: "▣ Drop charts and dashboard screenshots here"
+  - column: By channel
+    cards:
+      - note: "*Channel* · spend · result · cost per result"
+      - note: The channel that surprised you, up or down.
+  - column: Budget & ROI
+    cards:
+      - note: "Planned *amount* · spent *amount* · returned *amount*"
+      - note: Where the money did the most, and where it did nothing.
+  - column: Audience response
+    cards:
+      - note: What people said — comments, replies, reviews. Quote the real ones.
+      - note: Who responded that you didn't expect?
+  - break
+  - column: What worked
+    color: green
+    cards:
+      - note: Keep doing this.
+  - column: What didn't
+    color: clay
+    cards:
+      - note: Stop or change this.
+  - column: Next time
+    cards:
+      - todo: Carry forward
+        items: [Share this report with the team, Update the brief template, Note the benchmarks for the next campaign]

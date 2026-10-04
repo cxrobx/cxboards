@@ -1,0 +1,38 @@
+name: Marketing brief
+use_when: Starting a marketing campaign with the client or team — the background, goals, brand, audience and the numbers it'll be judged on — written down before the work starts.
+also: [creative-briefs]
+source: https://milanote.com/templates/marketing-campaign/marketing-brief
+cards:
+  - note: |
+      # *Campaign* brief
+      **Client / brand:**
+      **Due:** *date*  **Budget:** *amount*
+      **The single most important thing:** what this campaign must do.
+    color: amber
+    width: 340
+  - todo: Before kickoff
+    items: [Brief reviewed by the client, Questions answered, Shared with the team, Kickoff booked]
+  - break
+  - column: Background
+    cards:
+      - note: Who the brand is and what it's known for.
+      - note: What prompted this campaign. What the brand hopes changes.
+      - note: "Scope — timeline, milestones, and who signs off."
+  - column: Goals & deliverables
+    cards:
+      - note: Specific, measurable goals that fit the business plan.
+      - note: The deliverables that will get you there — ads, content, social, events.
+  - column: Brand
+    cards:
+      - note: Personality and tone of voice, in a few words.
+      - note: Values the work should reflect.
+      - note: "▣ Drop the logo, colours and guidelines here"
+  - column: Audience
+    cards:
+      - note: The person you're talking to — age, place, income, interests.
+      - note: What they need, and what frustrates them.
+      - note: "▣ Drop a photo that stands for this person"
+  - column: Key metrics
+    cards:
+      - note: "*Metric* · baseline · target"
+      - note: How and when you'll measure it.

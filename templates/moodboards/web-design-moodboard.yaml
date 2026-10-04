@@ -1,0 +1,61 @@
+name: Web design moodboard
+also: [ux-design, website-design]
+use_when: Setting the visual direction for a website — look, layout, interface pieces and motion — so everyone agrees on it before design starts.
+source: https://milanote.com/templates/moodboards/web-design-moodboard
+cards:
+  - note: |
+      # *Site* — visual direction
+      **Who it's for:** the visitor you're designing for.
+      **Three words for the feel:** *word* · *word* · *word*
+    color: amber
+    width: 340
+  - note: |
+      **From the brief**
+      Positioning, tagline, the client's own references — paste what's already agreed.
+  - break
+  - column: Look & feel
+    width: 320
+    cards:
+      - note: "▣ Drop screenshots of sites with the right mood"
+      - note: One line on each — exactly what you'd borrow.
+      - note: Image style — photography, illustration, 3D, none?
+  - column: Layout
+    cards:
+      - note: "▣ Drop page layouts — headers, navigation, sections, footers"
+      - note: Dense or airy? One long scroll or many short pages?
+  - column: Interface pieces
+    cards:
+      - note: "▣ Drop buttons, forms, cards and icons you like"
+      - note: Rounded or square? Outlined or filled?
+  - column: Motion
+    cards:
+      - note: "▣ Drop GIFs or clips of transitions and hover states"
+      - note: Where movement helps, and where things should stay still.
+  - break
+  - column: Colour
+    cards:
+      - swatch: "#0F172A"
+        text: Ink
+      - swatch: "#F8FAFC"
+        text: Background
+      - swatch: "#2563EB"
+        text: Action
+      - swatch: "#F59E0B"
+        text: Highlight
+      - note: Check text and buttons for contrast before you fall for a palette.
+  - column: Type
+    cards:
+      - note: "**Headings:** *font*"
+      - note: "**Body:** *font*"
+      - note: Choose fonts licensed for the web, and check the weights you need exist.
+  - column: Screen sizes
+    cards:
+      - note: How it should hold up on a phone, a tablet and a wide screen.
+      - note: "▣ Drop responsive examples"
+  - column: Sign-off
+    cards:
+      - note: Feedback from the client and the team, and what you changed.
+      - todo: ""
+        items:
+          - Direction agreed before wireframes
+          - Fonts and image sources settled

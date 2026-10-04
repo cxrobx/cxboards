@@ -1,0 +1,39 @@
+name: Podcast schedule
+use_when: Running a show with several episodes on the go at once — seeing where each one is, from idea to published, and where the gaps are.
+source: https://milanote.com/templates/podcasting/podcast-schedule
+cards:
+  - note: |
+      # *Show name* — schedule
+      **Publishing:** every *day* at *time*.
+      **Check weekly:** is the idea column full enough? Is anything stuck in editing?
+    color: amber
+    width: 360
+  - note: |
+      **One card per episode**
+      Ep *n* · *title* · *guest* · *target date*. Move it right as it moves along.
+  - break
+  - column: Ideas
+    cards:
+      - note: "Ep · *idea* · why it's worth an episode"
+      - note: "Ep · *idea*"
+  - column: Researching
+    cards:
+      - note: "Ep · *title* · research and outline in progress"
+  - column: Booked
+    cards:
+      - note: "Ep · *title* · guest · record date"
+  - column: Editing
+    cards:
+      - note: "Ep · *title* · who's editing"
+  - column: Ready
+    cards:
+      - note: "Ep · *title* · scheduled for *date*"
+  - column: Published
+    cards:
+      - note: "Ep · *title* · *date*"
+  - break
+  - todo: An episode is Ready when
+    items: [Edited and mixed, Show notes written, Title and cover set, Clips cut, Scheduled in the host]
+  - column: Columns to fit your process
+    cards:
+      - note: Add or rename stages to match how you actually work — script, guest prep, transcript.

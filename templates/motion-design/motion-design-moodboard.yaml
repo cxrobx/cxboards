@@ -1,0 +1,38 @@
+name: Motion design moodboard
+use_when: Setting the visual and animation direction for a motion piece — characters, type, colour, and real examples of how things should move and sound.
+also: [moodboards]
+source: https://milanote.com/templates/motion-design/motion-design-moodboard
+cards:
+  - note: |
+      # *Project* — direction
+      **Look in three words:**
+      **Moves like:** snappy, floaty, mechanical, hand-made…
+    color: amber
+    width: 340
+  - note: "▣ The anchor: one frame or clip that sums it up. Make it the biggest thing on the board"
+    width: 360
+  - break
+  - column: Existing material
+    cards:
+      - note: "▣ Past work, the client's references, brand assets"
+  - column: Characters & scenes
+    cards:
+      - note: "▣ Character styles, environments, compositions"
+  - column: Type
+    cards:
+      - note: "▣ Typefaces and how type enters, holds and leaves"
+  - column: Motion & sound
+    cards:
+      - note: "▣ Drop GIFs and clips showing the timing and transitions you want"
+      - note: "▣ Drop music or sound design that sets the rhythm"
+      - note: What makes each one feel right — easing, pace, the cut?
+  - break
+  - swatch: "#14213D"
+    text: Base
+  - swatch: "#FCA311"
+    text: Accent
+  - swatch: "#E5E5E5"
+    text: Light
+  - swatch: "#2A9D8F"
+    text: Secondary
+  - note: Pull the palette from your references and replace these.

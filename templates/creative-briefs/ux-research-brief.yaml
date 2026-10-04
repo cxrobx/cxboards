@@ -1,0 +1,41 @@
+name: UX research brief
+use_when: Setting up a user research project — what you need to learn, from whom, by which method, and what's already known.
+also: [ux-research]
+source: https://milanote.com/templates/creative-briefs/UX-research-brief
+cards:
+  - note: |
+      # *Study name*
+      **We need to learn:** the one question that matters most.
+      **So we can decide:** what changes depending on the answer.
+    color: amber
+    width: 340
+  - break
+  - column: Background
+    cards:
+      - note: The product, the stage it's at, and what prompted the research.
+  - column: Goals
+    cards:
+      - note: Research questions, most important first.
+      - note: Assumptions the team holds that this could prove wrong.
+  - column: Methods
+    cards:
+      - note: Interviews, usability tests, diary study, survey, analytics — and why that fits the question.
+      - note: What participants will see — prototype, live product, nothing.
+  - column: Participants
+    cards:
+      - note: Who you need, who to exclude, and how many.
+      - todo: Recruitment
+        items: [Screener written, Source found, Incentive agreed, Sessions booked, Consent forms ready]
+  - break
+  - column: Past research
+    cards:
+      - note: "▣ Drop earlier findings, recordings and reports here"
+      - note: What's still true, and what's out of date.
+  - column: Dates & budget
+    cards:
+      - note: When findings are needed, and for which decision.
+      - note: Budget, including incentives.
+  - column: Deliverables
+    cards:
+      - todo: ""
+        items: [Research plan, Discussion guide, Session notes and recordings, Synthesis, Findings readout]

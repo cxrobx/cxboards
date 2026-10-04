@@ -82,6 +82,7 @@ GOOD = "name: {name}\nuse_when: Testing.\ncards:\n  - note: Hello\n"
         ({"a/one.yaml": GOOD.format(name="One") + "also: [nowhere]\n"}, "isn't another category"),
         ({"c/one.yaml": GOOD.format(name="One")}, "not a category"),
         ({"a/One.yaml": GOOD.format(name="One")}, "lowercase-with-dashes"),
+        ({"a/one.yaml": "name: One\nuse_when: x\ncards:\n  - todo: T\n    items: ['*bold* step']\n"}, "plain text"),
     ],
 )
 def test_format_mistakes_name_the_file_and_the_problem(tmp_path: Path, files: dict, message: str) -> None:
@@ -105,6 +106,18 @@ def test_search_puts_name_matches_first() -> None:
     assert hits and hits[0].slug == "studio-session-plan"
     assert all(t.category == "music" or "music" in t.also for t in lib.search(LIBRARY, category="music"))
     assert lib.search(LIBRARY, "zzzz-nothing") == []
+    # Filler words don't count, and "mood board" finds the moodboards.
+    assert lib.search(LIBRARY, "a mood board for my wedding")[0].slug == "wedding-moodboard"
+    assert lib.search(LIBRARY, "podcast outline")[0].slug == "podcast-outline"
+
+
+def test_the_readme_index_is_current() -> None:
+    import subprocess
+    import sys
+
+    root = Path(__file__).resolve().parents[1]
+    done = subprocess.run([sys.executable, "scripts/template-index.py", "--check"], cwd=root, capture_output=True, text=True)
+    assert done.returncode == 0, done.stdout
 
 
 def test_api_lists_and_builds_from_the_library(client) -> None:
@@ -138,3 +151,15 @@ def test_agents_find_and_use_templates(client) -> None:
         assert "Beat pack" in m.list_boards()
     finally:
         m.set_client(None)  # type: ignore[arg-type]
+
+
+def test_the_app_leaves_a_broken_file_out_and_says_so(tmp_path: Path) -> None:
+    write(tmp_path, "categories.yaml", "- {slug: a, name: A}\n")
+    write(tmp_path, "a/good.yaml", GOOD.format(name="Good"))
+    write(tmp_path, "a/typo.yaml", "name: Typo\nuse_when: x\ncards:\n  - todo: T\n    items: [a, b?, c: d]\n")
+    write(tmp_path, "a/twin.yaml", GOOD.format(name="good"))
+    cat = lib.catalog(tmp_path)
+    assert list(cat.templates) == ["good"]
+    assert len(cat.problems) == 2 and any("twin.yaml" in p for p in cat.problems)
+    with pytest.raises(lib.TemplateError):
+        lib.load(tmp_path)  # the tests stay strict

@@ -1,0 +1,43 @@
+name: Architecture moodboard
+use_when: Setting the look and atmosphere of a building project — form, materials, textures, light and colour — from collected images before the design is drawn.
+also: [moodboards]
+source: https://milanote.com/templates/architecture/architecture-moodboard
+cards:
+  - note: |
+      # *Project* — atmosphere
+      **Three words for the place:**
+      **What it should feel like to arrive:**
+    color: amber
+    width: 340
+  - note: "▣ The anchor: the single image closest to the building in your head"
+    width: 360
+  - break
+  - column: Form & massing
+    cards:
+      - note: "▣ Buildings, roofs, openings, how they meet the ground"
+  - column: Materials & textures
+    cards:
+      - note: "▣ Stone, timber, concrete, metal, glass — close up"
+      - note: How each one weathers.
+  - column: Light & space
+    cards:
+      - note: "▣ Interiors, thresholds, shadows"
+      - note: Where the light comes from, and when.
+  - column: Details
+    cards:
+      - note: "▣ Junctions, handrails, joinery, the things you touch"
+  - column: Landscape
+    cards:
+      - note: "▣ Planting, paving, the edge between inside and out"
+  - break
+  - swatch: "#D8D2C4"
+    text: Limestone
+  - swatch: "#A2795A"
+    text: Timber
+  - swatch: "#8C8C88"
+    text: Concrete
+  - swatch: "#3D4A3F"
+    text: Planting
+  - swatch: "#2B2B2B"
+    text: Metal
+  - note: Pick the palette from your material photos and replace these.

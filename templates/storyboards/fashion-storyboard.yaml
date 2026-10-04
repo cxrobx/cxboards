@@ -1,0 +1,62 @@
+name: Fashion storyboard
+use_when: Showing how a collection comes together — the story behind it, the palette and fabrics, every look, and how it's styled, shot and shown in store.
+also: []
+source: https://milanote.com/templates/storyboards/fashion-storyboard
+cards:
+  - note: |
+      # *Collection* — *season*
+      **The story:** what the collection is about, in one sentence.
+      **Who wears it:** the person and the place they're going.
+    color: amber
+    width: 360
+  - column: Inspiration
+    cards:
+      - note: "▣ Drop the images, places, eras and people the collection grew from"
+      - note: The thread that runs through all of them.
+  - break
+  - column: Palette
+    cards:
+      - swatch: "#1F1D1B"
+        text: Base
+      - swatch: "#D8CBB4"
+        text: Neutral
+      - swatch: "#8C3B2E"
+        text: Accent
+      - swatch: "#5C6A5A"
+        text: Secondary
+      - note: Replace these with colours pulled from your fabrics.
+  - column: Fabrics & trims
+    cards:
+      - note: "▣ Fabric swatches and close-ups"
+      - note: Weight, hand-feel, supplier, minimums.
+  - column: Silhouettes
+    cards:
+      - note: "▣ Sketches and illustrations"
+      - note: The shapes that repeat across the range.
+  - column: Styling & accessories
+    cards:
+      - note: "▣ Shoes, bags, jewellery, hair and makeup references"
+  - break
+  - board: Looks
+    folder: true
+    cards:
+      - note: One board per look. Duplicate *Look template* for each and keep them in running order.
+      - board: Look template
+        cards:
+          - note: |
+              # Look *01*
+              **Pieces:**  **Fabric:**  **Colourway:**
+          - note: "▣ Illustration, then fittings as they happen"
+          - todo: Status
+            items: [Designed, Pattern, Sample, Fitted, Approved]
+  - column: Campaign
+    cards:
+      - note: "▣ References for the shoot — models, location, light"
+      - note: How the story gets told in images.
+  - column: In store
+    cards:
+      - note: "▣ Merchandising and display ideas"
+      - note: Which looks hang together, and what goes in the window.
+  - column: Review
+    cards:
+      - note: Feedback on the range before it's locked.

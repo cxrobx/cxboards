@@ -1,0 +1,37 @@
+name: Campaign strategy
+use_when: Deciding the shape of a campaign before any work starts — the objective, who it's for, what you'll say, where you'll say it and over how long.
+source: https://milanote.com/templates/marketing-campaign/campaign-strategy
+cards:
+  - note: |
+      # *Campaign* strategy
+      **The problem it solves for the business:**
+      **Success looks like:** one measurable outcome and a date.
+    color: amber
+    width: 340
+  - note: |
+      **The test of a good strategy**
+      Could someone who wasn't in the room say who it's for, what it says and why it'll work?
+  - break
+  - column: Objectives
+    cards:
+      - note: The main objective, with a number.
+      - note: One or two secondary ones — nice to move, not the point.
+  - column: Audience
+    cards:
+      - note: Who they are, in plain terms. Age, situation, what they already believe.
+      - note: What they want, and what's in the way.
+      - note: "▣ Drop audience data, survey results or a persona here"
+  - column: Key messages
+    cards:
+      - note: The one thing you want them to remember.
+      - note: Two or three proof points that make it believable.
+      - note: The tone — and the words you'll never use.
+  - column: Channels
+    cards:
+      - note: "*Channel* · why this audience is there · what goes out on it"
+      - note: Where you're deliberately *not* showing up, and why.
+  - column: Timeline
+    cards:
+      - note: "Tease · launch · sustain · close — dates for each phase."
+      - todo: Before launch
+        items: [Strategy signed off, Brief written for the creative team, Tracking set up]

@@ -1,0 +1,49 @@
+name: Flow chart
+use_when: Mapping a workflow or decision process step by step, so you can see where it branches, stalls or could be simpler.
+source: https://milanote.com/templates/brainstorming/flow-chart
+also: [software-development]
+cards:
+  - note: |
+      # *Process name*
+      **Starts when:** the trigger.
+      **Ends when:** the result someone is waiting for.
+      **Owner:** who's accountable for it end to end.
+    color: amber
+    width: 340
+  - note: |
+      **Key**
+      Green = start · plain = a step · violet = a decision (yes / no) · clay = an end.
+      Draw lines between cards once the steps are in order.
+  - break
+  - note: "**Start** — *the trigger*"
+    color: green
+    width: 220
+  - column: Steps
+    cards:
+      - note: "1. *Verb + object* — who does it"
+      - note: "2. *Verb + object* — who does it"
+      - note: "3. *Verb + object* — who does it"
+      - note: One action per card. If a step has an "and" in it, split it.
+  - column: Decisions
+    color: violet
+    cards:
+      - note: "*Question?* Yes → step *n* · No → step *n*"
+      - note: "*Question?* Yes → · No →"
+  - column: Ends
+    color: clay
+    cards:
+      - note: "Done — *the result*"
+      - note: "Stopped — *why it can end early*"
+  - break
+  - column: Pain points
+    cards:
+      - note: Where work waits, gets passed back, or depends on one person.
+      - note: Loops that run more than once on a normal day.
+  - column: Improvements
+    cards:
+      - note: Steps you could drop, merge, automate or move earlier.
+      - todo: Before you share it
+        items:
+          - Every decision has both answers drawn
+          - Every path reaches an end
+          - Walked through once with someone who does the work

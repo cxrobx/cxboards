@@ -1,0 +1,40 @@
+name: UI design brief
+use_when: Briefing an interface design project so collaborators can quote and start — the aims, the process, the existing styles and what they'll hand over.
+source: https://milanote.com/templates/creative-briefs/ui-design-brief
+cards:
+  - note: |
+      # *Product* — UI brief
+      **What's being designed:** screens, flows, a component library, a redesign.
+      **Done well means:** what users can do faster or feel better about.
+    color: amber
+    width: 340
+  - break
+  - column: Objectives
+    cards:
+      - note: The problems with the interface today.
+      - note: The outcomes you want — fewer support tickets, more completed sign-ups, a calmer feel.
+  - column: Process
+    cards:
+      - note: How you'd like to work — sprints, reviews, who signs off.
+      - note: Tools the team already uses.
+  - column: Existing styles
+    cards:
+      - note: "▣ Drop current screens, brand guidelines and the style guide here"
+      - swatch: "#2AA198"
+        text: Primary
+      - swatch: "#E0A33A"
+        text: Accent
+      - note: Type, spacing and components you're keeping.
+  - column: User research
+    cards:
+      - note: Who uses it, and what research says about them.
+      - note: Known pain points, with quotes if you have them.
+  - break
+  - column: Deliverables
+    cards:
+      - todo: ""
+        items: [Wireframes for key flows, High-fidelity screens, Interactive prototype, Component library, "Empty, loading and error states", Developer handoff]
+  - column: Budget & timing
+    cards:
+      - note: Budget range.
+      - note: Review dates and the final deadline.

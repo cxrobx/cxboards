@@ -1,0 +1,52 @@
+name: YouTube script
+use_when: Writing a YouTube video chapter by chapter — the hook, the talking points, what's on screen and the timestamps — so you stay on track while filming and editing.
+source: https://milanote.com/templates/content-creation/youtube-script
+cards:
+  - note: |
+      # *Video title*
+      **The promise:** what the viewer can do or understand by the end.
+      **Length:** about *n* minutes.
+    color: amber
+    width: 340
+  - note: "▣ Drop thumbnail ideas here — the title and thumbnail should promise the same thing"
+    width: 300
+  - break
+  - column: Hook · 0:00
+    color: clay
+    cards:
+      - note: The first 15 seconds. Show the payoff or name the problem — skip the greeting.
+      - note: "On screen:"
+  - column: Intro · 0:15
+    cards:
+      - note: Why you, and what's coming. Keep it under 30 seconds.
+      - note: "On screen:"
+  - column: Chapter 1
+    cards:
+      - note: "**Point:**  **Starts at:**"
+      - note: "Talking points:"
+      - note: "B-roll / graphics:"
+  - column: Chapter 2
+    cards:
+      - note: "**Point:**  **Starts at:**"
+      - note: "Talking points:"
+      - note: "B-roll / graphics:"
+  - column: Chapter 3
+    cards:
+      - note: "**Point:**  **Starts at:**"
+      - note: "Talking points:"
+      - note: "B-roll / graphics:"
+  - break
+  - column: Call to action
+    cards:
+      - note: The one thing you'll ask for, and where in the video it lands best.
+  - column: Outro
+    cards:
+      - note: Recap in a sentence, then point to the next video to watch.
+  - column: Before filming
+    cards:
+      - todo: ""
+        items:
+          - Read it out loud and cut what you stumble on
+          - Every chapter has something to show
+          - Chapter timestamps ready for the description
+          - Shot list for the B-roll

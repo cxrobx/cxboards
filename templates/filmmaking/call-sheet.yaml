@@ -1,0 +1,41 @@
+name: Film call sheet
+use_when: Getting a shoot day's cast and crew to the right place at the right time — the job, the location, who's on, what to bring and the run of the day.
+source: https://milanote.com/templates/filmmaking/call-sheet
+theme: film
+cards:
+  - note: |
+      # *Production* — day *n* of *n*
+      **Date:**  **General crew call:** *time*
+      **What we're shooting today:** the scenes, in one line.
+      **In charge on the day:** *name* · *phone*
+    color: amber
+    width: 360
+  - note: "▣ Drop the poster, a still or the client's logo here"
+  - note: |
+      **Weather and daylight**
+      Forecast · sunrise · sunset · the backup plan if it rains.
+  - break
+  - column: Location
+    cards:
+      - note: Address, and the door or gate you actually come in through.
+      - note: Parking, and the nearest train or bus stop.
+      - note: "▣ Drop a map pin or a photo of the entrance here"
+      - note: Nearest hospital and the first-aider on set.
+  - column: Cast & crew
+    width: 340
+    cards:
+      - note: "*Name* · *role* · *phone* · call *time*"
+      - note: "*Name* · *role* · *phone* · call *time*"
+      - note: "*Name* · *role* · *phone* · call *time*"
+      - note: Who's driving whom, and who brings the keys.
+  - column: Gear & props
+    cards:
+      - todo: On the truck
+        items: [Camera package, Lights and stands, Sound kit, Batteries charged, Props and wardrobe, First-aid kit]
+  - column: Schedule
+    cards:
+      - note: "*time* — General crew call, coffee, safety talk"
+      - note: "*time* — Scene *n* · *setup*"
+      - note: "*time* — Lunch (a real one, sitting down)"
+      - note: "*time* — Scene *n* · *setup*"
+      - note: "*time* — Wrap, pack, leave it as you found it"

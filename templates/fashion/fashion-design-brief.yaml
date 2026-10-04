@@ -1,0 +1,49 @@
+name: Fashion design brief
+use_when: Agreeing what a fashion project needs to be before designing — the background, the wearer, the references, the goals and what gets delivered.
+source: https://milanote.com/templates/fashion/fashion-design-brief
+cards:
+  - note: |
+      # *Project name* — brief
+      **Client or label:**
+      **The ask in one sentence:** what's being designed, for whom, by when.
+    color: amber
+    width: 360
+  - note: |
+      **Good looks like**
+      How you'll know the result is right — the reaction you want.
+  - break
+  - column: Background
+    cards:
+      - note: The label or client — what they stand for, what they've done before.
+      - note: Why this project, and why now.
+  - column: The wearer
+    cards:
+      - note: Who wears it, where they wear it, what else is in their wardrobe.
+      - note: What they need the garment to do.
+  - column: References
+    cards:
+      - note: "▣ Drop reference images here"
+      - note: What to take from each — the cut, the fabric, the attitude.
+      - note: "▣ Drop what to avoid here, and say why"
+  - column: Direction
+    cards:
+      - swatch: "#1E1E1E"
+        text: Colour 1
+      - swatch: "#D8CBB5"
+        text: Colour 2
+      - swatch: "#5B6E5A"
+        text: Colour 3
+      - note: Fabrics and finishes to start from.
+  - break
+  - column: Constraints
+    cards:
+      - note: "**Budget · season · production run · price point**"
+      - note: Sizing range and fit requirements.
+      - note: Sustainability or sourcing rules.
+  - column: Deliverables
+    cards:
+      - todo: ""
+        items: [Concept boards, Sketches and line-up, Tech packs, Samples, Final pieces]
+  - column: Dates
+    cards:
+      - note: "*Milestone* · *date* · who signs off"

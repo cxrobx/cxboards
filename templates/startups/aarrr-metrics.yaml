@@ -1,0 +1,52 @@
+name: AARRR metrics
+use_when: Checking a startup's health stage by stage — acquisition, activation, retention, referral, revenue — side by side, to decide which part of the funnel to work on next.
+source: https://milanote.com/templates/startups/AARRR-metrics
+cards:
+  - note: |
+      # *Company* — growth funnel
+      **Period:** *month / quarter*
+      **The leakiest stage:** where the biggest drop-off is.
+      **This period we focus on:** one stage, not five.
+    color: amber
+    width: 360
+  - break
+  - column: Acquisition
+    cards:
+      - note: "**How do people find us?**"
+      - note: "Metric · *visitors, sign-ups by channel* · now: — · target: —"
+      - note: Initiatives to improve it.
+  - column: Activation
+    cards:
+      - note: "**Do they have a great first experience?**"
+      - note: "Metric · *% who reach the key action* · now: — · target: —"
+      - note: Initiatives to improve it.
+  - column: Retention
+    cards:
+      - note: "**Do they come back?**"
+      - note: "Metric · *week-4 return rate, churn* · now: — · target: —"
+      - note: Initiatives to improve it.
+  - column: Referral
+    cards:
+      - note: "**Do they tell others?**"
+      - note: "Metric · *invites sent, referred sign-ups* · now: — · target: —"
+      - note: Initiatives to improve it.
+  - column: Revenue
+    cards:
+      - note: "**Do they pay?**"
+      - note: "Metric · *conversion to paid, revenue per user* · now: — · target: —"
+      - note: Initiatives to improve it.
+  - break
+  - column: Experiments running
+    color: cyan
+    cards:
+      - note: "*Experiment* · stage · what you expect · when you'll know"
+  - column: Learned
+    color: green
+    cards:
+      - note: What the last round of experiments told you.
+  - todo: Each review
+    items:
+      - Numbers updated for every stage
+      - Biggest drop-off named
+      - One focus stage chosen
+      - Shared with the team and investors

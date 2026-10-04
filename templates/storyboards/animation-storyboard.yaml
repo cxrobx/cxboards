@@ -1,0 +1,56 @@
+name: Animation storyboard
+use_when: Turning a script into an animation plan scene by scene — the frames, the motion, the timing and the sound — before anyone opens an animation tool.
+also: []
+source: https://milanote.com/templates/storyboards/animation-storyboard
+cards:
+  - note: |
+      # *Title* — storyboard
+      **Length:** *seconds / minutes*  **Style:** 2D · 3D · stop-motion · motion graphics
+      **The story in one line:** who wants what, and what happens.
+    color: amber
+    width: 360
+  - note: |
+      **Read each frame as motion**
+      A frame is a still — write how it moves, how long it holds, and how it hands to the next one.
+  - break
+  - column: "Scene 1 — *name*"
+    cards:
+      - note: "▣ Sketch or reference frame"
+      - note: "**Action:** what moves, and how the character behaves"
+      - note: "**Camera:** framing and any move · **Time:** *s*"
+      - note: "**Sound / VO:** "
+      - note: "**Into next:** cut, match, wipe, morph"
+  - column: "Scene 2 — *name*"
+    cards:
+      - note: "▣ Sketch or reference frame"
+      - note: "**Action:** "
+      - note: "**Camera:**  **Time:** "
+      - note: "**Sound / VO:** "
+      - note: "**Into next:** "
+  - column: "Scene 3 — *name*"
+    cards:
+      - note: "▣ Sketch or reference frame"
+      - note: "**Action:** "
+      - note: "**Camera:**  **Time:** "
+      - note: "**Sound / VO:** "
+      - note: "**Into next:** "
+  - column: "Scene 4 — *name*"
+    cards:
+      - note: "▣ Sketch or reference frame"
+      - note: "**Action:** "
+      - note: "**Camera:**  **Time:** "
+      - note: "**Sound / VO:** "
+  - break
+  - column: Characters
+    cards:
+      - note: "▣ Model sheets or references"
+      - note: Each character's personality in a line, and how that shows in how they move.
+  - column: Look & feel
+    cards:
+      - note: "▣ Style frames — colour, line, texture"
+      - note: The animation references you're matching for timing and feel.
+  - column: Review
+    cards:
+      - note: Notes from the team, frame by frame.
+      - todo: ""
+        items: [Script locked, Boards reviewed, Order and timing agreed, Animatic cut]

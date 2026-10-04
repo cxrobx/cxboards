@@ -1,0 +1,93 @@
+name: Photoshoot plan
+use_when: Running a whole shoot from one place — the brief, the moodboard, the shot list, the call sheet and the selects each get a board, with the workflow and gear checklists beside them.
+also: [project-plans]
+source: https://milanote.com/templates/photography/photoshoot-plan
+cards:
+  - note: |
+      # *Shoot name*
+      **Client:**  **Shoot date:**  **Delivery:**
+      **The point of the shoot:** one sentence.
+      Work through the boards left to right — each one feeds the next.
+    color: amber
+    width: 360
+  - break
+  - board: Brief
+    cards:
+      - note: |
+          # Brief
+          **Client and project:** who they are and why this shoot exists.
+        color: amber
+      - column: Goals & audience
+        cards:
+          - note: What these images have to do, and for whom.
+      - column: Deliverables
+        cards:
+          - todo: ""
+            items: [Number of finals, Formats and sizes, Usage and term, Due date]
+      - column: Dates
+        cards:
+          - note: Brief signed off · shoot · selects · delivery
+  - board: Moodboard
+    cards:
+      - note: "▣ Drop the anchor image first, then everything that supports it"
+      - column: Light & framing
+        cards:
+          - note: "▣ References"
+      - column: Styling
+        cards:
+          - note: "▣ Wardrobe, props, surfaces"
+      - column: Palette
+        cards:
+          - swatch: "#2B2622"
+            text: Shadows
+          - swatch: "#E9E1D3"
+            text: Highlights
+  - board: Shot list
+    cards:
+      - note: "One column per subject. ▣ A reference image on top, the shots underneath."
+      - column: "*Subject 1*"
+        cards:
+          - note: "▣ Reference"
+          - todo: Shots
+            items: [Wide, Mid, Detail]
+      - column: "*Subject 2*"
+        cards:
+          - note: "▣ Reference"
+          - todo: Shots
+            items: [Wide, Mid, Detail]
+      - column: Lighting & backgrounds
+        cards:
+          - note: Backdrop, key light, and anything that has to stay consistent.
+  - board: Call sheet
+    cards:
+      - note: "**Date** · **general call** · **person in charge** and their number"
+      - column: Location
+        cards:
+          - note: Address, parking, how to get in.
+      - column: People
+        cards:
+          - note: "*Name* · *role* · *phone* · call *time*"
+      - column: Schedule
+        cards:
+          - note: "*time* — call · first shot · lunch · wrap"
+  - board: Contact sheet
+    cards:
+      - note: The shortlist for the client. Explain why you chose them, then let them pick.
+      - column: Selects
+        cards:
+          - note: "▣ Drop the cropped selects here"
+      - column: Client picks
+        cards:
+          - note: Move the chosen frames here with any retouch notes.
+  - break
+  - column: Workflow
+    cards:
+      - todo: ""
+        items: [Brief signed off, Moodboard signed off, Shot list agreed, Crew and talent booked, Call sheet sent, Shoot, Contact sheet sent, Picks retouched and delivered]
+  - column: Gear
+    cards:
+      - todo: ""
+        items: [Bodies and backup, Lenses, Lights and modifiers, Stands and sandbags, Cards and batteries, Laptop and tether]
+  - column: Notes
+    cards:
+      - note: Decisions, changes and anything the client said in passing that matters.

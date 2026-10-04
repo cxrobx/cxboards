@@ -61,7 +61,7 @@ phases (commits aa2b1e6, 4cc5ad8, 435d5a7) and verified in the browser.
 | Unsorted tray per board | ✅ | Where clips and agent drops land without cluttering the canvas |
 | Labels (colours, rename everywhere, find by label) | ✅ | Agents can label too |
 | Search across every board (⌘F), recent boards | ✅ | |
-| Templates (board → template, new board from template) | ✅ | E.g. a "Session plan" template |
+| Templates (board → template, new board from template) | ✅ | Your own boards as templates, plus a library of Milanote's whole gallery by use case, de-duplicated and rewritten, and a Music category of our own (`templates/`, browsable in New board, usable by agents) |
 | Home board | ✅ | The sidebar tree does this job |
 
 ## Navigation, view, keyboard

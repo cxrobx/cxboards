@@ -1,0 +1,110 @@
+name: Logo design project plan
+use_when: Running a whole logo project from one hub — brief, brainstorm, research, moodboard, concepts and handover — with the workflow checklists beside them.
+source: https://milanote.com/templates/logo-design/logo-design-plan
+cards:
+  - note: |
+      # *Client* — logo project
+      **Goal:** what the new logo has to do for the business.
+      **Due:** concepts *date* · final files *date*
+    color: amber
+    width: 340
+  - note: |
+      **How this board works**
+      One board per stage, in order. Tick off a stage's checklist below before you open the next.
+  - break
+  - board: 1 · Brief
+    cards:
+      - note: |
+          # Brief
+          Background on the client, the goals, the audience and the dates.
+        color: amber
+      - column: Goals & audience
+        cards:
+          - note: What success looks like, and who the logo has to win over.
+      - todo: Deliverables
+        items: [Primary logo, Icon, Colour palette, Type choices, Usage guide]
+  - board: 2 · Brainstorm
+    cards:
+      - note: Five minutes per theme. Write everything down; judge later.
+        color: amber
+      - column: Personality
+        cards:
+          - note: Words and feelings.
+      - column: Symbols
+        cards:
+          - note: Shapes and metaphors.
+      - column: Sketches
+        cards:
+          - note: "▣ Drop sketch photos here"
+  - board: 3 · Research
+    cards:
+      - note: The competitors, and the space none of them owns.
+        color: amber
+      - column: Competitors
+        cards:
+          - note: "▣ Drop their logos, one line on each"
+      - column: The gap
+        cards:
+          - note: Where this brand can stand apart.
+  - break
+  - board: 4 · Moodboard
+    cards:
+      - note: The visual direction, agreed before design starts.
+        color: amber
+      - column: References
+        cards:
+          - note: "▣ Drop images that set the tone"
+      - column: Colour & type
+        cards:
+          - swatch: "#E0A33A"
+          - note: Fonts worth trying.
+  - board: 5 · Concepts
+    cards:
+      - note: Two or three directions, each with the thinking behind it.
+        color: amber
+      - column: Concept A
+        cards:
+          - note: "▣ Drop the mark and a mock-up"
+          - note: Why it answers the brief.
+      - column: Concept B
+        cards:
+          - note: "▣ Drop the mark and a mock-up"
+          - note: Why it answers the brief.
+      - column: Feedback
+        cards:
+          - note: What the client said, and the direction chosen.
+  - board: 6 · Handover
+    cards:
+      - note: Every file the client needs, in one place.
+        color: amber
+      - todo: Files
+        items:
+          - Logo as SVG, EPS and PNG
+          - One-colour and reversed versions
+          - Colour values
+          - Fonts and licences
+          - Usage guide
+  - break
+  - column: Brief & research
+    cards:
+      - todo: ""
+        items:
+          - Brief written with the client
+          - Brief shared and agreed
+          - Competitors mapped
+  - column: Ideas & direction
+    cards:
+      - todo: ""
+        items:
+          - Brainstorm done
+          - Twenty-plus sketches
+          - Moodboard agreed
+  - column: Design & delivery
+    cards:
+      - todo: ""
+        items:
+          - Concepts presented
+          - Direction chosen
+          - Final artwork refined
+          - Files handed over
+          - Invoice sent

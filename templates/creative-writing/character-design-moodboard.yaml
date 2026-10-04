@@ -1,0 +1,44 @@
+name: Character design moodboard
+use_when: Finding what a character looks like and lives among — face, clothes, the things they love, the places they go — before you describe them on the page.
+also: [moodboards]
+source: https://milanote.com/templates/creative-writing/character-design-moodboard
+cards:
+  - note: |
+      # *Character name*
+      **In one line:** who they are when nobody is watching.
+      **The first thing a stranger notices:**
+    color: amber
+    width: 340
+  - note: |
+      **Their palette**
+      Pull three or four colours from the images below — what they wear, where they live.
+  - swatch: "#5B4636"
+    text: Their main colour
+  - swatch: "#A9B7A0"
+    text: Second colour
+  - swatch: "#D9C3A5"
+    text: Accent
+  - break
+  - column: Appearance
+    cards:
+      - note: "▣ Drop faces, builds and expressions that feel like them"
+      - note: How they carry themselves — posture, the way they walk into a room.
+      - note: Clothes and the one object they're never without.
+  - column: Interests
+    cards:
+      - note: "▣ Drop images of what they do with a free afternoon"
+      - note: What they'd talk about for an hour without being asked.
+  - column: Environment
+    cards:
+      - note: "▣ Drop their home, their street, the place they feel safe"
+      - note: What's on the walls, what's on the floor, what's missing.
+  - column: Backstory
+    cards:
+      - note: "▣ Drop images from their past — a childhood house, an old photo, a place they left"
+      - note: The one moment from before the story that still shapes them.
+  - break
+  - note: |
+      **What the board is telling you**
+      Step back. Which three images are the character? Write the one detail you'll actually put in the book.
+    color: cyan
+    width: 360

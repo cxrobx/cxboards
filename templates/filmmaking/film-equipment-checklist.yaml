@@ -1,0 +1,39 @@
+name: Film equipment checklist
+use_when: Packing for a shoot, one day or several, so every camera, light, mic, cable and battery is on set when it's needed.
+source: https://milanote.com/templates/filmmaking/film-equipment-checklist
+cards:
+  - note: |
+      # *Shoot* — gear
+      **Days:** *n*  **Locations:** *where*
+      **Packed by:** *name* — tick it as it goes in the case, not as you remember it.
+    color: amber
+    width: 340
+  - note: |
+      **Rentals**
+      What's hired, from where, the deposit, and the return date and time.
+  - break
+  - column: Camera
+    cards:
+      - todo: ""
+        items: [Camera body, Lenses, Lens cloths and caps, Media cards (formatted), Card reader, Monitor, Matte box and filters]
+  - column: Support
+    cards:
+      - todo: ""
+        items: [Tripod and plate, Gimbal or rig, Slider, Sandbags, Apple boxes]
+  - column: Lighting
+    cards:
+      - todo: ""
+        items: [Key and fill lights, Stands, Diffusion and flags, Reflector, Gels, Extension leads]
+  - column: Sound
+    cards:
+      - todo: ""
+        items: [Recorder, Boom pole and shotgun mic, Lav mics, Headphones, Wind protection, Spare batteries]
+  - column: Power & data
+    cards:
+      - todo: ""
+        items: [Batteries charged, Chargers, Power strip, Laptop and drives, Backup drive]
+  - column: On set
+    cards:
+      - todo: ""
+        items: [Gaffer tape, Clamps and clips, Tool kit, First-aid kit, Slate, Call sheet printed]
+      - note: Anything that broke or went missing, so it's fixed before next time.

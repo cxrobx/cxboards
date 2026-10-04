@@ -1,0 +1,44 @@
+name: Game design brainstorming
+use_when: Turning a rough game idea into a wall of possibilities — characters, story, play, places and look — then picking the ones worth building.
+source: https://milanote.com/templates/game-design/game-design-brainstorm
+cards:
+  - note: |
+      # *Working title*
+      **The concept:** the game in one or two sentences.
+      **Who's in the room:** a mix of people, not only the ones who'll build it.
+    color: amber
+    width: 340
+  - todo: How the session runs
+    items:
+      - Read the concept out loud
+      - Five minutes per theme, no judging
+      - Add pictures, clips and sounds next to the ideas
+      - Everyone picks favourites and says why
+  - break
+  - column: Characters
+    cards:
+      - note: Who you play, who you meet, who's in the way.
+  - column: Story
+    cards:
+      - note: What happens, and why the player should care.
+  - column: Gameplay
+    cards:
+      - note: What the player does, minute to minute.
+  - column: Levels & places
+    cards:
+      - note: Where it happens, and how the places change.
+  - column: Look & sound
+    cards:
+      - note: Styles, moods, the music in your head.
+      - note: "▣ Drop images, clips and sounds here"
+  - break
+  - column: Keep
+    color: green
+    cards:
+      - note: The ideas that make the concept dramatically better. Say why under each one.
+  - column: Park
+    cards:
+      - note: Good ideas that don't serve this game. Come back to them later.
+  - note: |
+      **Next step**
+      Take the kept ideas into a moodboard, a world and a first level.

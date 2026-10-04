@@ -1,0 +1,50 @@
+name: Motion design brief
+use_when: Agreeing with a client what an animation is for, what it must say, who it's for and exactly what gets delivered, before a frame is designed.
+also: [creative-briefs]
+source: https://milanote.com/templates/motion-design/motion-design-brief
+cards:
+  - note: |
+      # *Client* — *project*
+      **Kickoff:**  **First look:**  **Final delivery:**
+      **Budget:**
+      **Approver:** the one person who signs it off.
+    color: amber
+    width: 360
+  - note: |
+      **In one sentence**
+      What this animation has to do, written the way the client would say it.
+  - break
+  - column: Purpose
+    cards:
+      - note: What problem is this solving?
+      - note: What led to it — a launch, a rebrand, a confusing product?
+      - note: What's different if it works?
+  - column: Key messages
+    cards:
+      - note: The one thing it must say. Then, at most, two more.
+      - note: How it should feel — three words for tone.
+      - note: Words, claims or visuals that are off limits.
+  - column: Audience
+    cards:
+      - note: Who's watching, where, and with the sound on or off?
+      - note: What they care about and what they already believe.
+      - note: Research or numbers worth knowing.
+  - column: Deliverables
+    cards:
+      - todo: Outputs
+        items:
+          - "Main film · length · aspect ratio"
+          - "Cut-downs · lengths"
+          - "Formats · frame rate · resolution · codec"
+          - Captions and versions without text
+          - Project files and fonts handed over?
+  - break
+  - column: References
+    cards:
+      - note: "▣ Drop clips and GIFs that show the motion you mean"
+      - note: "▣ Drop the brand guidelines, logo files and fonts"
+      - note: One line under each on what's right about it.
+  - column: Kickoff
+    cards:
+      - todo: ""
+        items: [Brief read back to the client, Feedback rounds agreed (how many), Assets received, Kickoff call booked]

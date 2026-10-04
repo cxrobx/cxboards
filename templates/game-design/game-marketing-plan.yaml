@@ -1,0 +1,48 @@
+name: Game marketing plan
+use_when: Planning a game's launch from the first announcement to the months after release — who it's for, the budget, and what happens in each phase.
+source: https://milanote.com/templates/game-design/game-marketing-plan
+cards:
+  - note: |
+      # *Game title* — launch plan
+      **Launch date:**  **Platforms:**  **Price:**
+      **The hook:** the one sentence a player repeats to a friend.
+    color: amber
+    width: 360
+  - column: Overview
+    cards:
+      - note: Genre, comparable games, what makes this one different.
+      - note: "▣ Drop the key art and the best screenshots here"
+  - column: Audience
+    cards:
+      - note: Who the player is — what else they play, where they watch and talk.
+      - note: Communities, creators and press who reach them.
+  - column: Budget
+    cards:
+      - note: "*Item* · *cost* · what it should bring in"
+      - note: What gets cut first if money runs short.
+  - break
+  - column: Pre-launch
+    cards:
+      - todo: ""
+        items:
+          - Store page live with wishlist
+          - Announcement trailer
+          - Mailing list and community space open
+          - Demo or playtest
+          - Press and creator list built
+  - column: Launch
+    cards:
+      - todo: ""
+        items:
+          - Launch trailer
+          - Keys sent to press and creators
+          - Launch-day posts scheduled
+          - Someone on community replies all day
+  - column: After launch
+    cards:
+      - note: Updates, sales and events for the first three months.
+      - note: What players are asking for, and what you'll answer.
+  - column: Results
+    cards:
+      - note: Wishlists, sales, reviews — and which channel brought them.
+      - note: What you'd do differently for the next game.

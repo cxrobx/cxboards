@@ -1,0 +1,41 @@
+name: Digital campaign brief
+use_when: Planning an online marketing campaign — the goal, the audience, the channels and message, and the numbers you'll judge it by.
+source: https://milanote.com/templates/creative-briefs/digital-campaign-brief
+cards:
+  - note: |
+      # *Campaign*
+      **The goal:** sales, leads or awareness — choose one.
+      **We'll call it a win if:** *number* by *date*.
+    color: amber
+    width: 340
+  - break
+  - column: Background
+    cards:
+      - note: What's happening in the business that led to this campaign.
+      - note: What's been tried before, and what it taught you.
+  - column: Audience
+    cards:
+      - note: Who you're trying to reach, and what they're searching for or scrolling past.
+      - note: What would make them stop.
+  - column: Message & content
+    cards:
+      - note: The one message, and the offer or action attached to it.
+      - note: Content formats — video, carousel, search ads, email, landing page.
+      - note: "▣ Drop reference ads and landing pages here"
+  - column: Channels
+    cards:
+      - note: Where it runs, and the role each channel plays.
+      - note: How spend is split across them.
+  - break
+  - column: Measurement
+    cards:
+      - note: "KPIs: the main one, and two that explain it."
+      - todo: Tracking in place
+        items: [Conversion events, UTM links, Dashboard or report, Baseline numbers recorded]
+  - column: Challenges
+    cards:
+      - note: What could get in the way — budget, competition, season, approvals.
+  - column: Dates & budget
+    cards:
+      - note: "Brief · creative · launch · mid-campaign check · wrap-up."
+      - note: Total budget, media versus production.

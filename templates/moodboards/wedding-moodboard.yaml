@@ -1,0 +1,51 @@
+name: Wedding moodboard
+use_when: Setting the style for a wedding — yours or a client's — from the venue and the outfits to the flowers, the paper and the colours.
+source: https://milanote.com/templates/moodboards/wedding-moodboard
+cards:
+  - note: |
+      # *Names* — *date*
+      **The day in three words:** formal, rustic, vintage, modern…
+      **The one thing guests should remember:**
+    color: amber
+    width: 340
+  - note: |
+      **Keep it loose**
+      Ideas will change as the planning goes. Take things off the board as freely as you add them.
+  - break
+  - column: Venue & setting
+    cards:
+      - note: "▣ Drop photos of venues and spaces"
+      - note: Indoors or out? Time of day? The light you want in the photos.
+  - column: Attire
+    cards:
+      - note: "▣ Drop dress, suit and wedding-party references"
+      - note: Shoes, hair, jewellery, ties.
+  - column: Flowers & decor
+    cards:
+      - note: "▣ Drop bouquets, centrepieces, table settings, lighting"
+      - note: The small details — signage, candles, the cake table.
+  - column: Paper & type
+    cards:
+      - note: "▣ Drop invitation and menu examples"
+      - note: The fonts — script, serif, something modern?
+  - break
+  - column: Palette
+    cards:
+      - swatch: "#F3EDE4"
+        text: Base
+      - swatch: "#B7A48B"
+        text: Neutral
+      - swatch: "#7D8F69"
+        text: Greenery
+      - swatch: "#C98B8B"
+        text: Accent
+      - note: Where each colour shows up — flowers, linens, the wedding party.
+  - column: Food & music
+    cards:
+      - note: The menu's mood, and how it's served.
+      - note: Songs for the walk in, the first dance and the last one.
+  - column: Shared with
+    cards:
+      - note: Who's seen it and what they said.
+      - todo: Send to
+        items: [Partner or couple, Planner, Florist, Photographer, Stationer]

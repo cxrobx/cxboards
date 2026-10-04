@@ -1,0 +1,50 @@
+name: TVC advertising storyboard
+use_when: Pitching or planning a TV or online commercial, frame by frame against the clock, so every second earns its place and the must-have shots are covered.
+also: [agencies]
+source: https://milanote.com/templates/storyboards/tvc-advertising-storyboard
+cards:
+  - note: |
+      # *Brand* — *spot name*
+      **Length:** 30s  **Cutdowns:** 15s · 6s
+      **The single message:** what one thing should the viewer remember?
+      **The ask:** what they do next.
+    color: amber
+    width: 360
+  - note: |
+      **Against the clock**
+      Every frame gets a time. If it doesn't fit, cut a frame, not the end card.
+  - break
+  - column: "0–5s · Hook"
+    cards:
+      - note: "▣ Frame"
+      - note: What stops someone from skipping.
+      - note: "**VO / super:** "
+      - note: "**Sound:** "
+  - column: "5–15s · Set-up"
+    cards:
+      - note: "▣ Frame"
+      - note: The situation or tension the product answers.
+      - note: "**VO / super:** "
+  - column: "15–25s · The product"
+    cards:
+      - note: "▣ Frame"
+      - note: The product doing the thing — the hero shot.
+      - note: "**VO / super:** "
+  - column: "25–30s · End frame"
+    cards:
+      - note: "▣ Pack shot and logo"
+      - note: "Tagline, call to action, where to find it."
+  - break
+  - column: Mandatories
+    cards:
+      - todo: ""
+        items: [Logo on screen long enough, Pack shot, Legal supers and disclaimers, Brand colours and sonic logo]
+  - column: Cutdowns
+    cards:
+      - note: "15s — which frames survive?"
+      - note: "6s — the hook and the end frame, nothing else."
+  - column: Approvals
+    cards:
+      - todo: ""
+        items: [Script approved, Boards approved, Clearance / broadcast check, Production quote signed]
+      - note: Client feedback, frame by frame.

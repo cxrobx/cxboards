@@ -1,0 +1,49 @@
+name: Academic project plan
+use_when: Planning an academic project or a course — the objectives, the method, the schedule around classes and the work broken into steps.
+also: [education]
+source: https://milanote.com/templates/project-plans/academic-plan
+cards:
+  - note: |
+      # *Project or course title*
+      **The question or goal:** one sentence.
+      **Due:** *date* · **For:** *module, supervisor or students*
+    color: amber
+    width: 360
+  - note: |
+      **Done means**
+      What exists at the end — a paper, a presentation, a course others can take.
+  - break
+  - column: Objectives
+    cards:
+      - note: The two or three things this project has to achieve.
+      - note: How each will be assessed or measured.
+  - column: Method
+    cards:
+      - note: How you'll answer the question — reading, experiments, interviews, data.
+      - note: What you need access to — labs, archives, software, people.
+  - column: Sources
+    cards:
+      - note: "*Author, year* — one line on what it gives you."
+      - note: Gaps in the reading you still need to fill.
+  - column: Schedule
+    cards:
+      - note: Classes, exams and other deadlines this has to fit around.
+      - note: Hours a week you can honestly give it.
+  - break
+  - column: Milestones
+    cards:
+      - note: "*Milestone* · *date*"
+      - note: Check-ins with your supervisor or group.
+  - column: Tasks
+    cards:
+      - todo: ""
+        items:
+          - Topic and question agreed
+          - Reading list done
+          - Research or data gathered
+          - First draft
+          - Feedback in
+          - Final version submitted
+  - column: Notes & feedback
+    cards:
+      - note: What your supervisor, peers or students said, and what you changed.

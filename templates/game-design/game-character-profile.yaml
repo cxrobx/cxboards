@@ -1,0 +1,45 @@
+name: Game character profile
+use_when: Building one character for a game — who they are, where they came from, how they look and how they move — so artists, animators and designers all work from the same person.
+source: https://milanote.com/templates/game-design/game-character-profile
+cards:
+  - note: |
+      # *Character name*
+      **Role in the game:** playable · companion · boss · NPC
+      **Archetype:** hero, outlaw, sage, jester… pick the one they start as.
+      **In one line:** what the player should feel when this character is on screen.
+    color: amber
+    width: 360
+  - note: "▣ Drop the one image that *is* this character — a sketch, a render, a found photo"
+  - break
+  - column: The basics
+    cards:
+      - note: "**Age · origin · faction**"
+      - note: What they want, in their own words.
+      - note: The flaw that gets in the way of it.
+  - column: Backstory
+    cards:
+      - note: Where they came from, and the moment that made them who they are now.
+      - note: What they hide from other characters (and maybe from the player).
+      - note: Details that won't make it into the game but explain how they act.
+  - column: Look
+    cards:
+      - note: Build, face, silhouette — can you recognise them from a shadow?
+      - note: Clothing, gear, weapon. What each piece says about their past.
+      - note: "▣ Drop sketches and reference images here"
+  - column: Gameplay
+    cards:
+      - note: How they move — heavy or quick, grounded or floaty.
+      - note: How they attack and how they defend.
+      - note: Abilities they start with, and the ones they unlock.
+      - note: Does their move set match how they look? Where it doesn't, which one changes?
+  - column: Motion & sound
+    cards:
+      - note: "▣ Drop animation references, clips and GIFs for the way they move"
+      - note: Voice, footsteps, the sound their signature move makes.
+  - break
+  - todo: Before it goes to the team
+    items:
+      - Backstory and wants written down
+      - A front and side reference
+      - Move set agreed with design
+      - Open questions listed for the artists and animators

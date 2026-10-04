@@ -60,6 +60,17 @@ user, never deployed. Built 2026-10-02 to plan creative sessions next to the art
   width and closed folders are per-browser localStorage (`cxboards.sidebar`, `cxboards.side-w`,
   `cxboards.shut`), written straight onto the elements so hovering doesn't re-render the board.
 
+- **Templates** (`templates/`, `src/cxboards/templates.py`): a library of boards as YAML files,
+  `templates/<use case>/<slug>.yaml`, use cases ordered in `templates/categories.yaml` (Milanote's
+  gallery, de-duplicated and rewritten in our words, plus our own Music). `templates/README.md`
+  documents the format and carries a generated index (`scripts/template-index.py`). The loader
+  refuses a slug, name or source used twice; the app loads leniently (a broken file is left out
+  and listed under `problems`), the tests strictly. `layout.flow` places a template in rows and
+  `Store.build_board` writes it as one undo step. Used from New board (a browser by use case, with
+  search and previews), `POST /api/boards {template: slug}`, and the MCP's `list_templates` +
+  `create_board(template=slug)`. Check new files with `scripts/check-template.py`. Boards Chris
+  makes into templates are still DB boards (`is_template`), shown under *Yours*.
+
 Data lives in `~/Library/Application Support/CXBoards/` (`cxboards.db`, `uploads/`,
 `export/`). `CXBOARDS_HOME` / `CXBOARDS_PORT` override both (the tests do).
 
@@ -87,7 +98,7 @@ Data lives in `~/Library/Application Support/CXBoards/` (`cxboards.db`, `uploads
 ## Run / verify
 
 ```bash
-.venv/bin/python -m pytest -q          # 116 tests: invariants, API, export, MCP, chat, themes, folders, phases 1-3
+.venv/bin/python -m pytest -q          # 343 tests: invariants, API, export, MCP, chat, themes, folders, templates (each built), phases 1-3
 app/build-app.sh                       # build + install CXBoards.app (Apple Development signed)
 scripts/selftest-app.sh                # the app's own end-to-end check (drops, dialogs, sidebar, downloads, links)
 scripts/install.sh                     # build UI, (re)install LaunchAgent, wait for health

@@ -1,0 +1,48 @@
+name: Porter's five forces
+use_when: Judging how attractive an industry is by weighing the five pressures on its profits — rivals, newcomers, suppliers, buyers and substitutes.
+source: https://milanote.com/templates/strategy/porters-five-forces
+cards:
+  - note: |
+      # *Industry* — five forces
+      **Your place in it:**
+      **The decision this feeds:** entering, pricing, investing, staying put…
+    color: amber
+    width: 360
+  - note: |
+      **Rate each force**
+      Low · medium · high, with the one fact that tips it.
+  - break
+  - column: New entrants
+    cards:
+      - note: How hard is it to start up here — money, licences, scale, brand?
+      - note: "**Threat:** low · medium · high"
+  - column: Supplier power
+    cards:
+      - note: How many suppliers are there, and how costly is it to switch?
+      - note: "**Power:** low · medium · high"
+  - column: Rivalry
+    color: clay
+    width: 320
+    cards:
+      - note: Who you compete with directly, and how hard — price wars, ad spend, copycats?
+      - note: Is the market growing, or is everyone fighting over a fixed pie?
+      - note: "**Intensity:** low · medium · high"
+  - column: Buyer power
+    cards:
+      - note: Can customers push prices down? How many are there, and how easily do they switch?
+      - note: "**Power:** low · medium · high"
+  - column: Substitutes
+    cards:
+      - note: What else solves the same problem — even from another industry?
+      - note: "**Threat:** low · medium · high"
+  - break
+  - column: Verdict
+    width: 360
+    cards:
+      - note: How attractive is the industry overall, and why?
+      - note: The force you can do the most about, and how.
+  - todo: Test it
+    items:
+      - Have the team rate each force on their own first
+      - Compare, and argue out the gaps
+      - Revisit when the market shifts

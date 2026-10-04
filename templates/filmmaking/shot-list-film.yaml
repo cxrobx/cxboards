@@ -1,0 +1,42 @@
+name: Film shot list
+use_when: Listing every shot you need, scene by scene, with size, angle and movement, so nothing critical is missed on the day.
+source: https://milanote.com/templates/filmmaking/shot-list-film
+cards:
+  - note: |
+      # *Film* — shot list
+      **Shoot day:**  **Director / DP:**
+      **If time runs out, these shots still happen:** mark them ★.
+    color: amber
+    width: 340
+  - note: |
+      **How to write a shot**
+      Size · angle · movement · what it shows. e.g. "MCU · low · slow push in — she reads the letter"
+  - break
+  - column: Scene 1 — *location*
+    cards:
+      - note: "▣ Drop a reference or a phone photo of the setup"
+      - todo: Shots
+        items: ["1A · WS · eye level · static — ", "1B · MS · ", "1C · CU · ", "1D · insert · "]
+  - column: Scene 2 — *location*
+    cards:
+      - note: "▣ Reference"
+      - todo: Shots
+        items: ["2A · ", "2B · ", "2C · "]
+  - column: Scene 3 — *location*
+    cards:
+      - note: "▣ Reference"
+      - todo: Shots
+        items: ["3A · ", "3B · ", "3C · "]
+  - break
+  - column: On the day
+    cards:
+      - note: Tone and mood for each scene, in a few words.
+      - note: Camera moves and blocking that need a rehearsal.
+      - note: Continuity to watch — props, wardrobe, eyelines.
+  - column: Gear
+    cards:
+      - todo: ""
+        items: [Camera and lenses, Support (tripod, gimbal, slider), Lights, Sound, Spare batteries and cards]
+  - column: Cut or added
+    cards:
+      - note: Shots dropped after review, and shots someone spotted that you'd missed.

@@ -1,0 +1,56 @@
+name: Fashion lookbook
+use_when: Assembling a collection look by look — the model, the pieces, the styling — for a shoot, a lookbook or a runway show.
+source: https://milanote.com/templates/fashion/Fashion-lookbook
+cards:
+  - note: |
+      # *Collection* — *season*
+      **The story of the collection:** one or two lines.
+      **Used for:** shoot · lookbook · show on *date*
+    color: amber
+    width: 360
+  - note: |
+      **Styling across the collection**
+      Hair, make-up, shoes and accessories that stay the same from look to look.
+  - break
+  - column: Look 1
+    cards:
+      - note: "▣ Drop the look photo or sketch here"
+      - note: "**Model:** *name* · height · bust · waist · hips · shoe"
+      - todo: Pieces
+        items: ["Top", "Bottom", "Outerwear", "Shoes and accessories"]
+      - note: Styling notes for this look.
+  - column: Look 2
+    cards:
+      - note: "▣ Drop the look photo or sketch here"
+      - note: "**Model:** *name* · measurements"
+      - todo: Pieces
+        items: ["Piece", "Piece", "Piece"]
+      - note: Styling notes.
+  - column: Look 3
+    cards:
+      - note: "▣ Drop the look photo or sketch here"
+      - note: "**Model:** *name* · measurements"
+      - todo: Pieces
+        items: ["Piece", "Piece", "Piece"]
+      - note: Styling notes.
+  - column: Look 4
+    cards:
+      - note: "▣ Drop the look photo or sketch here"
+      - note: "**Model:** *name* · measurements"
+      - todo: Pieces
+        items: ["Piece", "Piece", "Piece"]
+      - note: Styling notes.
+  - break
+  - column: Running order
+    cards:
+      - note: The order the looks appear, and why — open strong, build, close on the statement piece.
+  - column: Palette
+    cards:
+      - swatch: "#F1ECE4"
+        text: Light
+      - swatch: "#A68A64"
+        text: Mid
+      - swatch: "#262322"
+        text: Dark
+  - todo: Before the day
+    items: [Every look complete and pressed, Fittings done, Pieces labelled by look, Running order printed]

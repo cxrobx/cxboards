@@ -1,0 +1,42 @@
+name: Media planning brief
+use_when: Briefing a media plan — who you need to reach, where and when, with what budget — before any placements are bought.
+source: https://milanote.com/templates/creative-briefs/media-planning-brief
+cards:
+  - note: |
+      # *Campaign* — media brief
+      **Reach:** who, and how many of them.
+      **Why:** what seeing it should change.
+    color: amber
+    width: 340
+  - break
+  - column: Background
+    cards:
+      - note: The product, the moment, and what's driving the campaign.
+      - note: Last time — what ran, what it cost, what it delivered.
+  - column: Objectives
+    cards:
+      - note: "Awareness, consideration or action? The target for each."
+  - column: Audience
+    cards:
+      - note: Who they are and what they read, watch, listen to and scroll.
+      - note: When they're most open to the message.
+  - column: Channels & timing
+    cards:
+      - note: "Where: the mix you're considering, and what each does."
+      - note: "When: flighting, launch dates, seasonal peaks."
+  - break
+  - column: Budget
+    cards:
+      - note: Total budget, and any split already fixed.
+      - note: What's committed versus flexible.
+  - column: Challenges
+    cards:
+      - note: Competitors' spend, crowded dates, approvals, restrictions on what can run where.
+  - column: Past coverage
+    cards:
+      - note: "▣ Drop earlier placements, clippings and reports here"
+  - column: Avoid
+    cards:
+      - note: Outlets, placements or contexts the brand shouldn't appear next to.
+  - todo: Plan delivered with
+    items: [Channel mix and rationale, Flighting calendar, Budget by channel, Expected reach and frequency, How results will be reported]

@@ -1,0 +1,46 @@
+name: Marketing assets
+use_when: Keeping every brand asset a campaign team needs in one place — logos, colours, type, layouts and the photo and illustration style — so nobody hunts through folders.
+source: https://milanote.com/templates/marketing-campaign/marketing-assets
+cards:
+  - note: |
+      # *Brand* assets
+      **Use this board when:** you're making anything that carries the brand.
+      **Ask before you:** change the logo, invent a colour or use a new typeface — *who to ask*.
+    color: amber
+    width: 340
+  - todo: Kept up to date
+    items: [Logo files in every format, Brand guidelines PDF, Current campaign key visual, Approved photo set]
+  - break
+  - column: Logos
+    cards:
+      - note: "▣ Drop the primary logo, the mark on its own and the reversed version here"
+      - note: Clear space, minimum size, and the backgrounds it can sit on.
+  - column: Colour
+    cards:
+      - swatch: "#1F2A44"
+        text: Primary
+      - swatch: "#E0A33A"
+        text: Accent
+      - swatch: "#F4F1EA"
+        text: Background
+      - note: Swap these for your own. Which colour is for what, and which pairs never touch.
+  - column: Type
+    cards:
+      - note: "Headline face · body face · where to get the files"
+      - note: Sizes and weights you actually use.
+  - column: Layouts
+    cards:
+      - note: "▣ Drop sample layouts — social, email, ads, slides — here"
+      - note: What every layout has in common (margins, logo position, grid).
+  - break
+  - column: Photography
+    cards:
+      - note: "▣ Drop on-brand photos here"
+      - note: Light, framing and subjects that fit. What's off-brand.
+  - column: Illustration & icons
+    cards:
+      - note: "▣ Drop the illustration style and icon set here"
+  - column: Voice
+    cards:
+      - note: How the brand sounds, in three words.
+      - note: A sentence that sounds like us, and one that doesn't.

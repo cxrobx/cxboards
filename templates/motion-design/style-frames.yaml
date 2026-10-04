@@ -1,0 +1,41 @@
+name: Motion design style frames
+use_when: Presenting two or three visual directions for the same scene so the team or client can choose one look before animation starts.
+source: https://milanote.com/templates/motion-design/style-frames
+cards:
+  - note: |
+      # *Project* — style frames
+      **The scene shown:** *which storyboard frame*. Same content in every option, so only the style differs.
+      **Decision by:** *date*
+    color: amber
+    width: 360
+  - note: |
+      **When you review**
+      Talk about colour, composition, mood and texture. Say what you'd keep from the options you don't pick.
+  - break
+  - column: Option A — *name*
+    cards:
+      - note: "▣ Drop the frame (render, illustration or GIF)"
+      - note: The thinking, in two or three lines. What makes it different?
+      - swatch: "#1D3557"
+        text: Main colour
+  - column: Option B — *name*
+    cards:
+      - note: "▣ Drop the frame"
+      - note: The thinking, in two or three lines.
+      - swatch: "#E76F51"
+        text: Main colour
+  - column: Option C — *name*
+    cards:
+      - note: "▣ Drop the frame"
+      - note: The thinking, in two or three lines.
+      - swatch: "#2A9D8F"
+        text: Main colour
+  - break
+  - column: Feedback
+    cards:
+      - note: Who said what, per option. Mark favourites.
+  - column: Final direction
+    cards:
+      - note: The chosen option and the changes asked for.
+      - todo: Before animating
+        items: [Everyone agrees on one direction, Changes applied, Final frame approved in writing, Next frames designed in this style]

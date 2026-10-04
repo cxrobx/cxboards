@@ -1,0 +1,72 @@
+name: Marketing plan
+use_when: Setting out how a business will market itself — the brand, the audience, the goals, the channels and the budget — in one plan the team can follow and check against.
+also: []
+source: https://milanote.com/templates/marketing-strategy/marketing-plan
+cards:
+  - note: |
+      # *Brand* — marketing plan
+      **Period:** *quarter / year*
+      **The main goal:** one number you'll be judged on.
+      **Review date:**
+    color: amber
+    width: 360
+  - break
+  - column: The brand
+    cards:
+      - note: Where it came from — the history and the milestones that shaped it.
+      - note: Purpose and mission, in a sentence each.
+      - note: What it offers that nobody else does.
+  - column: Research
+    cards:
+      - note: Who the audience is — what they want, how they behave, where they spend time.
+      - note: The main competitors and how you're different.
+      - note: Trends worth riding.
+  - column: Goals
+    cards:
+      - note: "Awareness, traffic, leads, sales — pick the few that matter and give each a number."
+  - column: Strategies
+    cards:
+      - note: "For each goal: the approach that gets you there."
+      - note: "e.g. awareness → partnerships and creators; engagement → answering every comment."
+  - break
+  - board: Channels
+    folder: true
+    cards:
+      - note: One board per channel, ranked by how much it matters to the goals.
+      - board: Social
+        cards:
+          - note: "**Platforms:**  **Posting rhythm:**  **What it's for:**"
+          - column: Content ideas
+            cards:
+              - note: Formats and themes.
+          - todo: Measure
+            items: [Reach, Engagement, Clicks]
+      - board: Email
+        cards:
+          - note: "**List size:**  **Rhythm:**"
+          - column: Sends
+            cards:
+              - note: Newsletters, launches, lifecycle emails.
+      - board: Paid
+        cards:
+          - note: "**Monthly spend:**  **Target cost per result:**"
+          - column: Campaigns
+            cards:
+              - note: Search, social, display — what each is testing.
+      - board: Partnerships
+        cards:
+          - note: Creators, ambassadors and brands that already reach your audience.
+  - column: Budget
+    cards:
+      - note: "Channel · planned · actual"
+      - note: Production, distribution and promotion, split out.
+  - column: Measuring
+    cards:
+      - note: The metrics for each goal, where they come from, and how often you check.
+  - column: Assets
+    cards:
+      - note: "▣ Logos, photography, templates and brand guidelines"
+  - column: Kickoff
+    cards:
+      - todo: ""
+        items: [Plan shared with the team, Kickoff meeting held, Owners for each channel, First review in the calendar]

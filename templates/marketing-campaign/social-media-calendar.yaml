@@ -1,0 +1,52 @@
+name: Social media calendar
+use_when: Planning a week of social posts ahead of time — a backlog of ideas, what goes out each day on which platform, the copy and artwork, and a review before it's scheduled.
+source: https://milanote.com/templates/marketing-campaign/social-media-calendar
+cards:
+  - note: |
+      # Social — week of *date*
+      **This week's theme:**
+      **Platforms:** *Instagram · LinkedIn · TikTok · X*
+      **One post people should still remember on Friday:**
+    color: amber
+    width: 340
+  - column: Idea backlog
+    cards:
+      - note: Write down every idea, sort later. Product news · offers · reviews · behind the scenes · tips · milestones · reposts · collaborations · giveaways · industry takes · polls.
+      - note: Recurring days that save you thinking — a review every Monday, a tip every Thursday.
+  - break
+  - column: Monday
+    cards:
+      - note: "*Platform* · *time* · topic"
+      - note: Copy, hashtags and link
+      - note: "▣ Artwork here"
+  - column: Tuesday
+    cards:
+      - note: "*Platform* · *time* · topic"
+      - note: Copy, hashtags and link
+      - note: "▣ Artwork here"
+  - column: Wednesday
+    cards:
+      - note: "*Platform* · *time* · topic"
+      - note: Copy, hashtags and link
+      - note: "▣ Artwork here"
+  - column: Thursday
+    cards:
+      - note: "*Platform* · *time* · topic"
+      - note: Copy, hashtags and link
+      - note: "▣ Artwork here"
+  - column: Friday
+    cards:
+      - note: "*Platform* · *time* · topic"
+      - note: Copy, hashtags and link
+      - note: "▣ Artwork here"
+  - break
+  - column: Copy rules
+    cards:
+      - note: Short, friendly, written to one person. Lead with what's in it for them.
+      - note: Draft two versions of each post and keep the simpler one.
+  - column: Artwork rules
+    cards:
+      - note: Brand colours and type, sized for each platform.
+      - note: "▣ Drop the templates you reuse here"
+  - todo: Review before scheduling
+    items: [Typos and grammar, Clear and relevant to the audience, Matches the brand and strategy, "Simpler way to say it?", Links work, Scheduled]

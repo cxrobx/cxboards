@@ -1,0 +1,57 @@
+name: Campaign plan
+use_when: Turning an approved brief into a campaign you can run — the background, the goals and deliverables, the budget, the timeline and the creative direction.
+also: [project-plans]
+source: https://milanote.com/templates/marketing-campaign/campaign-plan
+cards:
+  - note: |
+      # *Campaign name*
+      **Runs:** *start* → *end*
+      **In one sentence:** what this campaign gets people to do.
+      **Owner:** who has the final call.
+    color: amber
+    width: 340
+  - note: |
+      **Read these first**
+      The brief, the audience research, the persona, and what the last campaign's numbers said. Drop them here.
+  - break
+  - column: Background
+    cards:
+      - note: Why this campaign, why now. What changed in the business or the market?
+      - note: Who you're talking to — what they care about, where they spend their attention.
+      - note: What's already been tried, and what it taught you.
+  - column: Goals & deliverables
+    cards:
+      - note: "The goal, with a number: *awareness / traffic / sign-ups / sales* to *target* by *date*."
+      - todo: Deliverables
+        items: [Key visual, Landing page, Email sequence, Social posts, Ads in each size]
+  - column: Budget
+    cards:
+      - note: "Total: *amount*. Split by stage — research, production, media, evaluation."
+      - note: "Line items: *item* · *cost* · *owner*"
+      - note: What gets cut first if the money runs short?
+  - column: Timeline
+    cards:
+      - todo: Plan
+        items: [Brief signed off, Creative concept approved, Budget locked]
+      - todo: Make & launch
+        items: [Assets produced, Channels set up, Launch day]
+      - todo: Evaluate
+        items: [Mid-campaign check, Final report, Lessons written down]
+  - break
+  - board: Creative direction
+    cards:
+      - note: |
+          # Creative direction
+          The look and feel the campaign should have, before anyone designs a thing.
+        color: amber
+      - column: References
+        cards:
+          - note: "▣ Drop images, ads and video that feel right here"
+          - note: One line under each on what you're taking from it.
+      - column: Ideas
+        cards:
+          - note: Rough concepts, headlines and angles. Quantity first.
+  - column: Team
+    cards:
+      - note: "*Name* · role · what they own"
+      - note: Check-in rhythm, and where decisions get written down.

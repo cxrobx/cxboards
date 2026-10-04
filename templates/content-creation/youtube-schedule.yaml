@@ -1,0 +1,45 @@
+name: YouTube video schedule
+use_when: Keeping a YouTube channel on a steady posting rhythm — what's coming out each week, what's in production, and where to announce each video when it goes live.
+source: https://milanote.com/templates/content-creation/youtube-schedule
+cards:
+  - note: |
+      # Upload schedule — *month*
+      **Cadence:** *n* videos a week, out on *day* at *time*.
+      **Buffer:** how many finished videos you want waiting.
+    color: amber
+    width: 340
+  - todo: Announce every video
+    items:
+      - Community post
+      - Short or clip cut from the video
+      - Instagram / TikTok
+      - Newsletter
+      - Reply to the first comments in the first hour
+  - break
+  - column: Week 1
+    cards:
+      - note: "*Title* · *date* · pillar"
+      - note: "▣ Thumbnail"
+  - column: Week 2
+    cards:
+      - note: "*Title* · *date* · pillar"
+      - note: "▣ Thumbnail"
+  - column: Week 3
+    cards:
+      - note: "*Title* · *date* · pillar"
+      - note: "▣ Thumbnail"
+  - column: Week 4
+    cards:
+      - note: "*Title* · *date* · pillar"
+      - note: "▣ Thumbnail"
+  - break
+  - column: In production
+    cards:
+      - note: "*Title* — scripting · filming · editing · ready"
+  - column: Idea backlog
+    cards:
+      - note: Ideas waiting for a slot. Note which pillar each one feeds.
+  - column: After it's out
+    cards:
+      - note: How each video did in its first week — views, watch time, click-through.
+      - note: What to repeat next month, and what to stop.

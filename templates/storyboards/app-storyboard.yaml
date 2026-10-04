@@ -1,0 +1,63 @@
+name: App storyboard
+use_when: Mapping how someone moves through a mobile app — screen by screen, from launch to checkout — so the team can see the flow before it's designed in detail.
+also: []
+source: https://milanote.com/templates/storyboards/app-storyboard
+cards:
+  - note: |
+      # *App name* — flow
+      **Who's using it:** *one person, one situation*
+      **The job they open it for:**
+      **The flow ends when:** they've done that job.
+    color: amber
+    width: 360
+  - note: |
+      **Under every screen**
+      What they see · what they do · where it takes them. If a screen has no clear next step, flag it.
+  - break
+  - column: Launch
+    cards:
+      - note: "▣ Splash screen sketch"
+      - note: What loads, and how long it can take before it feels slow.
+  - column: Onboarding
+    cards:
+      - note: "▣ Onboarding screens"
+      - note: The fewest steps before they see value. What can wait until later?
+  - column: Sign in
+    cards:
+      - note: "▣ Sign-in / sign-up"
+      - note: Which ways in, and what happens if they forget a password.
+  - column: Home
+    cards:
+      - note: "▣ The main screen"
+      - note: The one thing this screen helps them do.
+  - column: Menu & navigation
+    cards:
+      - note: "▣ Tab bar / menu"
+      - note: Every place they can get to, and how they get back.
+  - column: Checkout
+    cards:
+      - note: "▣ Cart, payment and confirmation"
+      - note: What they must see before they pay, and what reassures them after.
+  - break
+  - board: Screens
+    folder: true
+    cards:
+      - note: One board per screen, for the detail. Duplicate *Screen template* for each.
+      - board: Screen template
+        cards:
+          - note: |
+              # *Screen name*
+              **Comes from:**  **Goes to:**
+          - note: "▣ Wireframe or mock-up"
+          - column: Elements
+            cards:
+              - note: Every button, field and message on the screen.
+          - column: States
+            cards:
+              - note: Empty · loading · error · success
+  - column: Open questions
+    cards:
+      - note: Decisions the flow is waiting on.
+  - column: Feedback
+    cards:
+      - note: Notes from the client and team, by screen.

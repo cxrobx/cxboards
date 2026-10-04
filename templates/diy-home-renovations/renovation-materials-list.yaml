@@ -1,0 +1,50 @@
+name: Renovation materials list
+use_when: Keeping every tool, material and finish for a renovation in one list — what to buy, from where, for how much, and whether it's arrived.
+source: https://milanote.com/templates/diy-home-renovations/renovation-materials-list
+cards:
+  - note: |
+      # *Project* — materials
+      **Budget for materials:** *amount*
+      **Spent so far:** *amount*
+      **Order lead times** are the schedule's real enemy. Note them.
+    color: amber
+    width: 340
+  - note: |
+      **For each line**
+      Item · quantity (plus 10% waste) · supplier · price · lead time.
+  - break
+  - column: Tools
+    cards:
+      - todo: Own
+        items: [Drill and bits, Saw, Level, Tape and pencil, Stud finder, Safety glasses and mask]
+      - todo: Hire or borrow
+        items: ["tool · from where · back by date"]
+  - column: Building materials
+    cards:
+      - todo: ""
+        items: [Timber, Plasterboard, Screws and fixings, Adhesives and sealants, Insulation]
+  - column: Fixtures & fittings
+    cards:
+      - todo: ""
+        items: [Lights and switches, Taps and sanitaryware, Door and cabinet handles, Appliances]
+      - note: "▣ Drop product photos and spec sheets here"
+  - column: Finishes
+    cards:
+      - todo: ""
+        items: [Paint, Tiles and grout, Flooring and underlay, Trim and skirting]
+      - swatch: "#E9E4D8"
+        text: "Walls · *paint name*"
+      - swatch: "#5B6B5E"
+        text: "Cabinets · *paint name*"
+      - swatch: "#B9A58A"
+        text: "Floor · *finish*"
+  - break
+  - column: Ordered
+    cards:
+      - note: "Item · supplier · order no. · delivery date"
+  - column: Arrived
+    cards:
+      - note: Checked against the order. Damaged or short? Note it the same day.
+  - column: Returns & leftovers
+    cards:
+      - note: What goes back, by when, and the spare tiles and paint worth keeping for repairs.

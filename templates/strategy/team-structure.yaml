@@ -1,0 +1,65 @@
+name: Team structure
+use_when: Laying out who's on the team, what each person owns and who reports to whom — to plan growth or introduce new people.
+source: https://milanote.com/templates/strategy/team-structure
+cards:
+  - note: |
+      # *Company or team* — structure
+      **As of:** *date*  **Headcount:** *n*
+      **What this team exists to do:** one sentence.
+    color: amber
+    width: 340
+  - note: |
+      **One card per person**
+      Name, title, what they own, who they report to. Drop a photo in beside them if you have one.
+  - break
+  - column: Leadership
+    width: 300
+    cards:
+      - note: |
+          **Name** — *title*
+          Owns: the decisions and results that are theirs.
+          Reports to:
+  - column: Team one
+    cards:
+      - note: |
+          **Name** — *team lead*
+          Owns:
+          Reports to:
+      - note: |
+          **Name** — *role*
+          Owns:
+  - column: Team two
+    cards:
+      - note: |
+          **Name** — *team lead*
+          Owns:
+          Reports to:
+      - note: |
+          **Name** — *role*
+          Owns:
+  - column: Team three
+    cards:
+      - note: |
+          **Name** — *team lead*
+          Owns:
+          Reports to:
+      - note: |
+          **Name** — *role*
+          Owns:
+  - break
+  - column: Open roles
+    color: violet
+    cards:
+      - note: The role, the team it joins, and when you need them.
+  - column: How teams work together
+    cards:
+      - note: Where work hands from one team to another, and who owns the handoff.
+      - note: Decisions that need more than one team, and who makes the call.
+  - column: For new people
+    cards:
+      - note: Who to ask about what in the first month.
+      - todo: First week
+        items:
+          - Meet their lead and their team
+          - Coffee with one person from each other team
+          - Know what they'll own by day 30

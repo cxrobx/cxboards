@@ -1,0 +1,45 @@
+name: Concept map
+use_when: Making sense of a complex topic by laying out its ideas and naming how each one relates to the others.
+source: https://milanote.com/templates/brainstorming/concept-map
+cards:
+  - note: |
+      # *Topic*
+      **Focus question:** the one question this map should help you answer.
+      **For:** yourself, a study group, a team you need to explain it to.
+    color: amber
+    width: 340
+  - note: |
+      **How to read it**
+      Every link is a short sentence: *concept* → *linking words* → *concept*. If you can't name the link, the relationship isn't clear yet.
+  - break
+  - column: Main concepts
+    color: violet
+    cards:
+      - note: The three to six broadest ideas under the topic. One or two words each.
+      - note: Put the most general at the top, the most specific at the bottom.
+  - column: Sub-concepts
+    cards:
+      - note: The narrower ideas, each listed under the main concept it belongs to.
+      - note: "*Main concept* → *sub-concept*, *sub-concept*"
+  - column: Links
+    cards:
+      - note: "*Concept* — causes / needs / is part of — *concept*"
+      - note: Write each relationship as a phrase you could say out loud.
+  - column: Cross-links
+    color: cyan
+    cards:
+      - note: Connections between ideas on different branches. These are often the real insight.
+  - column: Examples
+    cards:
+      - note: Concrete cases that make an abstract idea land.
+      - note: "▣ Drop diagrams, images or clips here"
+  - break
+  - note: |
+      **Gaps and questions**
+      Concepts with no links, links you're unsure of, and what you'd need to read to settle them.
+    width: 340
+  - todo: Before you share it
+    items:
+      - Every concept has at least one link
+      - Every link has linking words
+      - The focus question can be answered from the map

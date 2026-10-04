@@ -1,0 +1,108 @@
+name: Motion design project plan
+use_when: Running a motion design job from one hub — brief, ideas, moodboard, storyboard and style frames — with the workflow checklist beside them.
+also: [project-plans]
+source: https://milanote.com/templates/motion-design/motion-design-plan
+cards:
+  - note: |
+      # *Client* — *project*
+      **Format:** spot · explainer · title sequence · social · music video
+      **Delivery:**  **Approver:**
+    color: amber
+    width: 360
+  - todo: Workflow
+    items:
+      - Brief signed off
+      - Ideas narrowed to one or two
+      - Moodboard agreed
+      - Storyboard and animatic approved
+      - Style frames approved
+      - Animation
+      - Sound and music
+      - Revisions and final delivery
+  - break
+  - board: Brief
+    cards:
+      - note: |
+          # The brief
+          **Background:** the client and why now.
+          **Goal:** what changes if it works.
+        color: amber
+        width: 340
+      - break
+      - column: Audience
+        cards:
+          - note: Who's watching, and where.
+      - column: Key message
+        cards:
+          - note: The one thing it must say.
+      - column: Deliverables
+        cards:
+          - todo: ""
+            items: ["Main film · length · ratio", Cut-downs, Formats and specs]
+      - column: Dates
+        cards:
+          - note: First look · revisions · final.
+  - board: Ideas
+    cards:
+      - note: Write the concept in the middle, then five minutes per theme.
+        color: amber
+        width: 320
+      - break
+      - column: Ways to say it
+        cards:
+          - note: Metaphors and visual ideas for the message.
+      - column: Characters
+        cards:
+          - note: Who or what carries the story.
+      - column: Styles
+        cards:
+          - note: 2D, 3D, type-led, collage…
+  - board: Moodboard
+    cards:
+      - note: "▣ Anchor frame or clip"
+        width: 340
+      - break
+      - column: Look
+        cards:
+          - note: "▣ Characters, scenes, type"
+      - column: Motion & sound
+        cards:
+          - note: "▣ Clips that show the timing you want"
+      - break
+      - swatch: "#14213D"
+        text: Base
+      - swatch: "#FCA311"
+        text: Accent
+  - board: Storyboard
+    cards:
+      - note: A column per beat. A frame, then what moves and what we hear.
+        width: 340
+      - break
+      - column: Open
+        cards:
+          - note: "▣ Frame"
+          - note: "Motion · VO / sound"
+      - column: Middle
+        cards:
+          - note: "▣ Frame"
+          - note: "Motion · VO / sound"
+      - column: End card
+        cards:
+          - note: "▣ Frame"
+          - note: "Motion · VO / sound"
+  - board: Style frames
+    cards:
+      - note: The same scene in two or three looks, side by side.
+        width: 340
+      - break
+      - column: Option A
+        cards:
+          - note: "▣ Frame"
+          - note: The thinking, in two lines.
+      - column: Option B
+        cards:
+          - note: "▣ Frame"
+          - note: The thinking, in two lines.
+      - column: Chosen
+        cards:
+          - note: Which one, and the changes asked for.

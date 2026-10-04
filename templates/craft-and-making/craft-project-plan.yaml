@@ -1,0 +1,33 @@
+name: Craft project plan
+use_when: Planning one thing you're making from idea to finished piece — what it's for, the inspiration, the materials and the steps — so it actually gets finished.
+source: https://milanote.com/templates/craft-and-making/craft-project-plan
+cards:
+  - note: |
+      # *Project*
+      **Making:** what it is, and who it's for.
+      **Finished by:** *date* — and why that date.
+      **Done means:** what it looks like when you'd happily give it away.
+    color: amber
+    width: 340
+  - break
+  - column: Goals
+    cards:
+      - note: What you want out of this one — a gift, a sale, a new skill, a calm evening.
+      - note: The new technique you're trying, if any.
+  - column: Inspiration
+    cards:
+      - note: "▣ Drop reference pictures and the pattern here"
+      - note: What you're taking from each.
+  - column: Materials
+    cards:
+      - todo: ""
+        items: [Material, Material, Material, Tools ready]
+      - note: Estimated cost.
+  - column: Steps
+    cards:
+      - todo: ""
+        items: [Prepare materials, Test piece, Main make, Finishing, Photograph it]
+  - column: Progress
+    cards:
+      - note: "▣ Drop work-in-progress photos here"
+      - note: What went wrong and how you fixed it — for next time.

@@ -1,0 +1,47 @@
+name: Brand personality
+use_when: Describing a brand as if it were a person — the traits it has, where it sits on each scale, and what it would never do — so later choices about name, look and voice have something to check against.
+source: https://milanote.com/templates/branding/brand-personality
+also: [brand-strategy-workshops]
+cards:
+  - note: |
+      # *Brand* — personality
+      **If the brand walked into a room:** who would it be, and how would people react?
+      **Three words:** *trait* · *trait* · *trait*
+    color: amber
+    width: 360
+  - note: |
+      **How to run it**
+      Do it as a group. For each scale, everyone marks a position, then you argue it out until you agree.
+  - break
+  - column: Scales
+    width: 360
+    cards:
+      - note: "Playful ○ ○ ○ ○ ○ Serious"
+      - note: "Bold ○ ○ ○ ○ ○ Understated"
+      - note: "Warm ○ ○ ○ ○ ○ Cool"
+      - note: "Classic ○ ○ ○ ○ ○ Modern"
+      - note: "Expert ○ ○ ○ ○ ○ Friend"
+  - column: We are
+    color: green
+    cards:
+      - note: Adjectives that fit, each with one example of it in action.
+  - column: We are not
+    color: clay
+    cards:
+      - note: The traits you could slide into but shouldn't. "Confident, not arrogant."
+  - column: As a character
+    cards:
+      - note: A famous person, a fictional character or a car that has this personality.
+      - note: "▣ Drop images that capture it here"
+  - break
+  - column: Against competitors
+    cards:
+      - note: Where the three closest competitors sit on the same scales. Where's the gap?
+  - column: Use it
+    cards:
+      - note: How it shows up in the tone of voice, the visuals and customer service.
+      - todo: Check
+        items:
+          - Everyone agreed on each scale
+          - Each trait has a real example
+          - It's different from the competitors

@@ -1,0 +1,50 @@
+name: Model brief
+use_when: Briefing a model agency on a campaign so they can put forward the right people and everyone arrives knowing the look, the shots and the terms.
+also: [creative-briefs]
+source: https://milanote.com/templates/photography/model-brief
+cards:
+  - note: |
+      # *Campaign* — model brief
+      **Looking for:** the person in one line — age range, look, energy.
+      **Shoot date:**  **Agency contact:**
+      **The images should make people feel:** *one word*
+    color: amber
+    width: 360
+  - note: |
+      **Casting deadline**
+      When you need options by, and when you'll confirm.
+  - break
+  - column: The brand
+    cards:
+      - note: Who the brand is if it were a person — how it talks, dresses, carries itself.
+      - note: Who buys it, and what they'd recognise themselves in.
+  - column: The campaign
+    cards:
+      - note: What this campaign has to do, in one sentence.
+      - note: Where the images run — web, social, print, out-of-home.
+      - note: "Usage term and territory, so the agency can quote the buyout."
+  - column: Casting specs
+    cards:
+      - note: "Height, sizes, hair, skin, distinguishing features. What's a must and what's flexible."
+      - note: "▣ Drop casting references — faces and builds that are close"
+      - note: Anything that rules someone out (visible tattoos, recent cuts, conflicts with a competitor campaign).
+  - break
+  - column: Poses & expression
+    cards:
+      - note: "▣ Drop pose references"
+      - note: The range you need — still and composed, candid and moving, or both.
+      - note: Expressions to avoid.
+  - column: Shot list
+    cards:
+      - todo: Shots
+        items: [Hero full-length, Three-quarter, Close-up / beauty, Product in hand, In motion]
+  - column: Set & schedule
+    cards:
+      - note: "Location, set, and what the model should bring (or not)."
+      - note: "Hair, makeup and wardrobe — who's doing it, and fitting dates."
+      - note: "Call time · first shot · wrap"
+  - column: Budget & terms
+    cards:
+      - note: "Day rate, overtime, travel, and the usage fee."
+      - todo: ""
+        items: [Options received, Model confirmed, Fitting booked, Call sheet sent, Model release signed]

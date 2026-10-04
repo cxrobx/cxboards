@@ -1,0 +1,52 @@
+name: Design brief
+use_when: Agreeing on a design job with a client before the work starts — the project, the goals, the audience, budget and timeline, examples, and what to avoid.
+source: https://milanote.com/templates/graphic-design/design-brief
+also: [creative-briefs]
+cards:
+  - note: |
+      # *Project name*
+      **Client:**
+      **The job in one sentence:** what's being designed and why.
+    color: amber
+    width: 360
+  - note: |
+      **Fill it in together**
+      Write this with the client, not for them. Every unanswered question here becomes a revision later.
+  - break
+  - column: Overview
+    cards:
+      - note: The company, what's happening, and why this project now.
+  - column: Scope
+    cards:
+      - todo: Deliverables
+        items:
+          - "Item · format · size"
+          - "Item · format · size"
+      - note: What's out of scope.
+  - column: Objectives
+    cards:
+      - note: What this design has to achieve, and how you'll know it did.
+  - column: Audience
+    cards:
+      - note: Who sees it, where, and what you want them to think or do.
+  - break
+  - column: Budget & timeline
+    cards:
+      - note: "**Budget:**"
+      - todo: Milestones
+        items:
+          - Brief signed off
+          - First concepts
+          - Revisions
+          - Final files
+  - column: Examples
+    cards:
+      - note: The client's existing work, and work they love by others.
+      - note: "▣ Drop images and references here"
+  - column: Avoid
+    color: clay
+    cards:
+      - note: Colours, styles, words or competitors' looks that are off limits.
+  - column: Sign-off
+    cards:
+      - note: Who approves the work, and how many rounds of changes are included.

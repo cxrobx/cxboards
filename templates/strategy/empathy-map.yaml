@@ -1,0 +1,45 @@
+name: Empathy map
+use_when: Stepping into one customer's shoes — what they think, see, say and hear — to find what hurts and what they stand to gain.
+source: https://milanote.com/templates/strategy/empathy-map
+cards:
+  - note: |
+      # *Customer*
+      **Who they are:** role, situation, the moment they meet your product.
+      **Built from:** interviews, reviews, support tickets — not guesses.
+    color: amber
+    width: 340
+  - note: "▣ Drop a photo or a real quote that captures this person"
+  - break
+  - column: Thinks & feels
+    cards:
+      - note: What's on their mind that they wouldn't say out loud?
+      - note: Worries and hopes about the problem you solve.
+  - column: Sees
+    cards:
+      - note: Their surroundings — what the market, their peers and their feed put in front of them.
+      - note: The alternatives they can see.
+  - column: Says & does
+    cards:
+      - note: What they tell others about the product or the problem.
+      - note: What they actually do — and where it contradicts what they say.
+  - column: Hears
+    cards:
+      - note: What colleagues, friends, reviewers and influencers tell them.
+  - break
+  - column: Pains
+    color: clay
+    cards:
+      - note: Frustrations, fears and obstacles.
+      - note: The part of the job they'd rather not do at all.
+  - column: Gains
+    color: green
+    cards:
+      - note: What they want, need, or measure success by.
+      - note: What would make them tell a friend.
+  - column: So what
+    cards:
+      - note: The two or three insights you'll act on.
+      - todo: ""
+        items:
+          - Show the team and ask what's missing
+          - Check one insight with a real customer

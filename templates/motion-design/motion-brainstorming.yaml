@@ -1,0 +1,41 @@
+name: Motion design brainstorming
+use_when: Turning the message an animation has to carry into lots of possible treatments — characters, styles, metaphors — then choosing the few worth designing.
+source: https://milanote.com/templates/motion-design/motion-brainstorming
+cards:
+  - note: |
+      # *Project*
+      **The message:** what the viewer should know or feel after *n* seconds.
+      **Where it plays:** feed, broadcast, product, screen in a room…
+    color: amber
+    width: 360
+  - note: |
+      **Rules for the first pass**
+      Five minutes per theme. Every idea gets its own card. No judging yet.
+  - break
+  - column: Ways to say it
+    cards:
+      - note: Metaphors and visual puns for the message.
+      - note: The literal version, so you know what you're moving away from.
+  - column: Characters & objects
+    cards:
+      - note: Who or what carries the story? A mascot, a shape, a product, a hand.
+      - note: How it moves tells us who it is — heavy, bouncy, precise?
+  - column: Animation styles
+    cards:
+      - note: 2D, 3D, type-led, collage, cel, stop-motion, a mix.
+      - note: The style that fits the budget and the one that doesn't (yet).
+  - column: Look
+    cards:
+      - note: Colour, texture, typography, the world it lives in.
+  - break
+  - column: References
+    cards:
+      - note: "▣ Drop GIFs, clips and stills"
+      - note: "▣ Drop music or sound that sets the pace"
+      - note: One line under each on what you'd borrow.
+  - column: Keepers
+    cards:
+      - note: The ideas that serve the message best. Say why for each.
+      - note: Parked, not deleted.
+      - todo: Next
+        items: [Everyone picks three, Debate them against the message, Take two or three into a moodboard]

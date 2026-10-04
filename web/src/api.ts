@@ -105,6 +105,34 @@ export interface BoardState {
   palette?: Palette | null
 }
 
+export interface LibraryCategory {
+  slug: string
+  name: string
+  blurb: string
+  count: number
+}
+
+export interface TemplatePreview {
+  kind: Kind
+  title: string
+  color: string | null
+  x: number
+  y: number
+  w: number
+  h: number
+  children: number
+}
+
+export interface TemplateSummary {
+  slug: string
+  name: string
+  category: string
+  also: string[]
+  use_when: string
+  card_count: number
+  preview: TemplatePreview[]
+}
+
 export interface ChangeEvent {
   board_id: string
   rev: number
@@ -202,6 +230,11 @@ export const api = {
   rotate: (id: string, degrees: number) => req<Card>('POST', `/api/cards/${id}/rotate`, { degrees }),
   themes: () => req<{ name: string; label: string; note: string; palette: Palette | null }[]>('GET', '/api/themes'),
   previewTheme: (theme: unknown) => req<{ palette: Palette | null }>('POST', '/api/themes/preview', { theme }),
+  templates: (q = '', category = '') =>
+    req<{ categories: LibraryCategory[]; templates: TemplateSummary[] }>(
+      'GET',
+      `/api/templates?q=${encodeURIComponent(q)}&category=${encodeURIComponent(category)}`,
+    ),
   thumbnailFromPath: (id: string, path: string) => req<Card>('POST', `/api/cards/${id}/thumbnail`, { path }),
 }
 

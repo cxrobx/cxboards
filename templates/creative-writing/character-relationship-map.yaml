@@ -1,0 +1,57 @@
+name: Character relationship map
+use_when: Seeing the whole cast at once — who sits at the centre, who orbits them, and what each pair wants from each other — so the tension between them is planned, not accidental.
+source: https://milanote.com/templates/creative-writing/character-relationship-map
+cards:
+  - note: |
+      # *Story title* — the cast
+      **Shape of the map:** a web around one character · a family tree · a timeline of how ties change
+      **The relationship the story turns on:**
+    color: amber
+    width: 360
+  - note: |
+      **How to mark a tie**
+      Write each link as *A ↔ B — what it is — what each wants from the other.* Colour the card: green for allies, clay for conflict, violet for love, cyan for family.
+  - break
+  - column: Main character
+    color: amber
+    cards:
+      - note: "*Name* — one line on who they are."
+      - note: "▣ Drop their picture here"
+  - column: Secondary characters
+    cards:
+      - note: "*Name* — friend, rival, lover, family? What do they bring to the plot?"
+      - note: "*Name* — "
+      - note: "*Name* — "
+  - column: Supporting characters
+    cards:
+      - note: Co-workers, neighbours, the barista — the people who make the world feel lived in.
+      - note: "*Name* — "
+  - break
+  - column: Allies
+    color: green
+    cards:
+      - note: "*A ↔ B* — what holds them together"
+  - column: Conflicts
+    color: clay
+    cards:
+      - note: "*A ↔ B* — the opposing goals that drive the tension"
+  - column: Bonds
+    color: violet
+    cards:
+      - note: "*A ↔ B* — love, family, debt, history"
+  - column: How it shifts
+    cards:
+      - note: Which ties change by the end, and the scene where each one turns.
+  - break
+  - board: Characters
+    folder: true
+    cards:
+      - note: One board per character. Duplicate *Character template* for each one and keep them here.
+      - board: Character template
+        cards:
+          - note: |
+              # *Name*
+              **Role:**  **Wants:**  **Fears:**
+            color: amber
+          - note: "▣ Drop a picture"
+          - note: Who they're closest to, and who they can't stand.

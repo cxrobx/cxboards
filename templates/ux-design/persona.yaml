@@ -1,0 +1,47 @@
+name: Customer persona
+use_when: Turning research about real customers into one person the whole team can picture — who they are, what they need, what frustrates them and what a great experience would feel like.
+also: [brand-strategy-workshops, branding, graphic-design, market-research, marketing-strategy, ux-research, website-design]
+source: https://milanote.com/templates/ux-design/persona
+cards:
+  - note: |
+      # *Persona name*
+      **Age · job · location · income**
+      **In one line:** what they're trying to get done, and why it matters to them.
+    color: amber
+    width: 360
+  - note: "▣ Drop a photo that looks like this person"
+  - note: |
+      **Built on real data**
+      Every line here should trace back to a quote, a survey answer or a number. Mark anything you're guessing with a ?
+  - break
+  - column: Research
+    cards:
+      - note: "\"Quote\" — from whom, when."
+      - note: Analytics, survey results, support tickets — what they say about this group.
+      - note: "▣ Drop research files and recordings here"
+  - column: Their story
+    cards:
+      - note: Life events that shaped how they buy and decide.
+      - note: Values and beliefs that steer their choices.
+      - note: What they do outside work.
+      - note: Where they want to be in five years.
+  - column: Needs & goals
+    cards:
+      - note: What they're trying to achieve when they come to you.
+      - note: What has to be true for them to say yes.
+  - column: Pain points
+    color: clay
+    cards:
+      - note: What gets in their way today.
+      - note: The workaround they've built and quietly hate.
+  - column: The ideal experience
+    color: green
+    cards:
+      - note: Set today's limits aside. What would make them a fan?
+  - break
+  - todo: Before you share it
+    items:
+      - Every claim has a source
+      - Name and photo feel like a real person
+      - The team can say what this person would hate
+      - Shared for comments with the team or client

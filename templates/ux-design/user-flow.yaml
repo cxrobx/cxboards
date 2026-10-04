@@ -1,0 +1,53 @@
+name: User flow diagram
+use_when: Mapping the steps a person takes through your product to reach a goal — where they come in, each screen and decision, where they get stuck — so you can see what to change.
+also: [ux-research]
+source: https://milanote.com/templates/ux-design/user-flow
+cards:
+  - note: |
+      # *Flow name*
+      **Who:** the persona taking this path.
+      **Goal:** what they're trying to get done.
+      **Scope:** the whole journey, or one feature?
+    color: amber
+    width: 360
+  - break
+  - column: Entry points
+    cards:
+      - note: Where do they come from? Search, an email, a link from a friend, the app icon.
+  - column: Step 1
+    cards:
+      - note: "*Screen* — what they see"
+      - note: "*Action* — what they do"
+  - column: Step 2
+    cards:
+      - note: "*Screen* — "
+      - note: "*Action* — "
+  - column: Decision
+    color: violet
+    cards:
+      - note: "*Question they face* — yes leads to… / no leads to…"
+  - column: Step 3
+    cards:
+      - note: "*Screen* — "
+      - note: "*Action* — "
+  - column: Goal reached
+    color: green
+    cards:
+      - note: What success looks like, and what happens next.
+  - break
+  - column: Pain points
+    color: clay
+    cards:
+      - note: Where do people hesitate, back out or call support? Name the step.
+  - column: Ideas
+    cards:
+      - note: For each pain point, one or two ways to fix it.
+  - column: Evidence
+    cards:
+      - note: "▣ Drop screenshots, recordings and analytics for each step"
+  - todo: Check the flow
+    items:
+      - Every step has a way back
+      - Every decision has both branches drawn
+      - Errors and empty states included
+      - Fewest steps possible to the goal

@@ -1,0 +1,54 @@
+name: Value proposition canvas
+use_when: Checking a product fits its customer — the jobs, pains and gains on one side, the features, pain relievers and gain creators on the other — and finding where they don't line up.
+also: [strategy]
+source: https://milanote.com/templates/startups/value-proposition-canvas
+cards:
+  - note: |
+      # *Product* for *customer segment*
+      Start with the customer. Only fill the product side once you can describe their day without mentioning your product.
+      **Fit means:** every top pain and gain has something on the product side that answers it.
+    color: amber
+    width: 380
+  - break
+  - note: |
+      ## The customer
+      One segment per canvas.
+    color: cyan
+    width: 240
+  - column: Jobs to be done
+    cards:
+      - note: The tasks they're trying to get done — practical, social and emotional.
+      - note: Which one matters most to them?
+  - column: Pains
+    color: clay
+    cards:
+      - note: What annoys them, costs them, or stops them before, during and after the job.
+      - note: Rank them — what's the worst?
+  - column: Gains
+    color: green
+    cards:
+      - note: The outcomes they want, and what would delight them.
+  - break
+  - note: |
+      ## The product
+      What you offer this segment.
+    color: violet
+    width: 240
+  - column: Products & services
+    cards:
+      - note: What you offer, listed plainly.
+  - column: Pain relievers
+    color: clay
+    cards:
+      - note: How each one removes a specific pain from the list above.
+  - column: Gain creators
+    color: green
+    cards:
+      - note: How each one produces a specific gain from the list above.
+  - break
+  - todo: Fit check
+    items:
+      - The top three pains each have a reliever
+      - The top three gains each have a creator
+      - Nothing on the product side answers nothing
+      - Tested with real customers, not just the team

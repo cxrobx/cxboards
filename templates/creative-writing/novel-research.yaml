@@ -1,0 +1,42 @@
+name: Research
+use_when: Gathering what you need to know for a story — facts you already hold, articles, quotes, clips and images — so the world on the page rings true.
+source: https://milanote.com/templates/creative-writing/novel-research
+cards:
+  - note: |
+      # *Book title* — research
+      **The topic:** the place, period or world you need to get right.
+      **What would embarrass you if you got it wrong?**
+    color: amber
+    width: 360
+  - note: |
+      **Collect now, read later**
+      Save first, judge later. Come back with a highlighter once the board is full.
+  - break
+  - column: What you already know
+    cards:
+      - note: Facts about the place, era, clothes, work and events in your story — even the obvious ones.
+      - note: The questions you can't answer yet.
+  - column: Articles & news
+    cards:
+      - note: Articles, records and essays worth returning to. One line each on why.
+  - column: Quotes & data
+    cards:
+      - note: "\"The quote\" — who said it, where, when."
+      - note: Numbers that set the scale — prices, distances, populations, dates.
+      - note: Turns of phrase from the period for your characters' voices.
+  - column: Video & audio
+    cards:
+      - note: "▣ Drop clips, documentaries and podcast episodes here"
+      - note: The mood each one gives you that words don't.
+  - column: Images
+    cards:
+      - note: "▣ Drop photos, maps and paintings that put you in the place"
+  - break
+  - column: Surprises
+    color: violet
+    cards:
+      - note: Anything that made you say *huh* — it's often where the story is.
+  - todo: Still to find out
+    items:
+      - "Question — where you'll look"
+      - "Question — who you could ask"

@@ -1,0 +1,42 @@
+name: Craft materials list
+use_when: Gathering every supply a project needs before you start — what you have, what to buy, what it costs — and keeping stock if you sell what you make.
+source: https://milanote.com/templates/craft-and-making/craft-materials-list
+cards:
+  - note: |
+      # *Project* — materials
+      **Making:** what, and how many.
+      **Budget:** what you're willing to spend on supplies.
+    color: amber
+    width: 340
+  - note: |
+      **Before you buy**
+      Check the drawer, the cupboard and the leftovers from last time.
+  - break
+  - column: Already have
+    cards:
+      - todo: ""
+        items: [Material · amount, Material · amount, Material · amount]
+  - column: To buy
+    cards:
+      - todo: ""
+        items: ["Material · amount · where · price", "Material · amount · where · price", "Material · amount · where · price"]
+      - note: "▣ Drop photos or product shots so you buy the right shade and size"
+  - column: Tools
+    cards:
+      - todo: ""
+        items: [Tool, Tool, Tool]
+      - note: Anything to borrow rather than buy.
+  - column: Costs
+    cards:
+      - note: Total spent so far.
+      - note: Cost per finished piece — materials divided by how many you'll make.
+  - break
+  - column: Stock
+    cards:
+      - note: If you sell — what's on hand, and how many pieces it'll make.
+      - note: The point at which you reorder.
+  - column: Restock
+    cards:
+      - todo: Running low
+        items: [Material]
+      - note: Suppliers you trust, and how long they take to deliver.

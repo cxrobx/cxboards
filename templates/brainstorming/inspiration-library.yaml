@@ -1,0 +1,49 @@
+name: Inspiration library
+use_when: Keeping a running collection of references — images, writing, colour, type, ideas — sorted so you can find them when a project needs them.
+source: https://milanote.com/templates/brainstorming/inspiration-library
+cards:
+  - note: |
+      # *Your* inspiration library
+      **What goes in:** anything you'd want to show someone and say "like this".
+      **One rule:** add a line on *why* you saved it, or you'll forget.
+    color: amber
+    width: 340
+  - column: Inbox
+    cards:
+      - note: Drop new finds here first. Sort them once a week.
+      - note: "▣ Drop images, links and clips here"
+  - break
+  - board: Visual
+    cards:
+      - note: Photography, illustration, layouts and compositions you keep coming back to.
+      - note: "▣ Drop images here"
+  - board: Colour
+    cards:
+      - note: Palettes worth stealing. Note where each one came from.
+      - swatch: "#2A3B4C"
+        text: Saved from *source*
+      - swatch: "#D9A441"
+        text: Saved from *source*
+  - board: Type
+    cards:
+      - note: Typefaces and pairings, with a screenshot of each in use.
+      - note: "▣ Drop specimens here"
+  - board: Words
+    cards:
+      - note: Headlines, lines and quotes that do a lot in a few words.
+  - board: Motion & sound
+    cards:
+      - note: Clips, transitions and audio that set a mood.
+      - note: "▣ Drop video and audio here"
+  - board: Ideas to try
+    cards:
+      - note: Techniques and formats you want to use on a real project.
+      - todo: Next time
+        items:
+          - "Idea — which project it might fit"
+  - break
+  - todo: Weekly tidy
+    items:
+      - Empty the inbox into the shelves
+      - Add a why to anything missing one
+      - Drop what no longer excites you

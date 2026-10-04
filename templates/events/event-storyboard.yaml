@@ -1,0 +1,47 @@
+name: Event storyboard
+use_when: Walking through an event in the order guests and crew will live it — bump-in to bump-out — so the moving parts and the gaps show up before the day.
+also: [storyboards]
+source: https://milanote.com/templates/events/event-storyboard
+cards:
+  - note: |
+      # *Event* — the run of it
+      **Date:**  **Doors:** *time*  **Close:** *time*
+      **The moment it's all building to:**
+    color: amber
+    width: 340
+  - note: |
+      **For every stage**
+      What guests see · what crew are doing · what has to be ready before it starts.
+  - break
+  - column: Bump in
+    cards:
+      - note: "*time* — suppliers arrive, set-up order"
+      - note: "▣ Floor plan"
+  - column: Arrivals
+    cards:
+      - note: How guests get there, who greets them, what's in their hand in the first minute.
+      - note: "▣ Entrance and signage"
+  - column: Opening
+    cards:
+      - note: "*time* — welcome, the first thing that happens"
+  - column: Main program
+    cards:
+      - note: Talks, performances, the reveal — in order, with times.
+      - note: "▣ Stage and performance references"
+  - column: Close
+    cards:
+      - note: How the night ends, and what guests leave with.
+  - column: Bump out
+    cards:
+      - note: "*time* — pack-down order, who's last out"
+  - break
+  - column: Before the day
+    cards:
+      - note: Marketing and invitations — what goes out, and when.
+  - column: Actions
+    cards:
+      - todo: ""
+        items: [Run sheet from this board, Crew briefed on their stages, Supplier times confirmed, Plan B for weather or delays]
+  - column: Notes
+    cards:
+      - note: Gaps you spotted while walking it through.

@@ -1,0 +1,77 @@
+name: Site map
+use_when: Planning a website's structure and content together — every page as its own board, with rough copy, images and a layout sketch inside it.
+also: [graphic-design, website-design]
+source: https://milanote.com/templates/ux-design/site-map
+cards:
+  - note: |
+      # *Site name* — site map
+      **What the site is for:** the one thing a visitor should do.
+      **Who it's for:**
+      Each board below is a page. Open one to plan what goes on it.
+    color: amber
+    width: 360
+  - note: |
+      **Structure**
+      Home
+      — About
+      — *Services / Products*
+      — — *Detail page*
+      — Blog
+      — Contact
+  - break
+  - board: Home
+    cards:
+      - note: |
+          # Home
+          **Key message:**  **Main call to action:**
+        color: amber
+      - column: Copy
+        cards:
+          - note: Headline, the three things to say, keywords to include.
+      - column: Images
+        cards:
+          - note: "▣ Drop example images"
+      - column: Layout
+        cards:
+          - note: "▣ Sketch or drop a rough layout — boxes and arrows are enough"
+  - board: About
+    cards:
+      - note: |
+          # About
+          **Key message:**
+        color: amber
+      - note: The story, the people, why you're trustworthy.
+      - note: "▣ Drop team photos or example images"
+  - board: Services
+    cards:
+      - note: |
+          # *Services / Products*
+          **Key message:**
+        color: amber
+      - note: One line per offering, and which one gets its own page.
+      - note: "▣ Drop example images"
+  - board: Blog
+    cards:
+      - note: |
+          # Blog
+          **Key message:**
+        color: amber
+      - note: Topics and categories. What's the first post?
+  - board: Contact
+    cards:
+      - note: |
+          # Contact
+          **What happens after they reach out?**
+        color: amber
+      - note: Form fields, address, map, hours.
+  - break
+  - column: Across every page
+    cards:
+      - note: Navigation, footer, the elements that repeat.
+      - note: Tone of voice in three words.
+  - todo: Before handing over
+    items:
+      - Every page has a key message
+      - Rough copy on every page
+      - Layout sketched for the key pages
+      - Shared with content and development

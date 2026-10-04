@@ -1,0 +1,52 @@
+name: YouTube channel plan
+use_when: Starting a YouTube channel or resetting one — what it's about, who it's for, the kinds of videos it makes and the goals you'll measure it by.
+source: https://milanote.com/templates/content-creation/youtube-channel-plan
+cards:
+  - note: |
+      # *Channel name*
+      **In one line:** what someone gets from subscribing.
+      **Why you:** the experience or angle nobody else on this topic has.
+    color: amber
+    width: 360
+  - note: |
+      **A year from now**
+      What the channel looks like if it's working — the videos, the audience, what it's done for you.
+  - break
+  - column: Theme
+    cards:
+      - note: The topic, and how narrow it is. Narrow enough to be known for something.
+      - note: Three channels in the same space, and what yours does differently.
+  - column: Audience
+    cards:
+      - note: "**The viewer:** who they are, what they already know, what they're stuck on."
+      - note: What they search for, and what they watch just for fun.
+      - note: Why they'd come back for the next video.
+  - column: Content pillars
+    cards:
+      - note: "**Pillar 1:** *a recurring kind of video*"
+      - note: "**Pillar 2:**"
+      - note: "**Pillar 3:**"
+      - note: Formats — long tutorials, shorts, vlogs, live, series.
+  - column: Look & voice
+    cards:
+      - note: "▣ Drop channel art, thumbnail and banner references here"
+      - note: How you sound on camera — three words.
+  - break
+  - column: Goals
+    color: green
+    cards:
+      - note: "**Next 90 days:** *n* videos published, *n* subscribers, *n* hours watched."
+      - note: The one number you'll actually check each week.
+  - column: Rhythm
+    cards:
+      - note: How often you'll publish, and what's realistic alongside everything else.
+      - note: Which day, and how far ahead you'll be.
+  - column: Launch
+    cards:
+      - todo: ""
+        items:
+          - Channel name, handle and description
+          - Banner and profile picture
+          - First three videos made before the first goes live
+          - Playlists for each pillar
+          - Upload defaults (tags, description template, end screen)

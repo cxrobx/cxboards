@@ -1,0 +1,72 @@
+name: Visual art project plan
+use_when: Planning an art project from brief to finished piece — the brief, the ideas, the inspiration and research, and the steps and materials to make it — in one place.
+source: https://milanote.com/templates/visual-art/visual-art-project-plan
+cards:
+  - note: |
+      # *Project title*
+      **Medium:**  **Size:**  **Finish by:** *date*
+      **What it's about:** one sentence.
+    color: amber
+    width: 340
+  - todo: Materials
+    items: [Surface / support, Paints or media, Tools, Framing or mounting]
+  - break
+  - board: Brief
+    cards:
+      - note: |
+          # Brief
+          **For:**  **Where it'll be shown:**
+          **The feeling it leaves:**
+        color: amber
+      - column: Goals
+        cards:
+          - note: What you want to learn or push on this piece.
+      - column: Deliverables
+        cards:
+          - todo: ""
+            items: [Finished piece, Photos of the work, Title and statement]
+  - board: Brainstorm
+    cards:
+      - note: "# Brainstorm\nEvery idea first, judge later."
+        color: amber
+      - column: Ideas
+        cards:
+          - note: Words, what-ifs and directions.
+      - column: Sketches
+        cards:
+          - note: "▣ Drop thumbnails and studies here"
+  - board: Inspiration
+    cards:
+      - note: "# Inspiration\nImages, colours and textures that set the mood."
+        color: amber
+      - column: Images
+        cards:
+          - note: "▣ Drop reference images here"
+      - column: Palette
+        cards:
+          - swatch: "#3A3E4A"
+            text: Base
+          - swatch: "#C9A66B"
+            text: Accent
+  - board: Research
+    cards:
+      - note: "# Research\nWhat you need to know about the subject before you make it."
+        color: amber
+      - column: Subject
+        cards:
+          - note: Facts, history and context.
+      - column: Artists & techniques
+        cards:
+          - note: Who's done something close, and how.
+  - break
+  - column: Steps
+    cards:
+      - todo: ""
+        items: [Studies and colour tests, Composition fixed, Underpainting / base layer, Main work, Details and finish, Photograph and document]
+  - column: Progress
+    cards:
+      - note: "▣ Drop a progress photo at the end of each session"
+      - note: What to start with next time.
+  - column: Show & share
+    cards:
+      - note: Where it's going — exhibition, client, online, sale.

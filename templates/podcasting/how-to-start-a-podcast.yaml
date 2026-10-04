@@ -1,0 +1,48 @@
+name: Podcast show plan
+use_when: Starting a podcast — settling the concept, the format, who it's for and how it reaches them before the first episode is recorded.
+source: https://milanote.com/templates/podcasting/how-to-start-a-podcast
+cards:
+  - note: |
+      # *Show name*
+      **In one line:** what the show is, and why you're the one making it.
+      **Success in a year looks like:** listeners, episodes, what it led to.
+    color: amber
+    width: 360
+  - note: "▣ Drop cover art drafts and shows you admire here"
+  - break
+  - column: Concept
+    cards:
+      - note: The topic, and the angle nobody else is taking on it.
+      - note: Why you want to make it — the reason that lasts past episode ten.
+  - column: Audience
+    cards:
+      - note: The one listener you picture — what they do, what they already listen to.
+      - note: What they get from an episode that they can't get elsewhere.
+  - column: Format
+    cards:
+      - note: Solo, co-hosted, interview, narrative?
+      - note: "**Length · frequency · season or ongoing**"
+      - note: The shape every episode follows — opening, segments, close.
+  - column: Name & look
+    cards:
+      - note: Name options, checked for clashes.
+      - note: Cover art that reads at thumbnail size.
+      - note: Intro music and voice.
+  - break
+  - column: Gear & recording
+    cards:
+      - todo: ""
+        items: [Microphone, Headphones, Recording software, A quiet room, Remote recording tool for guests]
+  - column: Distribution
+    cards:
+      - note: Where it's hosted and which apps it lands in.
+      - note: Where you'll share it — and the clips you'll cut for each place.
+  - column: Launch
+    cards:
+      - todo: ""
+        items:
+          - Trailer recorded
+          - Three episodes ready before launch
+          - Show notes template written
+          - Listed in the main podcast apps
+          - Told the people who'll share it first

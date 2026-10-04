@@ -1,0 +1,44 @@
+name: Game level design
+use_when: Planning one level of a game — the concept, the map, the route through it, the challenges and rewards — before any of it is built.
+source: https://milanote.com/templates/game-design/level-design
+cards:
+  - note: |
+      # *Level name*
+      **Concept:** the setting and its twist (the flooded one, the one in the dark).
+      **The player leaves able to:** the skill or story beat this level adds.
+    color: amber
+    width: 360
+  - note: "▣ Drop the top-down map here — a photo of a sketch is fine"
+    width: 360
+  - break
+  - column: The journey
+    cards:
+      - note: "**Start:** where the player enters, and what they see first."
+      - note: The ideal path, step by step.
+      - note: "**Finish:** the exit, and what triggers it."
+      - note: Landmarks that keep the player from getting lost.
+  - column: Challenges
+    cards:
+      - note: Obstacles and puzzles, in the order they're met.
+      - note: Enemies — where they wait and how they behave.
+      - note: The hardest moment, and what comes right before it.
+  - column: Rewards
+    cards:
+      - note: The small wins along the way.
+      - note: The tease — the reward the player glimpses early and works toward.
+      - note: Secrets for players who explore.
+  - column: Look
+    cards:
+      - note: "▣ Drop references for each area of the level"
+      - note: Lighting and mood, area by area.
+  - break
+  - column: Technical questions
+    cards:
+      - note: Where the player saves or respawns.
+      - note: How scoring works here.
+  - todo: Before blocking it out
+    items:
+      - Concept agreed
+      - Map and path drawn
+      - Challenges and rewards balanced
+      - Team has added their questions

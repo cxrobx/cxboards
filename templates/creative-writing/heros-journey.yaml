@@ -1,0 +1,42 @@
+name: Hero's journey
+use_when: Plotting a protagonist's adventure through the classic twelve stages — leaving home, being tested, coming back changed — and checking the sequence holds.
+also: [novel-outline]
+source: https://milanote.com/templates/creative-writing/heros-journey
+cards:
+  - note: |
+      # *Story title*
+      **The hero:** who they are at the start.
+      **What changes:** who they are at the end, in one line.
+      Fill the stages in order; it's a circle, so the last stage should echo the first.
+    color: amber
+    width: 360
+  - break
+  - column: Departure
+    color: cyan
+    cards:
+      - note: "**1. The ordinary world** — daily life, and what's quietly wrong with it."
+      - note: "**2. The call to adventure** — the event that won't let things stay the same."
+      - note: "**3. Refusing the call** — why they say no, at first."
+      - note: "**4. Meeting the mentor** — who or what gives them what they need to go."
+      - note: "**5. Crossing the threshold** — the moment there's no going back."
+  - column: Initiation
+    color: clay
+    cards:
+      - note: "**6. Tests, allies, enemies** — learning the rules of the new world."
+      - note: "**7. The approach** — preparing for the thing they fear most."
+      - note: "**8. The ordeal** — the lowest point; something has to die."
+      - note: "**9. The reward** — what they take from surviving it."
+  - column: Return
+    color: green
+    cards:
+      - note: "**10. The road back** — the cost of heading home."
+      - note: "**11. Resurrection** — the final test, where the change is proven."
+      - note: "**12. Return with the prize** — what they bring home, and how home has changed."
+  - break
+  - todo: Check the circle
+    items:
+      - Every stage has at least one scene
+      - The ordeal is the hero's own choice, not luck
+      - The ending answers the ordinary world
+      - The mentor's gift is used when it matters
+  - note: "▣ Drop images or clips for the key stages"

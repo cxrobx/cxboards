@@ -1,0 +1,46 @@
+name: Day in the life of
+use_when: Mapping one customer's ordinary day hour by hour — what they do, use and feel — to see where your product or service fits in, or could.
+source: https://milanote.com/templates/market-research/day-in-the-life-of
+cards:
+  - note: |
+      # A day in the life of *name*
+      **Who they are:** role, age, where they live, who they live with.
+      **How we know:** interview · observation · diary study · research.
+      **What we're trying to learn:**
+    color: amber
+    width: 360
+  - note: "▣ Drop a photo of them or their world"
+  - todo: Questions to ask
+    items:
+      - Walk me through yesterday, from when you woke up
+      - When did you last do the task? What happened?
+      - What did you use, and what did you wish you had?
+      - What's the most annoying part of your day?
+  - break
+  - column: Morning
+    cards:
+      - note: What they do · where · what they use · how they feel.
+      - note: "▣ Photos or clips"
+  - column: Midday
+    cards:
+      - note: What they do · where · what they use · how they feel.
+  - column: Afternoon
+    cards:
+      - note: What they do · where · what they use · how they feel.
+  - column: Evening
+    cards:
+      - note: What they do · where · what they use · how they feel.
+  - column: Night
+    cards:
+      - note: What they do · where · what they use · how they feel.
+  - break
+  - column: In their words
+    cards:
+      - note: Direct quotes, word for word, with the moment they said it.
+  - column: Patterns
+    cards:
+      - note: Habits, workarounds and moments of friction that show up more than once.
+  - column: Opportunities
+    cards:
+      - note: Where in the day the product could help, and what it would replace.
+      - note: The moment that matters most, and why.

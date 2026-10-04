@@ -1,0 +1,45 @@
+name: Illustration project plan
+use_when: Planning an illustration job from brief to final files — the objectives, the style and medium, the references, the dates and the deliverables.
+source: https://milanote.com/templates/project-plans/illustration-plan
+cards:
+  - note: |
+      # *Project name*
+      **Client:**  **Due:** *date*
+      **The image has to:** tell, sell or explain what, to whom?
+    color: amber
+    width: 360
+  - note: "▣ Drop the brief or the client's own references here"
+  - break
+  - column: Objectives
+    cards:
+      - note: What the illustration needs to communicate.
+      - note: Where it'll be seen — print, screen, packaging, a wall — and at what size.
+  - column: Style & medium
+    cards:
+      - note: Technique and medium, digital or traditional.
+      - note: Line, texture and level of detail.
+      - swatch: "#2F3E46"
+        text: Palette 1
+      - swatch: "#E9C46A"
+        text: Palette 2
+      - swatch: "#E76F51"
+        text: Palette 3
+  - column: References
+    cards:
+      - note: "▣ Drop style, subject and composition references here"
+      - note: What you're taking from each.
+  - break
+  - column: Dates
+    cards:
+      - note: "Sketches · *date*"
+      - note: "Final art · *date*"
+      - note: Rounds of revision included in the fee.
+  - column: Process
+    cards:
+      - todo: ""
+        items: [Thumbnails, Sketch approved, Colour rough approved, Final art, Revisions, Files delivered]
+  - column: Deliverables
+    cards:
+      - todo: ""
+        items: [Final files at print resolution, Web versions, Source files if agreed, Invoice]
+      - note: Usage rights — where, how long, exclusive or not.

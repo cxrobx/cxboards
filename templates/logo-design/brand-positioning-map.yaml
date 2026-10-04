@@ -1,0 +1,43 @@
+name: Brand positioning map
+also: [brand-strategy-workshops, branding, market-research, marketing-strategy]
+use_when: Placing your brand against its competitors on two axes to find the open ground — before a new logo or a rebrand.
+source: https://milanote.com/templates/logo-design/brand-positioning-map
+cards:
+  - note: |
+      # *Brand* — positioning
+      **The market:** who you're up against, in a phrase.
+      **Two axes buyers actually care about:** e.g. affordable ↔ premium, traditional ↔ modern.
+    color: amber
+    width: 360
+  - note: |
+      **Axes**
+      Across: *left* ↔ *right*
+      Up and down: *bottom* ↔ *top*
+  - break
+  - column: Competitors
+    cards:
+      - note: "▣ Drop each competitor's logo here, then move it into its quadrant"
+      - note: Name · one line on how they present themselves.
+  - column: Top left
+    cards:
+      - note: "*Top* and *left* — who sits here?"
+  - column: Top right
+    cards:
+      - note: "*Top* and *right* — who sits here?"
+  - break
+  - column: Visual habits
+    cards:
+      - note: The colours, fonts and symbols most of them share.
+      - note: The look nobody in the category has tried.
+  - column: Bottom left
+    cards:
+      - note: "*Bottom* and *left* — who sits here?"
+  - column: Bottom right
+    cards:
+      - note: "*Bottom* and *right* — who sits here?"
+  - break
+  - column: Where we stand
+    width: 360
+    cards:
+      - note: The quadrant you want to own, and why it's empty or weakly held.
+      - note: What that means for the logo — what it has to look like, and what it can't.

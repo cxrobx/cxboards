@@ -17,11 +17,11 @@ cards:
     cards:
       - todo: Tracklist
         items:
-          - "01 · *name* · *key* · *bpm*"
-          - "02 · *name* · *key* · *bpm*"
-          - "03 · *name* · *key* · *bpm*"
-          - "04 · *name* · *key* · *bpm*"
-          - "05 · *name* · *key* · *bpm*"
+          - "01 · name · key · bpm"
+          - "02 · name · key · bpm"
+          - "03 · name · key · bpm"
+          - "04 · name · key · bpm"
+          - "05 · name · key · bpm"
       - note: Drop each bounce here as you finish it.
   - column: Polish
     cards:

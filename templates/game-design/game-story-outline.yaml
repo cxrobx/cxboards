@@ -1,0 +1,41 @@
+name: Game design story outline
+use_when: Shaping a game's plot into a beginning, middle and end — and lining each story beat up with what the player is doing at that point.
+source: https://milanote.com/templates/game-design/game-story-outline
+cards:
+  - note: |
+      # *Game title* — story
+      **The premise:** who, wants what, against what.
+      **The ending you're writing toward:**
+    color: amber
+    width: 360
+  - note: |
+      **For every beat, two lines**
+      What happens in the story · what the player is doing while it happens.
+  - break
+  - column: Setup
+    cards:
+      - note: The ordinary world, and who the player is in it.
+      - note: The tutorial — how the story teaches the controls.
+  - column: Inciting event
+    cards:
+      - note: What breaks the ordinary world and sends the player out.
+  - column: Rising stakes
+    cards:
+      - note: The obstacles, in order. Each one harder, each one costing more.
+      - note: Allies met, enemies revealed.
+  - column: Midpoint
+    cards:
+      - note: The twist that changes what the player thinks the goal is.
+  - column: Climax
+    cards:
+      - note: The final confrontation — and the boss fight or set piece that carries it.
+  - column: Resolution
+    cards:
+      - note: What's changed. What's left open for a sequel or post-game.
+  - break
+  - column: Branches
+    cards:
+      - note: Choices that split the story, and whether they join back up.
+  - column: Side stories
+    cards:
+      - note: Quests and lore that deepen the world without blocking the main path.

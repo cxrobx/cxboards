@@ -1,0 +1,37 @@
+name: Podcast outline
+use_when: Arranging an episode's topics and talking points into an order that flows, as cue cards you can glance at while you record.
+source: https://milanote.com/templates/podcasting/podcast-outline
+cards:
+  - note: |
+      # *Episode title* — outline
+      **The point:** what the listener should remember tomorrow.
+      **Rule:** keywords and fragments, never full sentences — you're talking, not reading.
+    color: amber
+    width: 360
+  - note: "▣ Drop images or clips that help you tell it more vividly"
+  - break
+  - column: Opening
+    cards:
+      - note: The hook — a question, a story, a surprising fact.
+      - note: What this episode covers, in a sentence.
+  - column: Topic 1
+    cards:
+      - note: "• point\n• point\n• example"
+  - column: Topic 2
+    cards:
+      - note: "• point\n• point\n• example"
+  - column: Topic 3
+    cards:
+      - note: "• point\n• point\n• example"
+  - column: Close
+    cards:
+      - note: The takeaway, tied back to the opening.
+      - note: What to do next — subscribe, reply, the next episode.
+  - break
+  - column: Sequence check
+    cards:
+      - note: Does each topic set up the next? Where does it jump?
+      - note: Anything that arrives without an introduction.
+  - column: Stuck points
+    cards:
+      - note: Topics that need more research before you can talk about them.

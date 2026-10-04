@@ -1,0 +1,58 @@
+name: Diary study
+use_when: Running a diary study — participants log their habits and experiences over days or weeks — and turning the entries into insights about how people really use a product.
+also: [market-research]
+source: https://milanote.com/templates/ux-research/diary-study
+cards:
+  - note: |
+      # *Study name*
+      **What we want to learn:** one research question.
+      **Length:** *n* days  **Participants:** *n*  **Check-ins:** daily · on each use
+    color: amber
+    width: 360
+  - note: |
+      **The ask to participants**
+      What to log, when, and how — a note, a photo, a short video. Keep it under five minutes an entry.
+  - break
+  - column: Plan
+    cards:
+      - note: Who you're recruiting, and who you're leaving out.
+      - note: The incentive, and when it's paid.
+      - todo: Set-up
+        items: [Recruit and screen, Consent forms signed, Kickoff call with each participant, Reminder schedule set]
+  - column: Prompts
+    cards:
+      - note: "Day 1 — *prompt*"
+      - note: "Each time you use it — what were you trying to do, and how did it go?"
+      - note: "Last day — what would you change?"
+  - column: Running it
+    cards:
+      - note: Who's dropped off, who needs a nudge, entries that need a follow-up question.
+  - break
+  - board: Participants
+    folder: true
+    cards:
+      - note: One board per participant. Duplicate *Participant template* for each.
+      - board: Participant template
+        cards:
+          - note: |
+              # P*01* — *first name or code*
+              **Profile:** age, role, how often they use the product.
+            color: amber
+          - column: Entries
+            cards:
+              - note: "*Date* — what they did, what they said"
+              - note: "▣ Drop their photos and clips here"
+          - column: Stand-out moments
+            cards:
+              - note: Quotes and behaviour worth sharing.
+  - column: Patterns
+    cards:
+      - note: Things that came up for three or more people.
+      - note: Habits that changed over the study.
+  - column: Insights
+    cards:
+      - note: "We saw *this*, which means *that*."
+  - column: Share-out
+    cards:
+      - todo: ""
+        items: [Synthesis session with the team, Highlight reel of quotes and clips, Recommendations written, Thank and pay participants]

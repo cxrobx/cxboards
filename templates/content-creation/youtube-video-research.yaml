@@ -1,0 +1,47 @@
+name: YouTube video research
+use_when: Gathering what you need to know before making a YouTube video — sources, facts, quotes, visuals and the gaps — so the video holds up.
+source: https://milanote.com/templates/content-creation/youtube-video-research
+cards:
+  - note: |
+      # *Video topic*
+      **The question the video answers:**
+      **What you already believe:** so you can check it, not just confirm it.
+    color: amber
+    width: 340
+  - note: |
+      **Source rule**
+      Note where every fact came from as you save it. Finding it again later takes longer than writing it down now.
+  - break
+  - column: Sources
+    cards:
+      - note: "*Source* · type · how credible · date"
+      - note: "▣ Drop links, articles and papers here"
+  - column: Key facts
+    cards:
+      - note: "*Fact* — source"
+      - note: The surprising numbers worth putting on screen.
+  - column: Quotes
+    cards:
+      - note: "\"*Quote*\" — who, where"
+  - column: Visuals
+    cards:
+      - note: "▣ Drop images, charts and clips you could show"
+      - note: What you'd need to film or make yourself.
+  - column: Other videos
+    cards:
+      - note: What's already out on this topic, what it covered and what it left out.
+  - break
+  - column: Counterpoints
+    cards:
+      - note: The strongest argument against your take, and your answer to it.
+  - column: Gaps
+    color: clay
+    cards:
+      - note: Questions you still can't answer.
+      - todo: To check
+        items:
+          - "Claim — confirm with a second source"
+  - column: Takeaways
+    color: green
+    cards:
+      - note: The three points the video has to land. These become the chapters.

@@ -1,0 +1,49 @@
+name: Packaging design moodboard
+use_when: Setting the look of a product's packaging — shelf context, references, materials, colour and type — before you design the pack.
+source: https://milanote.com/templates/moodboards/packaging-design-moodboard
+cards:
+  - note: |
+      # *Product*
+      **Who picks it up:** the buyer, and where they find it — shelf, online, as a gift.
+      **What the pack has to say in two seconds:**
+    color: amber
+    width: 340
+  - note: |
+      **Constraints**
+      Size, shape, print method, cost per unit, and anything that must legally be on it.
+  - break
+  - column: On the shelf now
+    cards:
+      - note: "▣ Drop photos of competitors' packs"
+      - note: What everyone in the category does — and the look nobody is using.
+  - column: References
+    width: 320
+    cards:
+      - note: "▣ Drop packaging you love, from any category"
+      - note: One line on each — the material, the type, the restraint, the surprise.
+  - column: Form & materials
+    cards:
+      - note: Box, bag, tin, bottle, tube? What it's made of and how it opens.
+      - note: "▣ Drop finishes — foil, emboss, uncoated, recycled board"
+      - note: What should opening it feel like?
+  - break
+  - column: Colour
+    cards:
+      - swatch: "#1B3A2F"
+        text: Pack
+      - swatch: "#F2EBDD"
+        text: Label
+      - swatch: "#C8553D"
+        text: Accent
+      - note: Does colour code a range — flavours, sizes, variants?
+  - column: Type & graphics
+    cards:
+      - note: The type for the product name, and the type for everything else.
+      - note: "▣ Drop illustrations, patterns or photography styles"
+  - column: Before design
+    cards:
+      - todo: ""
+        items:
+          - Dieline or dimensions from the manufacturer
+          - Copy and legal text gathered
+          - Direction agreed with the client

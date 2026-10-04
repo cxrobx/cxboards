@@ -1,0 +1,46 @@
+name: Fashion brainstorm
+use_when: Getting garment and collection ideas out fast — shapes, materials, colour, details and influences — then picking the threads worth developing.
+source: https://milanote.com/templates/fashion/Fashion-brainstorm
+cards:
+  - note: |
+      # *Project or collection*
+      **The starting point:** a word, an image, a person, a memory.
+      **Rule for the first round:** quantity — no editing until the board is full.
+    color: amber
+    width: 340
+  - note: "▣ Drop the image that started it here"
+  - break
+  - column: Silhouettes
+    cards:
+      - note: Shapes and proportions — volume, length, where it fits and where it falls.
+      - note: "▣ Drop sketches here"
+  - column: Materials
+    cards:
+      - note: Fabrics, weights and finishes. How should it feel to touch?
+      - note: "▣ Drop swatch photos here"
+  - column: Colour
+    cards:
+      - swatch: "#2E2A26"
+        text: Base
+      - swatch: "#B9A58C"
+        text: Neutral
+      - swatch: "#8C2F39"
+        text: Accent
+      - note: Pull more from your images.
+  - column: Details
+    cards:
+      - note: Closures, trims, seams, prints, hardware.
+  - column: Influences
+    cards:
+      - note: Eras, places, subcultures, art — and what you're taking from each.
+  - break
+  - column: Strongest
+    color: green
+    cards:
+      - note: The ideas that keep pulling you back. One line on why.
+  - column: Combinations
+    cards:
+      - note: Two ideas from different columns that work better together.
+  - note: |
+      **Next**
+      Turn the strongest ideas into a brief, or straight into a moodboard.

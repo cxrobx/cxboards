@@ -1,0 +1,44 @@
+name: Character profile
+use_when: Getting to know one character well enough to write them — who they are, where they've been, what they want and what gets in their way.
+source: https://milanote.com/templates/creative-writing/character-profile
+cards:
+  - note: |
+      # *Character name*
+      **Role in the story:** protagonist · antagonist · supporting
+      **Archetype:** innocent, everyman, hero, outlaw, explorer, creator, ruler, magician, lover, caregiver, jester or sage — then how they break the mould.
+    color: amber
+    width: 360
+  - note: "▣ Drop a reference photo, a sketch or a clip that feels like them"
+  - break
+  - column: The basics
+    cards:
+      - note: "Age · where they live · what they do for money"
+      - note: Family, and who they'd call at 2am.
+      - note: How they talk — a phrase they overuse, what they never say.
+  - column: Characteristics
+    cards:
+      - note: Three traits a friend would use to describe them.
+      - note: What they look like, in the details a reader will remember.
+      - note: How would the story change if they were older, younger, or another gender?
+  - column: Backstory
+    cards:
+      - note: The road that brought them to page one.
+      - note: The fear they carry and where it came from.
+      - note: Why they make the choices they make.
+  - column: Quirks & flaws
+    cards:
+      - note: The habit that annoys the people closest to them.
+      - note: The flaw that gets them into trouble in this story.
+      - note: A contradiction — where they act against their own nature.
+  - column: Goals
+    cards:
+      - note: "**Wants:** what they're chasing on the surface."
+      - note: "**Needs:** what they actually need, and don't know yet."
+      - note: Are they getting closer, or making it worse?
+  - break
+  - todo: Before you write their first scene
+    items:
+      - You could describe them in one sentence
+      - You know what they want in this scene
+      - You know what they'd never do
+      - You know how they've changed by the last page

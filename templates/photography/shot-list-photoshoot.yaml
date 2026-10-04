@@ -1,0 +1,45 @@
+name: Photoshoot shot list
+use_when: Listing every photo you need from a shoot, subject by subject, so the critical one doesn't get missed on the day.
+also: []
+source: https://milanote.com/templates/photography/shot-list-photoshoot
+cards:
+  - note: |
+      # *Shoot* — shot list
+      **Subjects:** *products, people, rooms, moments*
+      **Must not leave without:** the one shot the whole job depends on.
+    color: amber
+    width: 340
+  - note: |
+      **How to read this**
+      One column per subject. Tick shots off as they're captured; star the ones the client asked for by name.
+  - break
+  - column: "*Subject 1*"
+    cards:
+      - note: "▣ Reference image or a quick phone snap"
+      - todo: Shots
+        items: [Front, Three-quarter, Side, Detail, In use / in context]
+      - note: "What to capture about it — e.g. the stitching, the grain, how it catches light."
+  - column: "*Subject 2*"
+    cards:
+      - note: "▣ Reference image"
+      - todo: Shots
+        items: [Front, Three-quarter, Detail, In context]
+      - note: "What to capture about it:"
+  - column: "*Subject 3*"
+    cards:
+      - note: "▣ Reference image"
+      - todo: Shots
+        items: [Front, Detail, In context]
+      - note: "What to capture about it:"
+  - break
+  - column: Lighting
+    cards:
+      - note: The set-up for each subject — key, fill, modifiers, and what changes between them.
+  - column: Backgrounds
+    cards:
+      - note: Plain seamless, coloured, or a lifestyle set? What's behind the subject and how it's dressed.
+      - note: "▣ Backdrop or set reference"
+  - column: Formats
+    cards:
+      - todo: Every hero shot in
+        items: [Landscape, Portrait, Square, With room for copy]

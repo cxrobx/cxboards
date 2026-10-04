@@ -1,0 +1,48 @@
+name: Website competitor analysis
+use_when: Comparing competitors' websites — how they look, what they say, how they're found and how they work — to decide where yours will stand out.
+source: https://milanote.com/templates/website-design/website-competitor-analysis
+cards:
+  - note: |
+      # *Your site* vs the field
+      **Who we're comparing:** the three or four sites your customers also visit.
+      **What we're judging:** design, message, search, experience.
+    color: amber
+    width: 360
+  - todo: Look at each site for
+    items:
+      - First impression on a phone and on a laptop
+      - The headline, and the promise it makes
+      - Keywords it ranks for
+      - How quickly you can do the main task
+      - How it asks for the sale or the sign-up
+  - break
+  - column: Competitor 1
+    width: 300
+    cards:
+      - note: "▣ Drop screenshots of the home page and one key page"
+      - note: "**Strengths:**"
+      - note: "**Weaknesses:**"
+  - column: Competitor 2
+    width: 300
+    cards:
+      - note: "▣ Drop screenshots of the home page and one key page"
+      - note: "**Strengths:**"
+      - note: "**Weaknesses:**"
+  - column: Competitor 3
+    width: 300
+    cards:
+      - note: "▣ Drop screenshots of the home page and one key page"
+      - note: "**Strengths:**"
+      - note: "**Weaknesses:**"
+  - break
+  - column: Search
+    cards:
+      - note: The keywords each one ranks for, and the ones nobody covers well.
+  - column: Experience
+    cards:
+      - note: Where their sites are slow, confusing or pushy.
+  - column: Our position
+    width: 340
+    cards:
+      - note: What we'll do that none of them does.
+      - note: What they all do well that we can't skip.

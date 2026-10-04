@@ -1,0 +1,52 @@
+name: Film location scouting
+use_when: Finding and vetting the places you'll film — what the script needs, every candidate you visit, and the light, power, access and permits at each.
+source: https://milanote.com/templates/filmmaking/film-location-scouting
+cards:
+  - note: |
+      # *Production* — locations
+      **Scout dates:**
+      **The deciding question:** can we get the shot here, on our budget, on our day?
+    color: amber
+    width: 340
+  - break
+  - column: What the script needs
+    cards:
+      - note: "*Scene* — interior / exterior · day / night · what the place has to say."
+      - note: "*Scene* — "
+      - note: Places that could play more than one scene.
+  - column: Candidates
+    cards:
+      - note: Every place worth a look. Name · area · who to call.
+      - note: Visited ✓ and ruled out ✗, with a word on why.
+  - column: Confirmed
+    cards:
+      - note: Location · scenes · dates booked · contact.
+      - todo: Before it's locked
+        items: [Permit or written permission, Fee agreed and paid, Insurance certificate sent, Neighbours told]
+  - break
+  - board: Scouted places
+    folder: true
+    cards:
+      - note: One board per place you visit. Duplicate *Location template* and rename it.
+      - board: Location template
+        cards:
+          - note: |
+              # *Place name*
+              **Address:**  **Contact:**
+              **Scenes it could play:**
+            color: amber
+            width: 320
+          - note: "▣ Drop scout photos here — wide, each wall, the view out"
+          - break
+          - column: Light
+            cards:
+              - note: Which way the windows face. Where the sun is at your call time.
+          - column: Power & sound
+            cards:
+              - note: Outlets and circuits. Traffic, planes, air-con you can't turn off.
+          - column: Access
+            cards:
+              - note: Parking, load-in, stairs or lift, toilets, a room for hair and make-up.
+          - column: Paperwork
+            cards:
+              - note: Permit needed? Fee? Hours you're allowed? Drop documents here.

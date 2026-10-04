@@ -1,0 +1,61 @@
+name: Brand strategy
+use_when: Running a brand strategy project in one place — research, audience, positioning, personality and visual direction — with a board for each part.
+source: https://milanote.com/templates/branding/brand-strategy
+also: [graphic-design]
+cards:
+  - note: |
+      # *Brand* — strategy
+      **The ambition:** what the brand should be known for in three years.
+      **Client / team:**
+      **Deliver by:**
+    color: amber
+    width: 360
+  - todo: Project stages
+    items:
+      - Discovery and research
+      - Audience
+      - Positioning
+      - Personality and voice
+      - Visual direction
+      - Present and sign off
+  - break
+  - board: Research
+    cards:
+      - note: The business, the market and the competitors — what's true today.
+      - column: Competitors
+        cards:
+          - note: "*Name* — what they promise, who they're for, how they look"
+      - column: Stakeholder interviews
+        cards:
+          - note: What the founders and staff think the brand is.
+  - board: Audience
+    cards:
+      - note: Who you're trying to reach, what they need and what they believe.
+      - column: Personas
+        cards:
+          - note: "*Name* — situation, need, what stops them buying"
+  - board: Positioning
+    cards:
+      - note: |
+          **For** *audience* **who** *need*, **we are** *category* **that** *benefit*, **unlike** *alternative*.
+      - note: The proof — why anyone should believe it.
+  - board: Personality & voice
+    cards:
+      - note: Three traits, and how each one sounds in writing.
+      - column: Voice examples
+        cards:
+          - note: "Say: *…*"
+          - note: "Don't say: *…*"
+  - board: Values
+    cards:
+      - note: Three to five values, each with what it means you'll do — and won't.
+  - board: Visual direction
+    cards:
+      - note: "▣ Drop images, colour and type references here"
+      - swatch: "#1E2B3A"
+        text: Starting colour
+  - break
+  - note: |
+      **The brand on a page**
+      Once each board is done, write the summary here — the ambition, the audience, the position, the personality and the values.
+    width: 400

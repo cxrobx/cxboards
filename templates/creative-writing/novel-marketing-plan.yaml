@@ -1,0 +1,51 @@
+name: Novel marketing plan
+use_when: Launching a book — who it's for, what success looks like, the build-up before release, launch week and keeping it alive afterwards.
+source: https://milanote.com/templates/creative-writing/novel-marketing-plan
+cards:
+  - note: |
+      # *Book title* — out *date*
+      **The reader:** the person who'll love this book, and the three books already on their shelf.
+      **The hook:** why it's worth their evening, in one line.
+    color: amber
+    width: 360
+  - column: Goals
+    cards:
+      - note: "Launch-month target — copies, reviews, newsletter sign-ups."
+      - note: What would make this a success *for you*, not just in numbers?
+  - break
+  - column: Audience
+    cards:
+      - note: Where your readers already gather — communities, podcasts, shops, feeds.
+      - note: Comparable authors, and how they reached readers.
+      - note: Your own list — who already follows your work?
+  - column: Pre-launch
+    cards:
+      - todo: ""
+        items:
+          - Cover and blurb final
+          - Advance copies to early readers and reviewers
+          - Pre-order page live
+          - Newsletter and social announcement
+          - Events or readings booked
+  - column: Launch
+    cards:
+      - todo: ""
+        items:
+          - Launch-day post and email
+          - Ask early readers to leave reviews
+          - Interviews and guest pieces go out
+          - Thank everyone who shared
+  - column: After launch
+    cards:
+      - note: The next three reasons to talk about the book — an anniversary, a prize, a related event.
+      - note: Promotions and price drops, and when.
+      - note: What do you reuse for the next book?
+  - break
+  - column: Tracking
+    cards:
+      - note: Weekly numbers — sales, reviews, list growth.
+      - note: Which channel actually moved copies?
+  - column: Assets
+    cards:
+      - note: "▣ Drop the cover, author photo, excerpts and graphics here"
+      - note: The one-paragraph pitch you send to everyone.

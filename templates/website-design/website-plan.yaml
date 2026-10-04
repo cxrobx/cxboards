@@ -1,0 +1,95 @@
+name: Website plan
+also: [project-plans, ux-design]
+use_when: Running a website project from one hub — brief, audience, visual direction, sitemap and content — with the checklists that move it from plan to launch.
+source: https://milanote.com/templates/website-design/website-plan
+cards:
+  - note: |
+      # *Site* — project plan
+      **Who it's for:**
+      **Success looks like:** a goal you can measure — more leads, more sales, fewer support emails.
+      **Launch:** *date*
+    color: amber
+    width: 360
+  - note: |
+      **How this board works**
+      Work through the boards left to right. Each one feeds the next.
+  - break
+  - board: 1 · Brief
+    cards:
+      - note: |
+          # Brief
+          The client, the goals, the dates.
+        color: amber
+      - column: Goals
+        cards:
+          - note: The measurable goal, and how you'll track it.
+      - todo: Deliverables
+        items: [Sitemap, Page designs, Copy, Images, Built site]
+  - board: 2 · Audience
+    cards:
+      - note: One persona per main type of visitor, built from real research.
+        color: amber
+      - column: Persona
+        cards:
+          - note: Who they are, what they're trying to get done, what they already use.
+      - column: Pain points
+        cards:
+          - note: What frustrates them today.
+      - column: Ideal experience
+        cards:
+          - note: Set limits aside — what would the best visit look like?
+  - board: 3 · Moodboard
+    cards:
+      - note: The visual direction, agreed before design starts.
+        color: amber
+      - column: References
+        cards:
+          - note: "▣ Drop sites, images and layouts with the right feel"
+      - column: Colour & type
+        cards:
+          - swatch: "#2563EB"
+          - note: Fonts worth trying.
+  - break
+  - board: 4 · Sitemap
+    cards:
+      - note: Every page, and how they connect.
+        color: amber
+      - column: Top level
+        cards:
+          - note: Home
+          - note: "*Section*"
+          - note: "*Section*"
+      - column: Under each
+        cards:
+          - note: The pages that sit beneath each section.
+  - board: 5 · Content
+    cards:
+      - note: The words and images for each page.
+        color: amber
+      - column: Page
+        cards:
+          - note: Purpose · headline · key messages
+          - note: "▣ Drop a layout sketch and images"
+  - break
+  - column: Plan
+    cards:
+      - todo: ""
+        items:
+          - Brief agreed
+          - Personas written
+          - Moodboard approved
+  - column: Structure
+    cards:
+      - todo: ""
+        items:
+          - Sitemap agreed
+          - Content drafted for every page
+          - Wireframes reviewed
+  - column: Build & launch
+    cards:
+      - todo: ""
+        items:
+          - Designs signed off
+          - Site built and tested on phones
+          - Analytics tracking the goal
+          - Launched

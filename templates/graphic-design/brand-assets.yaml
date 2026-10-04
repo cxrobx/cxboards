@@ -1,0 +1,52 @@
+name: Brand assets
+use_when: Keeping a brand's logos, colours, type, imagery and rules in one place so everyone making work for it uses the right files.
+source: https://milanote.com/templates/graphic-design/brand-assets
+cards:
+  - note: |
+      # *Brand* — assets
+      **Owner:** who to ask before using something new.
+      **Last updated:** *date*
+    color: amber
+    width: 340
+  - note: |
+      **The short version**
+      Three rules a designer should know even if they read nothing else here.
+  - break
+  - column: Logos
+    cards:
+      - note: "▣ Drop the primary logo, the stacked version and the icon here"
+      - note: Light and dark versions, minimum size, clear space around it.
+      - note: "Don't: stretch it, recolour it, add effects."
+  - column: Colour
+    cards:
+      - swatch: "#1D3557"
+        text: Primary · *name*
+      - swatch: "#E63946"
+        text: Accent · *name*
+      - swatch: "#F1FAEE"
+        text: Background · *name*
+      - swatch: "#2B2D42"
+        text: Text · *name*
+      - note: Which combinations are allowed, and the ratio they're used in.
+  - column: Typography
+    cards:
+      - note: "**Headlines:** *typeface, weight*"
+      - note: "**Body:** *typeface, weight, size*"
+      - note: "▣ Drop font files or a specimen here"
+  - column: Imagery
+    cards:
+      - note: The photo and illustration style, in a sentence.
+      - note: "▣ Drop approved images here"
+  - break
+  - column: Templates
+    cards:
+      - note: "▣ Drop slide, social and document templates here"
+  - column: Guidelines
+    cards:
+      - note: "▣ Drop the brand guidelines PDF here"
+      - note: Tone of voice in three words.
+  - todo: Keep it current
+    items:
+      - Old logo versions removed
+      - File names say what they are
+      - Every file in the formats people need (SVG, PNG, PDF)

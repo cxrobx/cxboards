@@ -1,0 +1,46 @@
+name: Game worldbuilding
+use_when: Building the world a game takes place in — the land, who lives there and how they live — so characters and levels have rules to grow from.
+source: https://milanote.com/templates/game-design/game-world-building
+cards:
+  - note: |
+      # *World name*
+      **In one line:** the place, and what's wrong with it.
+      **The rule that makes it different:** magic, a disaster, a technology, a law.
+    color: amber
+    width: 360
+  - note: "▣ Drop a map sketch here, however rough"
+  - break
+  - column: Environment
+    cards:
+      - note: Geography — the regions and what separates them.
+      - note: Climate and seasons.
+      - note: Landmarks a player would remember.
+      - note: The dangers the land itself poses.
+  - column: Inhabitants
+    cards:
+      - note: Who lives here — peoples, creatures, machines.
+      - note: How they're organised, and who holds power.
+      - note: Where your main character fits, or doesn't.
+  - column: Culture
+    cards:
+      - note: How people dress, and what that says about them.
+      - note: Technology and weapons.
+      - note: Currency, trade and what's scarce.
+      - note: Beliefs, rituals, what people argue about.
+  - column: References
+    cards:
+      - note: "▣ Drop images for landscapes, architecture and people"
+      - note: Games, films and books whose worlds you're borrowing from, and what exactly you're taking.
+  - break
+  - column: History
+    cards:
+      - note: The event everyone in the world still talks about.
+  - column: Open questions
+    cards:
+      - note: What the team still needs answered before designing characters and levels.
+  - todo: Share and build on it
+    items:
+      - Environment, people and culture written
+      - References gathered
+      - Art, design and code have read it
+      - Their questions answered here

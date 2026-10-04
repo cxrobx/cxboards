@@ -1,0 +1,49 @@
+name: Team planner
+use_when: Managing a team's workload in one view — the priorities, who's on what with due dates, meeting notes and anything blocking the work.
+also: [agencies]
+source: https://milanote.com/templates/productivity/team-planner
+cards:
+  - note: |
+      # *Team* — *week or sprint*
+      **Top priorities:** the three things that matter most this stretch.
+      **Shipping this week:**
+    color: amber
+    width: 340
+  - todo: Team priorities
+    items: [Priority 1, Priority 2, Priority 3]
+  - break
+  - column: "*Name*"
+    cards:
+      - todo: ""
+        items: ["Task · due date"]
+      - note: Out of office or limited time.
+  - column: "*Name*"
+    cards:
+      - todo: ""
+        items: ["Task · due date"]
+      - note: Out of office or limited time.
+  - column: "*Name*"
+    cards:
+      - todo: ""
+        items: ["Task · due date"]
+      - note: Out of office or limited time.
+  - column: "*Name*"
+    cards:
+      - todo: ""
+        items: ["Task · due date"]
+      - note: Out of office or limited time.
+  - break
+  - column: Unassigned
+    cards:
+      - note: Work that needs an owner. Pick it up at the next check-in.
+  - column: Blocked
+    color: clay
+    cards:
+      - note: What's stuck, what it's waiting on, who can help.
+  - column: Meeting notes
+    cards:
+      - note: "*Date* · decisions · actions with names"
+  - column: Wins
+    color: green
+    cards:
+      - note: What got done that's worth saying out loud.

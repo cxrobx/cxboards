@@ -1,0 +1,52 @@
+name: Event planning
+use_when: Planning an event from the first idea to the day after — objectives, dates, venue, suppliers, budget and the task list — in one place.
+also: [project-plans]
+source: https://milanote.com/templates/events/event-plan
+cards:
+  - note: |
+      # *Event name*
+      **Date:**  **Venue:**  **Guests:** *n*  **Budget:**
+      **Success looks like:** one sentence you can check the day after.
+    color: amber
+    width: 360
+  - note: |
+      **Owner & team**
+      Who decides, who does what, who the suppliers call.
+  - break
+  - column: Objectives
+    cards:
+      - note: The two or three things this event must do.
+      - note: Who it's for, and what they get out of coming.
+  - column: Key dates
+    cards:
+      - note: "*date* — venue booked"
+      - note: "*date* — invitations out"
+      - note: "*date* — suppliers confirmed"
+      - note: "*date* — final numbers"
+      - note: "*date* — the event"
+  - column: Venue
+    cards:
+      - note: "▣ Venue photos and floor plan"
+      - note: Contact, capacity, access times, what's included.
+  - column: Suppliers
+    cards:
+      - note: "Catering · *name · contact · quote*"
+      - note: "AV · *name · contact · quote*"
+      - note: "Decor · *name · contact · quote*"
+  - break
+  - column: Budget
+    cards:
+      - note: "Item · estimate · actual"
+      - note: Contingency — at least 10%.
+  - column: Guests
+    cards:
+      - note: The list, RSVPs, dietaries and access needs.
+  - column: To do
+    cards:
+      - todo: ""
+        items: [Confirm date and venue, Set the budget, Send save-the-dates, Book suppliers, Write the run sheet, Brief staff and volunteers, Final walk-through]
+  - column: After
+    cards:
+      - todo: ""
+        items: [Thank-you notes, Pay suppliers, Collect photos, Debrief with the team]
+      - note: What to repeat and what to drop next time.

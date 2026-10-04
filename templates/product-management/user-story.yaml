@@ -1,0 +1,48 @@
+name: User story
+use_when: Writing up agile user stories for a feature — who wants it, what they need and why, how you'll know it's done, and where each story is in the sprint.
+source: https://milanote.com/templates/product-management/user-story
+cards:
+  - note: |
+      # *Feature*
+      **The user:** who this is for.
+      **The outcome:** what's better for them once it ships.
+    color: amber
+    width: 340
+  - note: |
+      **The format**
+      As a *type of user*, I want *an action* so that *a benefit*.
+      Small enough to finish in one sprint, or split it.
+  - break
+  - column: Persona
+    cards:
+      - note: Who they are, what they're trying to get done, what slows them down.
+      - note: "▣ Drop a photo or sketch that stands for them"
+  - column: Stories
+    width: 340
+    cards:
+      - note: As a *user*, I want *…* so that *…*.
+      - note: As a *user*, I want *…* so that *…*.
+      - note: As a *user*, I want *…* so that *…*.
+  - column: Acceptance criteria
+    cards:
+      - todo: Story 1 is done when
+        items: ["Given …, when …, then …"]
+      - note: Edge cases and error states.
+  - column: Designs
+    cards:
+      - note: "▣ Drop wireframes or mockups for each story here"
+  - break
+  - column: To do
+    cards:
+      - note: "*Story* · points · owner"
+  - column: In progress
+    color: amber
+    cards:
+      - note: "*Story* · sprint *n*"
+  - column: Done
+    color: green
+    cards:
+      - note: Meets every acceptance criterion and is live.
+  - column: Questions
+    cards:
+      - note: What the team needs answered before it can start.

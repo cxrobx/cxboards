@@ -1,0 +1,37 @@
+name: Visual art brainstorming
+use_when: Turning a first idea for a piece into something of your own — getting every thought, sketch and reference out of your head and onto the board, then picking a direction.
+source: https://milanote.com/templates/visual-art/visual-art-brainstorm
+cards:
+  - note: |
+      # *Working title*
+      **The starting point:** the image, phrase or feeling that set this off.
+      **The question you're exploring:**
+    color: amber
+    width: 340
+  - note: |
+      **Rules for this board**
+      Quantity before quality. No idea gets crossed out until there are at least twenty.
+  - break
+  - column: Words
+    cards:
+      - note: Every word the idea brings to mind. Nouns, verbs, moods.
+      - note: The opposite of your idea. Is that more interesting?
+  - column: Sketches
+    cards:
+      - note: "▣ Drop photos of thumbnails and doodles here"
+      - note: Ten fast versions. Change one thing each time — scale, crop, medium.
+  - column: References
+    cards:
+      - note: "▣ Drop images, artworks and photos that feel related here"
+      - note: A line under each on what pulls you to it.
+  - column: What if…
+    cards:
+      - note: What if it were huge? Tiny? Made of something else? In a different place?
+      - note: What would an artist you admire do with this?
+  - break
+  - column: Strongest ideas
+    color: green
+    cards:
+      - note: The three you keep coming back to.
+  - todo: Next
+    items: [Pick one direction, Make a small study, Start a brief or project plan]

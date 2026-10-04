@@ -1,0 +1,42 @@
+name: Podcast script
+use_when: Scripting an episode you'll read from — the timing, the order of segments and the narration — so it stays on track when the mic is on.
+source: https://milanote.com/templates/podcasting/podcast-script
+cards:
+  - note: |
+      # *Episode title* — script
+      **Target length:**  **Format:** narrative · solo · co-hosted
+      **Write for the ear:** short sentences, one idea each, read it aloud as you go.
+    color: amber
+    width: 360
+  - note: |
+      **Running time**
+      Add each segment's length as you write; the total should land near the target.
+  - break
+  - column: Cold open · 0:00
+    cards:
+      - note: The strongest moment of the episode, up front.
+  - column: Intro · 1:00
+    cards:
+      - note: Show name, who you are, what this episode is about.
+      - note: "▣ Drop the theme music here"
+  - column: Segment 1 · *time*
+    cards:
+      - note: Narration.
+      - note: "**Sound / clip:** what plays, and where"
+  - column: Segment 2 · *time*
+    cards:
+      - note: Narration.
+      - note: "**Transition:** the line that hands to the next segment"
+  - break
+  - column: Break · *time*
+    cards:
+      - note: Sponsor read or a call to action.
+  - column: Segment 3 · *time*
+    cards:
+      - note: Narration.
+  - column: Outro · *time*
+    cards:
+      - note: The takeaway in a sentence.
+      - note: Thanks, credits, what's next week.
+  - todo: Before you press record
+    items: [Read the whole script aloud, Cut anything you stumble on, Timing checked, Clips and music cued]

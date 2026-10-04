@@ -1,0 +1,53 @@
+name: Brand board
+use_when: Pinning down how a brand looks and sounds — logo, palette, type, imagery and voice — on one page everyone works from.
+source: https://milanote.com/templates/moodboards/brand-board
+cards:
+  - note: |
+      # *Brand name*
+      **In one line:** what the brand is and who it's for.
+      **Three words it should feel like:** *word* · *word* · *word*
+    color: amber
+    width: 340
+  - note: |
+      **The story**
+      Where it came from, what it stands for, and the promise it keeps every time someone meets it.
+  - break
+  - column: Logo
+    cards:
+      - note: "▣ Drop the primary logo here"
+      - note: Secondary marks, the icon on its own, and the light and dark versions.
+      - note: Clear space, and the smallest size it still reads at.
+  - column: Colour
+    cards:
+      - swatch: "#1F2A44"
+        text: Primary
+      - swatch: "#E0A33A"
+        text: Accent
+      - swatch: "#F4EFE6"
+        text: Background
+      - swatch: "#2B2B2B"
+        text: Text
+      - note: Which colour leads, and roughly how much of each shows up on a page.
+  - column: Type
+    cards:
+      - note: "**Headings:** *font, weight*"
+      - note: "**Body:** *font, weight*"
+      - note: "▣ Drop a type specimen, or a screenshot of it in use"
+  - break
+  - column: Imagery
+    cards:
+      - note: "▣ Drop photos and illustrations that are on-brand"
+      - note: What the photography always has — light, framing, subject — and what it never does.
+  - column: Voice
+    cards:
+      - note: How the brand talks, in three rules.
+      - note: A line that sounds like us, and one that doesn't.
+      - note: Taglines and phrases worth reusing.
+  - column: In use
+    cards:
+      - note: "▣ Drop mock-ups — a card, a post, a page, the packaging"
+      - todo: Before you share it
+        items:
+          - Logo files in every format people will ask for
+          - Colour values written out (hex, RGB, CMYK)
+          - Fonts licensed for how they'll be used

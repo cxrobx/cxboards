@@ -1,0 +1,104 @@
+name: Novel plan
+use_when: Running a whole novel from one board — the idea, research, inspiration, characters and outline each in their own board, with the checklists that take it from first draft to print.
+also: [project-plans]
+source: https://milanote.com/templates/creative-writing/novel-plan
+cards:
+  - note: |
+      # *Working title*
+      **The premise:** who wants what, what stops them, in two sentences.
+      **Genre and length:**
+      **Done means:** a draft of *n* words by *date*.
+    color: amber
+    width: 360
+  - note: |
+      **Order of work**
+      Research and brainstorm first, then the moodboard, then characters, then the outline. Come back to all of them while you draft.
+  - break
+  - board: Research
+    cards:
+      - note: |
+          # Research
+          What do you need to know to write this honestly?
+        color: amber
+      - column: Facts
+        cards:
+          - note: What you already know — place, period, work, events.
+      - column: Sources
+        cards:
+          - note: Articles, books and people worth going back to.
+      - column: Images & clips
+        cards:
+          - note: "▣ Drop them here"
+  - board: Brainstorm
+    cards:
+      - note: |
+          # *The idea in one line*
+          Five minutes, no judging — fill the board.
+        color: amber
+      - column: Ideas
+        cards:
+          - note: Settings, characters, conflicts, history.
+      - column: Keep
+        cards:
+          - note: The ones that make the story bigger.
+  - board: Moodboard
+    cards:
+      - note: |
+          # The mood
+          **Three words:**
+        color: amber
+      - note: "▣ Drop images, clips and colours that feel like the book"
+  - board: Outline
+    cards:
+      - note: |
+          # Outline
+          The scenes you know so far, in order. Move them until the sequence holds.
+        color: amber
+      - column: Beginning
+        cards:
+          - note: "*Scene* — what happens, who's in it"
+      - column: Middle
+        cards:
+          - note: "*Scene* — "
+      - column: End
+        cards:
+          - note: "*Scene* — "
+  - board: Characters
+    folder: true
+    cards:
+      - note: One board per character. Duplicate *Character template* for each.
+      - board: Character template
+        cards:
+          - note: |
+              # *Name*
+              **Role:**  **Wants:**  **Needs:**  **Flaw:**
+            color: amber
+          - note: Backstory — the road to page one.
+          - note: "▣ Drop a reference picture"
+  - break
+  - column: Writing
+    cards:
+      - todo: ""
+        items:
+          - Daily word target set
+          - First draft finished
+          - Rest it for two weeks
+          - Second draft — structure
+          - Third draft — line by line
+  - column: Editing
+    cards:
+      - todo: ""
+        items:
+          - Beta readers
+          - Notes sorted and decided
+          - Professional edit
+          - Proofread
+  - column: To print
+    cards:
+      - todo: ""
+        items:
+          - Title and blurb final
+          - Cover
+          - Formatting and ISBN
+          - Publisher, agent or self-publish decided
+          - Launch plan

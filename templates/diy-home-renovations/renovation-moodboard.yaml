@@ -1,0 +1,41 @@
+name: Renovation moodboard
+use_when: Collecting the look of a room you're about to renovate — photos, materials, colours, furniture and light — until the finished space is clear enough to build.
+source: https://milanote.com/templates/diy-home-renovations/renovation-moodboard
+cards:
+  - note: |
+      # *Room* — the look
+      **How it should feel:** three words.
+      **Keeping:** what stays from the room as it is now.
+    color: amber
+    width: 340
+  - note: "▣ The anchor: the one photo closest to the finished room. Make it the biggest thing here"
+    width: 360
+  - break
+  - column: The room now
+    cards:
+      - note: "▣ Drop before photos and a rough floor plan with measurements"
+  - column: Inspiration
+    cards:
+      - note: "▣ Rooms you love — magazines, saved photos, places you've stayed"
+      - note: Under each, the one thing you'd take from it.
+  - column: Materials & textures
+    cards:
+      - note: "▣ Floor, worktops, tiles, fabric — photos or snaps of samples"
+  - column: Furniture & fixtures
+    cards:
+      - note: "▣ The pieces you're keeping, and the ones you're hunting for"
+  - column: Light
+    cards:
+      - note: Daylight by time of day, and the lamps, pendants and dimmers that take over at night.
+  - break
+  - swatch: "#F1ECE2"
+    text: Walls
+  - swatch: "#C9B79C"
+    text: Natural wood
+  - swatch: "#7A8B7B"
+    text: Sage
+  - swatch: "#2F3A40"
+    text: Dark accent
+  - swatch: "#B5653C"
+    text: Warm metal
+  - note: Swap these for colours picked from your photos and paint samples.

@@ -1,0 +1,44 @@
+name: Beat sheet
+use_when: Shaping a screenplay into the fifteen classic story beats before you write scenes, so the pacing and the arc are settled first.
+source: https://milanote.com/templates/filmmaking/beat-sheet
+cards:
+  - note: |
+      # *Title*
+      **Logline:** who wants what, and what stands in the way, in one sentence.
+      **Length:** *n* pages. Page numbers below assume 110; scale them to yours.
+    color: amber
+    width: 360
+  - note: |
+      **How to fill it**
+      One or two lines per beat. Write what *happens*, not what it means. Leave a beat blank before you force it.
+  - break
+  - column: Act one
+    cards:
+      - note: "**Opening image** · p. 1 — the picture of the hero's world before anything changes."
+      - note: "**Theme stated** · p. 5 — someone says, in passing, the lesson the hero will learn."
+      - note: "**Set-up** · pp. 1–10 — the hero's life, what's missing, the people in it."
+      - note: "**Catalyst** · p. 12 — the event that knocks the old life over."
+      - note: "**Debate** · pp. 12–25 — should they go? What's the fear?"
+  - column: Act two, first half
+    cards:
+      - note: "**Break into two** · p. 25 — the hero chooses to step into the new world."
+      - note: "**B story** · p. 30 — the relationship that carries the theme."
+      - note: "**Fun and games** · pp. 30–55 — the promise of the premise: the scenes from the trailer."
+      - note: "**Midpoint** · p. 55 — a false win or a false loss, and the stakes go up."
+  - column: Act two, second half
+    cards:
+      - note: "**Bad guys close in** · pp. 55–75 — pressure from outside, cracks from inside."
+      - note: "**All is lost** · p. 75 — the lowest point. Something or someone is gone."
+      - note: "**Dark night of the soul** · pp. 75–85 — the hero sits with it, and finds the answer."
+  - column: Act three
+    cards:
+      - note: "**Break into three** · p. 85 — the A and B stories meet; a plan forms."
+      - note: "**Finale** · pp. 85–110 — the hero acts on what they learned and wins (or loses well)."
+      - note: "**Final image** · p. 110 — the mirror of the opening image. What changed?"
+  - break
+  - todo: Read-through checks
+    items:
+      - The catalyst happens to the hero, not near them
+      - The midpoint changes the goal, not just the pace
+      - Theme stated and finale say the same thing
+      - Opening and final images rhyme

@@ -1,0 +1,48 @@
+name: Film marketing plan
+use_when: Launching a finished film — who it's for, what success looks like, the assets, and the push before, at and after release.
+source: https://milanote.com/templates/filmmaking/film-marketing-plan
+cards:
+  - note: |
+      # *Film* — release plan
+      **Premiere:** *where* · *date*
+      **The hook:** why someone who's never heard of it would press play.
+      **Success means:** *n* festival selections, *n* views, a distributor, a sale…
+    color: amber
+    width: 360
+  - todo: Assets
+    items:
+      - Trailer and a 15-second cut
+      - Poster and key art
+      - Production stills
+      - Press kit (synopsis, bios, credits, contact)
+      - Subtitled versions
+  - break
+  - column: Audience
+    cards:
+      - note: The people who'll love this first. Be narrow.
+      - note: Where they already gather — communities, festivals, newsletters, creators.
+      - note: Films they've loved that sit next to yours.
+  - column: Goals
+    cards:
+      - note: Two or three goals you can count, with a date on each.
+      - note: The one that matters most if you only hit one.
+  - column: Release route
+    cards:
+      - note: Festivals, theatrical, streaming, online premiere — and in what order.
+      - note: Deadlines and fees for each submission.
+  - break
+  - column: Before release
+    cards:
+      - todo: ""
+        items: [Social accounts and a page for the film, Behind-the-scenes posts, Mailing list, Press and creator outreach, Trailer drop]
+  - column: Release
+    cards:
+      - todo: ""
+        items: [Premiere-day posts, Cast and crew share, Q&A or screening event, Thank everyone who wrote about it]
+  - column: After release
+    cards:
+      - note: How you keep it in front of people — awards, new platforms, anniversaries, the next project.
+  - column: Tracking
+    cards:
+      - note: The numbers, week by week, and what each one told you.
+      - note: What you'd change for the next film.

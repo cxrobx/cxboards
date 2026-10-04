@@ -1,0 +1,86 @@
+name: Architecture project plan
+use_when: Running an architecture project from one hub — the brief, the work at each design stage, the drawings, the moodboard and the team.
+also: [project-plans]
+source: https://milanote.com/templates/architecture/architecture-project-plan
+cards:
+  - note: |
+      # *Project*
+      **Client:**  **Site:**
+      **Budget:**  **Completion:**
+      **The project in one sentence:**
+    color: amber
+    width: 360
+  - note: |
+      **Team**
+      Architect · client · structural · services · QS · planner · contractor — name and who they answer to.
+  - break
+  - column: Concept design
+    cards:
+      - todo: ""
+        items: [Brief agreed, Site survey, Options presented, Concept signed off]
+  - column: Developed design
+    cards:
+      - todo: ""
+        items: [Consultant input, Cost plan, Planning application, Design frozen]
+  - column: Technical design
+    cards:
+      - todo: ""
+        items: [Construction drawings, Specifications, Building regulations, Tender issued]
+  - column: Construction
+    cards:
+      - todo: ""
+        items: [Contractor appointed, Site visits, Change log, Practical completion, Handover]
+  - break
+  - board: Brief
+    cards:
+      - note: |
+          # The brief
+          **What the client needs the building to do.**
+        color: amber
+        width: 320
+      - break
+      - column: Spaces
+        cards:
+          - note: "Room · area · who uses it · when"
+      - column: Requirements
+        cards:
+          - note: Performance, accessibility, sustainability targets.
+      - column: Constraints
+        cards:
+          - note: Site, planning, budget, programme.
+  - board: Drawings
+    cards:
+      - note: The current set. Replace a drawing when it's revised, and note the revision.
+        width: 340
+      - break
+      - column: Plans
+        cards:
+          - note: "▣ Drop plans"
+      - column: Sections & elevations
+        cards:
+          - note: "▣ Drop sections and elevations"
+      - column: Details
+        cards:
+          - note: "▣ Drop details"
+  - board: Moodboard
+    cards:
+      - note: "▣ The anchor image"
+        width: 340
+      - break
+      - column: Materials
+        cards:
+          - note: "▣ Materials and textures"
+      - column: Light & space
+        cards:
+          - note: "▣ Interiors and atmosphere"
+      - break
+      - swatch: "#D8D2C4"
+        text: Stone
+      - swatch: "#A2795A"
+        text: Timber
+  - column: Decisions
+    cards:
+      - note: "Date · decision · who made it"
+  - column: Risks
+    cards:
+      - note: What could stall it, and the plan if it does.

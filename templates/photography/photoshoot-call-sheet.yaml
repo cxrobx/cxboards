@@ -1,0 +1,46 @@
+name: Photoshoot call sheet
+use_when: Getting crew and talent to the right place at the right time on shoot day — who's coming, where, when, and what they need to bring.
+also: []
+source: https://milanote.com/templates/photography/photoshoot-call-sheet
+cards:
+  - note: |
+      # *Shoot name* — call sheet
+      **Date:**  **General crew call:** *time*
+      **In charge on the day:** *name · phone*
+      **The shoot in a line:** what we're making today.
+    color: amber
+    width: 360
+  - note: "▣ Drop the client logo or a photo of the product"
+  - break
+  - column: Location
+    cards:
+      - note: "**Address:** "
+      - note: Parking, nearest public transport, and how to get into the building.
+      - note: "▣ Drop a map screenshot and a photo of the entrance"
+      - note: Nearest hospital, bathrooms, where to eat.
+  - column: Talent
+    cards:
+      - note: "*Name* · *role* · *phone* · call *time*"
+      - note: "*Name* · *role* · *phone* · call *time*"
+  - column: Crew
+    cards:
+      - note: "Photographer · *phone* · call *time*"
+      - note: "Assistant · *phone* · call *time*"
+      - note: "Stylist / hair / makeup · *phone* · call *time*"
+  - column: Gear
+    cards:
+      - todo: ""
+        items: [Camera bodies and backup, Lenses, Lights and stands, Modifiers, Tether cable and laptop, Cards and batteries, Gaffer tape and clamps]
+  - break
+  - column: Schedule
+    width: 340
+    cards:
+      - note: "*time* — crew call and set-up"
+      - note: "*time* — talent in hair and makeup"
+      - note: "*time* — first shot"
+      - note: "*time* — lunch"
+      - note: "*time* — wrap and pack down"
+  - column: Notes
+    cards:
+      - note: "Weather plan, dress code, what's provided and what isn't."
+      - note: "If you're running late, call:"

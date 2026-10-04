@@ -1,0 +1,46 @@
+name: Product launch plan
+use_when: Planning a product launch — the goals, the story you'll tell, the channels, the assets and copy each needs, and the run-up to launch day.
+source: https://milanote.com/templates/product-management/product-launch-plan
+cards:
+  - note: |
+      # *Product* launch
+      **Launch day:** *date*
+      **The goal:** the number that says it worked.
+      **The headline:** what you'd want the first post about it to say.
+    color: amber
+    width: 340
+  - note: |
+      **Who it's for**
+      The customer who'll care most on day one, and why now.
+  - break
+  - column: Objectives
+    cards:
+      - note: The main outcome — sign-ups, sales, press, upgrades.
+      - note: What has to be true for the launch to count, even if the number misses.
+  - column: Positioning & copy
+    cards:
+      - note: Headline options. Keep the shortest that's still true.
+      - note: Three benefits, in the customer's words.
+      - note: The one-paragraph description everything else is cut from.
+  - column: Channels
+    cards:
+      - note: "*Channel* · what goes out · when · owner"
+      - note: Email list, social, press, partners, in-product, community.
+  - column: Assets
+    cards:
+      - todo: Images & video
+        items: [Product screenshots, Hero image, Demo video, Social cut-downs]
+      - note: "▣ Drop drafts here as they come in"
+  - break
+  - column: Before launch
+    cards:
+      - todo: ""
+        items: [Pricing and plans final, Landing page live (hidden), Support and sales briefed, Press and partners warmed up, Launch-day posts scheduled]
+  - column: Launch day
+    cards:
+      - todo: ""
+        items: [Flip the page live, Send the announcement, Reply to everyone, Watch for bugs and fix fast]
+  - column: After
+    cards:
+      - note: First-week numbers against the goal.
+      - note: What customers asked for that you didn't expect.

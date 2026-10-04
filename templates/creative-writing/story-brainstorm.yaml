@@ -1,0 +1,48 @@
+name: Story brainstorm
+use_when: Turning a spark of a story into a pile of ideas — the central concept, its themes, everything it suggests — and then picking the ones worth writing.
+source: https://milanote.com/templates/creative-writing/story-brainstorm
+cards:
+  - note: |
+      # *The idea*
+      Your concept in one or two sentences — rough is fine.
+      **Set a timer for five minutes per column. No judging until the last one.**
+    color: amber
+    width: 360
+  - todo: Key themes
+    items:
+      - "Era or setting"
+      - "Characters"
+      - "Conflict"
+      - "Theme"
+  - break
+  - column: Characters
+    cards:
+      - note: Who could be at the heart of this? Who would complicate it?
+  - column: Places
+    cards:
+      - note: Where does it happen? Where would be the most surprising place for it to happen?
+  - column: Conflicts
+    cards:
+      - note: What goes wrong? Who wants the opposite?
+  - column: History
+    cards:
+      - note: What happened before page one that matters?
+  - column: Wild cards
+    cards:
+      - note: The ideas that don't fit anywhere yet.
+  - column: Images, clips & sound
+    cards:
+      - note: "▣ Drop references for moods, faces, places and clothes"
+  - break
+  - column: Keep
+    color: green
+    cards:
+      - note: Ideas that make the story bigger. Say why for each.
+  - column: Park
+    color: violet
+    cards:
+      - note: Good, but not this story. Come back later.
+  - note: |
+      **Evaluate with someone**
+      Ask a writing partner to pick their three favourites and say why. Argue with them.
+    color: cyan

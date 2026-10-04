@@ -1,0 +1,42 @@
+name: Film moodboard
+use_when: Setting the look and feel of a film for cast and crew — light, colour, sets, wardrobe and framing — in images before anyone builds or shoots.
+also: [moodboards]
+source: https://milanote.com/templates/filmmaking/filmmaking-moodboard
+theme: film
+cards:
+  - note: |
+      # *Film* — look
+      **In three words:** the feeling of the picture.
+      **Never:** the look you're steering away from.
+    color: amber
+    width: 340
+  - note: "▣ The anchor: drop the one image that sums up the film, and make it the biggest thing here"
+    width: 360
+  - break
+  - column: What you already have
+    cards:
+      - note: "▣ Stills from earlier shoots, the director's references, anything the client sent"
+  - column: Light
+    cards:
+      - note: "▣ Drop frames that show the light you want"
+      - note: Hard or soft? Where does it come from? How dark do the shadows go?
+  - column: Sets & wardrobe
+    cards:
+      - note: "▣ Rooms, textures, props, costume"
+      - note: What does this world look like when nobody's tidied it?
+  - column: Framing
+    cards:
+      - note: "▣ Compositions, lenses, camera height"
+      - note: Close and handheld, or wide and still?
+  - break
+  - swatch: "#1C1A17"
+    text: Shadows
+  - swatch: "#6B4E3D"
+    text: Skin and wood
+  - swatch: "#C08A4A"
+    text: Practical light
+  - swatch: "#5E7469"
+    text: Cool fill
+  - swatch: "#E6DCC8"
+    text: Highlights
+  - note: Pick the palette straight from your images. Replace these with what the frames actually use.

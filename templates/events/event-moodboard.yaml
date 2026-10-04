@@ -1,0 +1,53 @@
+name: Event moodboard
+use_when: Defining the look and atmosphere of an event — theme, colour, venue, props and the small details — so clients and suppliers can react before anything is booked.
+also: [moodboards]
+source: https://milanote.com/templates/events/event-moodboard
+cards:
+  - note: |
+      # *Event* — the feel
+      **The theme in three words:** *word · word · word*
+      **When guests walk in, they should feel:**
+    color: amber
+    width: 340
+  - column: Hero
+    width: 420
+    cards:
+      - note: "▣ The one image that sums up the night — make it the biggest thing here"
+  - break
+  - column: Venue
+    cards:
+      - note: "▣ Spaces that have the right scale and light"
+      - note: Inside or out, one room or several, how it's lit after dark.
+  - column: Styling & decor
+    cards:
+      - note: "▣ Tables, florals, lighting, furniture"
+  - column: Food & drink
+    cards:
+      - note: "▣ How it's served, not just what"
+  - column: Details
+    cards:
+      - note: "▣ Signage, invitations, place cards, favours, uniforms"
+      - note: The small touch nobody expects.
+  - column: Palette
+    cards:
+      - swatch: "#1E2B3A"
+        text: Base
+      - swatch: "#F2E8D8"
+        text: Light
+      - swatch: "#C88A3D"
+        text: Metallic / accent
+      - swatch: "#7A3B4B"
+        text: Pop
+      - note: Pull these from your strongest images.
+  - break
+  - column: Sound & motion
+    cards:
+      - note: "▣ Music, video or performance references"
+  - column: Not this
+    cards:
+      - note: "▣ The close-but-wrong references, and why"
+  - column: Feedback
+    cards:
+      - note: Client and supplier reactions.
+      - todo: ""
+        items: [Client signed off on the direction, Shared with venue and stylist, Budget checked against the look]

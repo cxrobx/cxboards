@@ -1,0 +1,44 @@
+name: Video creative brief
+use_when: Briefing a video shoot or edit — the goal, the message, the shots that matter and how the result will be judged.
+source: https://milanote.com/templates/creative-briefs/video-creative-brief
+cards:
+  - note: |
+      # *Video* — creative brief
+      **What it's for:** an ad, a product film, a brand piece, a social cutdown…
+      **The one thing viewers remember:**
+    color: amber
+    width: 340
+  - note: |
+      **Length and where it plays**
+      *seconds* · *platforms* · *aspect ratios* · sound on or off.
+  - break
+  - column: Objectives
+    cards:
+      - note: What the video should get people to think or do.
+      - note: How you'll measure it — views, completion, clicks, sales.
+  - column: Audience
+    cards:
+      - note: Who's watching, where, and how long you have before they scroll.
+  - column: Message
+    cards:
+      - note: The key message, in one sentence.
+      - note: Features or proof points that must appear.
+      - note: The call to action at the end.
+  - column: Look & feel
+    cards:
+      - note: "▣ Drop reference films and stills here"
+      - note: Pace, music and mood in a few words.
+  - break
+  - column: Must-have shots
+    cards:
+      - todo: ""
+        items: [Shot, Shot, Shot]
+      - note: Locations, cast and products needed on the day.
+  - column: Deliverables
+    cards:
+      - todo: ""
+        items: [Script, Storyboard or shot list, Main edit, Cutdowns, Subtitled versions, Raw footage and project files]
+  - column: Dates & budget
+    cards:
+      - note: "Pre-production · shoot · first cut · final."
+      - note: Budget, and how many rounds of edits it covers.

@@ -1,0 +1,107 @@
+name: Game design document
+use_when: Running a whole game project from one hub — the vision, the brainstorm, the look, the world, the levels, the characters and the launch — instead of a long document nobody reads.
+also: [project-plans]
+source: https://milanote.com/templates/game-design/game-design-document
+cards:
+  - note: |
+      # *Game title*
+      **The pitch:** genre, setting and hook in one sentence.
+      **Platform · audience · scope:** where it ships, who it's for, how big it is.
+      **Done means:** what's playable, and by *date*.
+    color: amber
+    width: 360
+  - note: |
+      **Pillars**
+      Three things every decision in this game has to support. If a feature fights a pillar, it goes.
+  - break
+  - board: Brainstorm
+    cards:
+      - note: |
+          # The concept
+          Write it in the middle, then five minutes on each theme below.
+        color: amber
+      - column: Ideas
+        cards:
+          - note: Characters, story, play, places, look — anything goes here first.
+      - column: Keep
+        cards:
+          - note: The best ones, sorted into groups.
+  - board: Moodboard
+    cards:
+      - note: "▣ Drop the anchor image — the one that sets the tone"
+      - column: References
+        cards:
+          - note: "▣ Characters, environments, textures"
+      - column: Palette
+        cards:
+          - swatch: "#1F2A44"
+            text: Shadow
+          - swatch: "#E0A33A"
+            text: Highlight
+  - board: World
+    cards:
+      - column: Environment
+        cards:
+          - note: Where it takes place — geography, climate, era.
+      - column: Inhabitants
+        cards:
+          - note: Who lives here, and how they're organised.
+      - column: Culture
+        cards:
+          - note: Dress, technology, money, what people fight over.
+  - break
+  - board: Levels
+    folder: true
+    cards:
+      - note: One board per level. Duplicate *Level template* for each new one.
+      - board: Level template
+        cards:
+          - note: |
+              # *Level name*
+              **Concept:** the setting and the twist.
+          - column: Journey
+            cards:
+              - note: Start, the ideal path, the exit.
+          - column: Challenges & rewards
+            cards:
+              - note: What blocks the player, and what they earn for getting past it.
+  - board: Characters
+    folder: true
+    cards:
+      - note: One board per character. Duplicate *Character template*.
+      - board: Character template
+        cards:
+          - note: |
+              # *Name*
+              **Role · archetype · want · flaw**
+          - column: Look
+            cards:
+              - note: "▣ Sketches and references"
+          - column: Gameplay
+            cards:
+              - note: Movement, attacks, abilities.
+  - board: Launch
+    cards:
+      - column: Audience
+        cards:
+          - note: The players you're making it for, and where they hang out.
+      - column: Plan
+        cards:
+          - todo: ""
+            items: [Store page, Trailer, Press and creator list, Launch date]
+  - break
+  - column: Audio, effects & interface
+    cards:
+      - note: "▣ Drop sound effect, VFX and UI references here"
+      - note: Music direction, in a few words and a few tracks.
+      - note: The HUD — what the player has to see at all times, and nothing more.
+  - column: Workflow
+    cards:
+      - todo: Pre-production
+        items: [Concept and pillars agreed, Moodboard signed off, World rules written, First level on paper]
+      - todo: Production
+        items: [Vertical slice playable, Characters modelled and animated, All levels blocked out, Playtest round]
+  - column: Decisions & open questions
+    cards:
+      - note: Decided — what, when and why, so it isn't re-argued.
+      - note: Still open — who owns the answer.

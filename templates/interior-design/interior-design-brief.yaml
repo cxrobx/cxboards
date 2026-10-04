@@ -1,0 +1,52 @@
+name: Interior design brief
+use_when: Starting an interior project with a client — why it's happening, the rooms and requirements, who uses the space and the look they have in mind.
+also: [architecture, creative-briefs]
+source: https://milanote.com/templates/interior-design/interior-design-brief
+cards:
+  - note: |
+      # *Project* — *address or venue*
+      **Why now:** what isn't working about the space today.
+      **Keep:** what the client loves and wants to stay.
+      **Change:** what has to go.
+    color: amber
+    width: 360
+  - break
+  - column: Background
+    cards:
+      - note: The client's own words on what they want — write them down as they say them.
+      - note: How the space is used today, and what's changing — a new baby, a new menu, working from home.
+  - column: Requirements & style
+    cards:
+      - note: The style in the client's words, then in yours.
+      - note: Things it must have — storage, seating for *n*, accessibility, acoustics.
+      - note: "▣ Drop the floor plan and site photos here"
+  - column: Goals & deliverables
+    cards:
+      - todo: Rooms
+        items: [Room · what it needs to do, Room · what it needs to do, Room · what it needs to do]
+      - note: Budget and the date it needs to be finished.
+  - column: Who uses it
+    cards:
+      - note: The people in the space, and what they're doing there.
+      - note: How they should feel walking in.
+      - note: "▣ Drop an image that sums them up"
+  - break
+  - column: Visual references
+    width: 320
+    cards:
+      - note: "▣ Drop the client's pictures — rooms, furniture, materials, colours"
+      - note: One line on each — what they like about it.
+  - column: Palette
+    cards:
+      - swatch: "#F3ECDD"
+        text: Base
+      - swatch: "#859900"
+        text: Mid tone
+      - swatch: "#CB4B16"
+        text: Accent
+  - column: Features & finishes
+    cards:
+      - note: Architectural features to celebrate or hide.
+      - note: Preferred furnishings, flooring and finishes.
+  - todo: Before the kickoff
+    items: [Measure and photograph the space, Confirm the budget, Agree who signs off, Share the brief with the team]

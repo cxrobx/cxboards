@@ -1,0 +1,45 @@
+name: Motion design storyboard
+use_when: Laying out an animated sequence frame by frame — the key moments, how each one moves into the next, and what the voice-over and sound do.
+also: [storyboards]
+source: https://milanote.com/templates/motion-design/motion-design-storyboard
+cards:
+  - note: |
+      # *Project* — storyboard
+      **Length:** *n* s  **Ratio:** 16:9 · 9:16 · 1:1
+      **The beat that has to land:**
+    color: amber
+    width: 340
+  - note: |
+      **Under each frame**
+      What moves · how it hands to the next frame · the VO line or sound.
+  - break
+  - column: Open — *name*
+    cards:
+      - note: "▣ Frame — sketch, render or GIF"
+      - note: "Motion · transition · VO / sound"
+  - column: Set-up — *name*
+    cards:
+      - note: "▣ Frame"
+      - note: "Motion · transition · VO / sound"
+  - column: Turn — *name*
+    cards:
+      - note: "▣ Frame"
+      - note: "Motion · transition · VO / sound"
+  - column: Payoff — *name*
+    cards:
+      - note: "▣ Frame"
+      - note: "Motion · transition · VO / sound"
+  - column: End card
+    cards:
+      - note: "▣ Frame — logo, line, call to action"
+      - note: How long it holds, and what the last sound is.
+  - break
+  - column: Script / VO
+    width: 340
+    cards:
+      - note: The full voice-over, timed against the frames above.
+  - column: Feedback
+    cards:
+      - note: What the team or client read differently. Reorder frames from here.
+      - todo: Before animating
+        items: [Frame order agreed, VO recorded or temp, Animatic timed to the VO, Storyboard signed off]

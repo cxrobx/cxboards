@@ -1,0 +1,51 @@
+name: YouTube equipment checklist
+use_when: Working out the gear for a YouTube setup or a shoot day — what you have, what you need, what to buy first and what to pack.
+source: https://milanote.com/templates/content-creation/youtube-equipment-checklist
+cards:
+  - note: |
+      # Gear — *setup or shoot*
+      **Budget:**
+      **Biggest weakness right now:** usually audio, then light, then camera.
+    color: amber
+    width: 340
+  - note: |
+      **Buy order**
+      Fix what viewers notice first. Bad sound loses people faster than a soft picture.
+  - break
+  - column: Camera
+    cards:
+      - todo: ""
+        items: [Camera or phone, Lens, Tripod or mount, Spare batteries, Memory cards]
+      - note: "▣ Drop product photos and links here"
+  - column: Audio
+    cards:
+      - todo: ""
+        items: [Microphone, Mic stand or boom, Cables / wireless kit, Headphones, Room treatment]
+      - note: "▣ Drop product photos and links here"
+  - column: Lighting
+    cards:
+      - todo: ""
+        items: [Key light, Fill or reflector, Background light, Diffusion, Light stands]
+  - column: Set & backdrop
+    cards:
+      - note: What's behind you, and what it says about the channel.
+      - note: "▣ Drop backdrop references here"
+  - column: Editing
+    cards:
+      - todo: ""
+        items: [Editing software, Storage for footage, Backup drive, Music and sound library]
+  - break
+  - column: Shopping list
+    color: clay
+    cards:
+      - note: "*Item* · price · where · priority 1–3"
+      - note: Compare two options side by side before you buy.
+  - column: Shoot day
+    cards:
+      - todo: Pack and check
+        items:
+          - Batteries charged
+          - Cards formatted
+          - Test recording for sound and focus
+          - Lights placed and white balance set
+          - Phone on silent

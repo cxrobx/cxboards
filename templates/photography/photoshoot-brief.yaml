@@ -1,0 +1,54 @@
+name: Photoshoot brief
+use_when: Briefing a photographer and their team on a shoot — the client, the subject, the goals and every deliverable — so the images land on the first try.
+also: [creative-briefs]
+source: https://milanote.com/templates/photography/photoshoot-brief
+cards:
+  - note: |
+      # *Project* — photoshoot brief
+      **In one sentence:** what these photos have to do.
+      **Shoot date:**  **Delivery due:**
+    color: amber
+    width: 360
+  - note: |
+      **Contacts**
+      Who signs off · who's on set · who to call if something changes.
+  - break
+  - column: The client
+    cards:
+      - note: What they make or do, what they stand for, and a little of their history.
+      - note: "▣ Drop their logo and a few images they've used before"
+  - column: The subject
+    cards:
+      - note: A product, a person, a space? What the photographer needs to know about it.
+      - note: "▣ Drop photos of the subject as it is today"
+  - column: Goals
+    cards:
+      - note: What the audience should think, feel or do after seeing these.
+      - note: How you'll know the shoot worked.
+  - column: Audience
+    cards:
+      - note: Who you're trying to reach, and what they care about.
+      - note: "▣ One image that looks like your audience"
+  - break
+  - column: Deliverables
+    cards:
+      - todo: ""
+        items:
+          - Shot list attached
+          - Number of finals and their formats
+          - "Usage — web, social, print — and for how long"
+          - Timings, breaks and travel
+          - Equipment the job needs
+          - "Location access, with a weather plan B"
+          - Model releases
+          - Styling, wardrobe and props
+  - column: References
+    cards:
+      - note: "▣ Drop images for mood and style — past campaigns, finds from anywhere"
+      - note: One line under each on what to take from it.
+  - column: Post-production
+    cards:
+      - note: How the images should be edited — grade, retouching level, skin, crop ratios.
+      - note: What must never be changed (product colour, logos).
+  - todo: Kickoff
+    items: [Brief shared with the team, Kickoff call held, Questions answered, Moodboard started]

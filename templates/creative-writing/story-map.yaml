@@ -1,0 +1,38 @@
+name: Story map
+use_when: Testing a story idea against five basic questions — who, where, what's wrong, what's at stake and how it ends — before you outline.
+also: [novel-outline]
+source: https://milanote.com/templates/creative-writing/story-map
+cards:
+  - note: |
+      # *Story title*
+      Answer each question in a few lines. If one is hard, that's the part of the idea that needs work.
+      **Next:** take the answers into an outline and a character profile.
+    color: amber
+    width: 360
+  - break
+  - column: Who is it about?
+    cards:
+      - note: The main character, and the one thing that makes them interesting.
+      - note: Who stands against them?
+  - column: Where and when?
+    cards:
+      - note: The setting, and why the story could only happen here.
+      - note: "▣ Drop a picture of the place"
+  - column: What's the problem?
+    cards:
+      - note: The conflict that drives the story.
+      - note: What does the hero want, and what's in the way?
+  - column: What's at stake?
+    cards:
+      - note: What's lost if they fail?
+      - note: Why should a reader care?
+  - column: How does it end?
+    cards:
+      - note: The resolution, even if it changes later.
+      - note: What has the hero learned or lost?
+  - break
+  - note: |
+      **The idea, refined**
+      Rewrite your premise using the five answers. One paragraph.
+    color: green
+    width: 420

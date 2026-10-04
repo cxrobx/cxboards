@@ -1,0 +1,60 @@
+name: Research proposal
+use_when: Planning a research project before you ask for approval or funding — the question, the background, the method, the timeline and what you expect to find.
+source: https://milanote.com/templates/education/research-proposal
+cards:
+  - note: |
+      # *Working title*
+      **Research question:** the one question the project answers.
+      **Why it matters:** who benefits if you answer it.
+    color: amber
+    width: 360
+  - note: |
+      **Supervisor / committee:**
+      **Submission deadline:** *date*
+      **Word limit:**
+  - break
+  - column: Objectives
+    cards:
+      - note: Three to five things the project will do, each starting with a verb.
+  - column: Background
+    cards:
+      - note: What's already known, and the gap your project fills.
+      - note: "**Key publications:** *author, year* — what it found"
+      - note: "▣ Drop papers and figures here"
+  - column: Scope
+    cards:
+      - note: What's in, what's out, and why.
+      - note: Assumptions you're making.
+  - column: Methodology
+    cards:
+      - note: Approach — qualitative, quantitative, mixed — and why it fits the question.
+      - note: Data — what you'll collect, from whom, and how.
+      - note: Analysis — how you'll get from the data to an answer.
+  - break
+  - column: Timeline
+    cards:
+      - todo: ""
+        items:
+          - "Literature review · dates"
+          - "Ethics approval · dates"
+          - "Data collection · dates"
+          - "Analysis · dates"
+          - "Writing up · dates"
+  - column: Resources
+    cards:
+      - note: Equipment, access, travel, software, and what they cost.
+  - column: Ethics & risks
+    color: clay
+    cards:
+      - note: Consent, data storage, anything that needs approval.
+      - note: What could go wrong, and your fallback.
+  - column: Expected outcomes
+    color: green
+    cards:
+      - note: What you expect to find, and what it would mean either way.
+      - todo: Before you submit
+        items:
+          - Question is specific enough to answer
+          - Every objective maps to a method
+          - References formatted
+          - Supervisor has read it

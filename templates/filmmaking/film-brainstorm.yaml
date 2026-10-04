@@ -1,0 +1,46 @@
+name: Film brainstorming
+use_when: Turning a rough film idea into a wall of options — characters, places, looks and history — then picking the ones that make the story better.
+source: https://milanote.com/templates/filmmaking/film-brainstorm
+cards:
+  - note: |
+      # *Working title*
+      **The idea in two sentences:** what happens, and to whom.
+      **What it's really about:** the feeling or question underneath.
+    color: amber
+    width: 360
+  - note: |
+      **Rules for the first pass**
+      Five-minute timer per theme. Every idea goes on a card. No judging until the timer's done.
+  - break
+  - column: Characters
+    cards:
+      - note: Who's at the centre, and what do they want?
+      - note: Who gets in their way — a person, a place, themselves?
+      - note: One character you'd never usually write.
+  - column: Places
+    cards:
+      - note: Where it happens, and where it *could* happen instead.
+      - note: A location that does half the storytelling for you.
+  - column: Look & sound
+    cards:
+      - note: Era, costume, colour, light.
+      - note: What it sounds like — score, silence, a recurring noise.
+  - column: History & real events
+    cards:
+      - note: A true event, place or person you could fold into the story.
+      - note: What you'd need to read or watch to get it right.
+  - break
+  - column: References
+    cards:
+      - note: "▣ Drop stills, clips and music that carry the mood"
+      - note: One line under each on what you're taking from it.
+  - column: Research
+    cards:
+      - note: Articles, interviews and notes clipped while digging.
+      - note: The detail you found that nobody else would know.
+  - column: Keepers
+    cards:
+      - note: The ideas that make the story stronger. Say why for each.
+      - note: Set aside, not deleted — the ones to come back to.
+      - todo: After the session
+        items: [Everyone picks three favourites, Argue for them out loud, Fold the keepers into the logline]

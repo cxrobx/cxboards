@@ -1,0 +1,82 @@
+name: Product hub
+use_when: Running a product from one place — the strategy, roadmap, research, designs and launches each on their own board, with the overview on top.
+source: https://milanote.com/templates/product-management/product-hub
+cards:
+  - note: |
+      # *Product*
+      **What it is:** one sentence a new hire would understand.
+      **Who it's for:**
+      **This quarter we're betting on:**
+    color: amber
+    width: 360
+  - column: Key links & people
+    cards:
+      - note: "*Name* · role · what to ask them"
+      - note: Where the code, analytics and support queue live.
+  - column: This week
+    cards:
+      - todo: ""
+        items: [Roadmap reviewed, Research notes filed, Decisions written down]
+  - break
+  - board: Strategy
+    cards:
+      - note: |
+          # Strategy
+          **Vision:** where the product is in three years.
+          **The problem we solve:**
+        color: amber
+      - column: Goals
+        cards:
+          - note: "Objective · how we'll measure it · target"
+      - column: Competitors
+        cards:
+          - note: "*Name* · what they do better · where we win"
+  - board: Roadmap
+    cards:
+      - note: "# Roadmap\nWhat we're building, in rough order. Keep it honest about confidence."
+        color: amber
+      - column: Now
+        cards:
+          - note: In progress this cycle.
+      - column: Next
+        cards:
+          - note: Committed, not started.
+      - column: Later
+        cards:
+          - note: Likely, not committed.
+  - board: User research
+    cards:
+      - note: "# User research\nInterviews, surveys and what they told us."
+        color: amber
+      - column: Interviews
+        cards:
+          - note: "*Person* · date · the quote that matters"
+      - column: Insights
+        cards:
+          - note: Patterns across three or more people.
+  - board: Designs
+    cards:
+      - note: "# Designs\nSketches, wireframes and mockups, newest first."
+        color: amber
+      - column: Exploring
+        cards:
+          - note: "▣ Drop early sketches here"
+      - column: Approved
+        cards:
+          - note: "▣ Drop final designs here"
+  - board: Launches
+    cards:
+      - note: "# Launches\nOne board per release. Duplicate the one below."
+        color: amber
+      - board: Release template
+        cards:
+          - note: "# *Release*\n**Ships:** *date*  **What's in it:**"
+          - todo: Ship list
+            items: [Release notes, Support briefed, Announcement out]
+  - break
+  - column: Decisions log
+    cards:
+      - note: "*Date* · what we decided · why · who decided"
+  - column: Open questions
+    cards:
+      - note: The things nobody knows yet, and who's finding out.

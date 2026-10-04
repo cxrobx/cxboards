@@ -1,0 +1,49 @@
+name: Brand naming
+use_when: Coming up with a name for a company, product or product line — from the criteria, through word banks and a long list, to a shortlist you've tested.
+source: https://milanote.com/templates/branding/brand-naming
+also: [brand-strategy-workshops]
+cards:
+  - note: |
+      # Naming *the company or product*
+      **What it does:** one plain sentence.
+      **The name should feel:** three words from the brand personality.
+    color: amber
+    width: 360
+  - note: |
+      **Criteria**
+      Easy to say and spell · works where you'll sell · room to grow · available to own. Agree on these before anyone pitches a name.
+  - break
+  - column: Word banks
+    cards:
+      - note: "**What it does:** verbs and nouns from the work itself."
+      - note: "**How it feels:** words for the emotion or result."
+      - note: "**Borrowed worlds:** myth, nature, places, other languages."
+  - column: Name types
+    cards:
+      - note: Descriptive — says what it is.
+      - note: Invented — a new word you can own.
+      - note: Metaphor — a word from somewhere else that carries the idea.
+      - note: Compound or blend — two words joined.
+      - note: Founder or place — rooted in a story.
+  - column: Long list
+    width: 320
+    cards:
+      - note: Every name, no filtering yet. Aim for a hundred.
+      - note: "*name*"
+  - column: Shortlist
+    color: green
+    cards:
+      - note: The five to ten that meet the criteria. One line on why each one works.
+  - break
+  - column: Test
+    cards:
+      - todo: For each finalist
+        items:
+          - Say it out loud on a phone call
+          - Domain and social handles
+          - Trademark search in your classes
+          - Meanings in other languages
+          - Typed in a logo mock-up
+  - column: Decision
+    cards:
+      - note: The name, the runner-up, and the reason it won.

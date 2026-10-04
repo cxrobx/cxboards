@@ -1,0 +1,48 @@
+name: Travel photography plan
+use_when: Planning a photo trip — where you're going, how you'll get around, what you want to shoot at each stop and what goes in the bag.
+also: []
+source: https://milanote.com/templates/photography/travel-photography
+cards:
+  - note: |
+      # *Destination* — *dates*
+      **What I want to come home with:** a series, a portfolio, content for a client…
+      **The shot that would make the trip:**
+    color: amber
+    width: 340
+  - column: Inspiration
+    cards:
+      - note: "▣ Drop photos from the places you're going and the photographers who've shot them well"
+      - note: What you'd do differently from them.
+  - break
+  - column: Itinerary
+    width: 320
+    cards:
+      - note: "**Day 1** · *place* · sunrise *time* · sunset *time*"
+      - note: "**Day 2** · *place* · "
+      - note: "**Day 3** · *place* · "
+      - note: Keep a spare day for weather.
+  - column: Getting around
+    cards:
+      - note: Flights, trains, car hire, ferries — times and confirmation numbers.
+      - note: Where you're staying each night.
+  - column: Locations
+    cards:
+      - note: "*Spot* — best light, how to get there, how long to walk in"
+      - note: "*Spot* — "
+      - note: "▣ Drop map pins or scout screenshots"
+  - column: Shot list
+    cards:
+      - todo: ""
+        items: [Landscape at golden hour, Street and people, Food and markets, Architecture details, Night / blue hour, Me in the frame]
+  - break
+  - column: Gear
+    cards:
+      - todo: ""
+        items: [Camera and backup body, Lenses, Tripod, Filters, Batteries and charger, Cards, Drone (check the rules), Rain cover]
+  - column: Admin
+    cards:
+      - todo: ""
+        items: [Passport and visas, Travel insurance covers the gear, Permits for drones or paid locations, Offline maps, Backup plan for the files]
+  - column: On the road
+    cards:
+      - note: What surprised you, and the shot you missed and want to come back for.

@@ -1,0 +1,43 @@
+name: Eisenhower matrix
+use_when: Sorting a pile of tasks by how urgent and how important each one is, so you know what to do now, schedule, hand off or drop.
+source: https://milanote.com/templates/productivity/eisenhower-matrix
+cards:
+  - note: |
+      # Priorities — *date*
+      **Urgent:** has a deadline or someone waiting on it now.
+      **Important:** moves your real goals forward.
+      Most things feel urgent. Few are important. Be strict.
+    color: amber
+    width: 360
+  - column: Everything on your plate
+    cards:
+      - note: Brain-dump every task first, then drag each into a box.
+  - break
+  - column: Do now
+    color: clay
+    width: 300
+    cards:
+      - note: Urgent and important. Finish these today or this week.
+      - todo: ""
+        items: [Task]
+  - column: Schedule
+    color: cyan
+    width: 300
+    cards:
+      - note: Important, not urgent. Put a date on each — this is where the real work lives.
+      - todo: ""
+        items: [Task · date]
+  - break
+  - column: Delegate
+    color: violet
+    width: 300
+    cards:
+      - note: Urgent, not important. Who else can do it?
+      - todo: ""
+        items: [Task → person]
+  - column: Drop
+    width: 300
+    cards:
+      - note: Neither. Delete it, or park it and see if anyone notices.
+  - todo: Check
+    items: [Nothing in Do now that could wait, Every Schedule item has a date, Every Delegate item has a name]

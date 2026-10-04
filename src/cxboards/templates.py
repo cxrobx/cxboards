@@ -100,6 +100,7 @@ class Template:
 class Catalog:
     categories: list[dict[str, Any]] = field(default_factory=list)
     templates: dict[str, Template] = field(default_factory=dict)
+    problems: list[str] = field(default_factory=list)  # files left out (lenient loads only)
 
     def get(self, slug: str) -> Template | None:
         return self.templates.get((slug or "").strip().lower())
@@ -156,6 +157,8 @@ def _check_cards(cards: Any, where: str, depth: int = 0, in_column: bool = False
                     raise TemplateError(f"{here}: each to-do item is text, or {{text, done, indent}}")
                 if isinstance(item, dict) and set(item) - {"text", "done", "indent"}:
                     raise TemplateError(f"{here}: a to-do item has only text, done and indent")
+                if re.search(r"\*\S|`", text):
+                    raise TemplateError(f"{here}: to-do items are plain text; the board doesn't render markdown in them")
         elif kind == "swatch":
             if not isinstance(card["swatch"], str) or not re.fullmatch(r"#[0-9A-Fa-f]{6}", card["swatch"]):
                 raise TemplateError(f"{here}: a swatch is a hex colour like \"#E0A33A\"")
@@ -212,8 +215,10 @@ def parse(path: Path, category: str) -> Template:
     )
 
 
-def load(root: Path = ROOT) -> Catalog:
-    """Read and check the whole library. Raises TemplateError on the first problem."""
+def load(root: Path = ROOT, strict: bool = True) -> Catalog:
+    """Read and check the whole library. Strict (the tests): raise TemplateError on the first
+    problem. Lenient (the app): leave a bad file out and list it in ``problems``, so one typo in a
+    template being edited doesn't take the rest of the library with it."""
     catalog = Catalog()
     index = root / "categories.yaml"
     if not index.is_file():
@@ -233,24 +238,37 @@ def load(root: Path = ROOT) -> Catalog:
         if folder.name not in known:
             raise TemplateError(f"{folder.name}/: not a category in categories.yaml")
         for path in sorted(folder.glob("*.yaml")):
-            if not SLUG.fullmatch(path.stem):
-                raise TemplateError(f"{folder.name}/{path.name}: file names are lowercase-with-dashes")
-            t = parse(path, folder.name)
-            where = f"{folder.name}/{path.name}"
-            if t.slug in catalog.templates:
-                raise TemplateError(f"{where}: {t.slug} is already {catalog.templates[t.slug].category}/{t.slug}.yaml")
-            if t.name.lower() in names:
-                raise TemplateError(f"{where}: the name {t.name!r} is already used by {names[t.name.lower()]}")
-            if t.source and t.source.rstrip("/").lower() in sources:
-                raise TemplateError(f"{where}: {t.source} is already the source of {sources[t.source.rstrip('/').lower()]}")
-            for a in t.also:
-                if a not in known or a == t.category:
-                    raise TemplateError(f"{where}: also lists {a!r}, which isn't another category")
+            try:
+                t = _admit(path, folder.name, catalog, known, names, sources)
+            except TemplateError as e:
+                if strict:
+                    raise
+                catalog.problems.append(str(e))
+                continue
             catalog.templates[t.slug] = t
-            names[t.name.lower()] = where
+            names[t.name.lower()] = f"{folder.name}/{path.name}"
             if t.source:
-                sources[t.source.rstrip("/").lower()] = where
+                sources[t.source.rstrip("/").lower()] = f"{folder.name}/{path.name}"
     return catalog
+
+
+def _admit(path: Path, category: str, catalog: Catalog, known: set[str], names: dict, sources: dict) -> Template:
+    """One file, checked on its own and against the templates already admitted."""
+    folder = path.parent
+    if not SLUG.fullmatch(path.stem):
+        raise TemplateError(f"{folder.name}/{path.name}: file names are lowercase-with-dashes")
+    t = parse(path, category)
+    where = f"{folder.name}/{path.name}"
+    if t.slug in catalog.templates:
+        raise TemplateError(f"{where}: {t.slug} is already {catalog.templates[t.slug].category}/{t.slug}.yaml")
+    if t.name.lower() in names:
+        raise TemplateError(f"{where}: the name {t.name!r} is already used by {names[t.name.lower()]}")
+    if t.source and t.source.rstrip("/").lower() in sources:
+        raise TemplateError(f"{where}: {t.source} is already the source of {sources[t.source.rstrip('/').lower()]}")
+    for a in t.also:
+        if a not in known or a == t.category:
+            raise TemplateError(f"{where}: also lists {a!r}, which isn't another category")
+    return t
 
 
 _cache: dict[Path, tuple[tuple, Catalog]] = {}
@@ -263,7 +281,7 @@ def catalog(root: Path = ROOT) -> Catalog:
     hit = _cache.get(root)
     if hit and hit[0] == signature:
         return hit[1]
-    fresh = load(root)
+    fresh = load(root, strict=False)
     _cache[root] = (signature, fresh)
     return fresh
 
@@ -350,11 +368,16 @@ def _text(cards: list[Any]) -> str:
     return " ".join(parts)
 
 
+STOP = {"a", "an", "and", "the", "for", "of", "to", "my", "our", "in", "on", "with", "me", "board", "template", "plan"}
+
+
 def search(cat: Catalog, query: str = "", category: str = "", limit: int | None = None) -> list[Template]:
     """Templates matching every word of ``query`` (name and use first, then contents), optionally
     only those in ``category``. No query: the category's templates (or all) by name."""
     pool = cat.in_category(category) if category else list(cat.templates.values())
-    words = [w for w in re.findall(r"[a-z0-9]+", (query or "").lower()) if len(w) > 1]
+    words = [w for w in re.findall(r"[a-z0-9]+", (query or "").lower()) if len(w) > 1 and w not in STOP]
+    # "mood board" finds "moodboard", "work flow" finds "workflow": a pair also counts as one word.
+    pairs = {i: words[i] + words[i + 1] for i in range(len(words) - 1)}
     if not words:
         found = sorted(pool, key=lambda t: t.name.lower())
         return found[:limit] if limit else found
@@ -365,12 +388,19 @@ def search(cat: Catalog, query: str = "", category: str = "", limit: int | None 
         use = t.use_when.lower()
         cats = " ".join([t.category, names.get(t.category, ""), *t.also, *(names.get(a, "") for a in t.also)]).lower()
         body = _text(t.cards).lower()
-        score = 0
-        for w in words:
-            s = 6 * (w in head) + 3 * (w in use) + 2 * (w in cats) + (w in body)
-            if not s:
+        def weight(w: str) -> int:
+            return 6 * (w in head) + 3 * (w in use) + 2 * (w in cats) + (w in body)
+
+        score, i = 0, 0
+        while i < len(words):
+            joined = weight(pairs[i]) if i in pairs else 0
+            if joined:
+                score, i = score + 2 * joined, i + 2
+                continue
+            single = weight(words[i])
+            if not single:
                 break
-            score += s
+            score, i = score + single, i + 1
         else:
             scored.append((score, t))
     scored.sort(key=lambda st: (-st[0], st[1].name.lower()))

@@ -1,0 +1,50 @@
+name: Interior design product list
+use_when: Keeping every product and material for an interior project on one list, by category, and ticking each off as it's bought.
+also: [architecture]
+source: https://milanote.com/templates/interior-design/interior-design-product-list
+cards:
+  - note: |
+      # *Project* — products
+      **Budget:**  **Spent so far:**
+      For each item: name · supplier · size or finish · price · lead time.
+    color: amber
+    width: 340
+  - note: |
+      **Order the slow things first**
+      Custom furniture, stone and lighting can take weeks. Check lead times before anything else.
+  - break
+  - column: Furniture
+    cards:
+      - todo: ""
+        items: [Sofa, Dining table, Chairs, Bed, Storage]
+      - note: "▣ Drop product images here"
+  - column: Lighting
+    cards:
+      - todo: ""
+        items: [Ceiling, Wall, Floor and table lamps, Bulbs]
+  - column: Flooring & rugs
+    cards:
+      - todo: ""
+        items: [Flooring, Rugs, Underlay]
+  - column: Art & objects
+    cards:
+      - todo: ""
+        items: [Artwork, Mirrors, Plants and planters]
+  - break
+  - column: Kitchen & dining
+    cards:
+      - todo: ""
+        items: [Glassware, Tableware, Linen]
+  - column: Soft furnishings
+    cards:
+      - todo: ""
+        items: [Curtains or blinds, Cushions, Throws]
+  - column: Finishes
+    cards:
+      - todo: ""
+        items: [Paint, Tile, Hardware]
+  - column: Delivered
+    color: green
+    cards:
+      - note: Move an item here when it arrives undamaged.
+      - note: Returns and replacements to chase.

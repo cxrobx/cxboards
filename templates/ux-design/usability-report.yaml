@@ -1,0 +1,49 @@
+name: Usability report
+use_when: Turning a round of usability testing into findings a team will act on — what you tested, what broke, the quotes and clips that prove it, and what to fix first.
+also: [ux-research]
+source: https://milanote.com/templates/ux-design/usability-report
+cards:
+  - note: |
+      # *Product* — usability findings
+      **Tested:** *date* · *n* participants · *method*
+      **The headline:** the one thing everyone should remember from this.
+    color: amber
+    width: 360
+  - todo: Top three to fix
+    items:
+      - "Issue — why it matters"
+      - "Issue — "
+      - "Issue — "
+  - break
+  - column: What we tested
+    cards:
+      - note: The goals and the questions you set out to answer.
+      - note: The tasks participants were asked to do.
+      - note: Who took part, and how they were found.
+  - column: Critical
+    color: clay
+    cards:
+      - note: Stopped people from finishing. *Finding* — how many hit it.
+  - column: Serious
+    color: amber
+    cards:
+      - note: Slowed people down or confused them.
+  - column: Minor
+    cards:
+      - note: Noticed, worked around.
+  - column: What worked
+    color: green
+    cards:
+      - note: Keep these — say so, so nobody redesigns them by accident.
+  - break
+  - column: In their words
+    cards:
+      - note: "\"Quote\" — participant *n*, on task *n*"
+      - note: "\"Quote\" — "
+  - column: Clips & screens
+    cards:
+      - note: "▣ Drop session clips and annotated screenshots here"
+  - column: Recommendations
+    cards:
+      - note: For each finding — the change you'd make, and how you'd know it worked.
+      - note: Open questions for the next round.

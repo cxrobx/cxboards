@@ -1,0 +1,44 @@
+name: Architectural design concept
+use_when: Presenting a building's design concept to a client or team — the idea, the site, the precedents, the drawings and renders, and the materials — in one place.
+source: https://milanote.com/templates/architecture/architecture-design-concept
+cards:
+  - note: |
+      # *Project* — design concept
+      **Client:**  **Site:**  **Stage:** concept · developed design
+      **The idea in one sentence:** what this building does that another wouldn't.
+    color: amber
+    width: 360
+  - note: "▣ Drop the hero render or sketch here, large"
+    width: 360
+  - break
+  - column: Concept
+    cards:
+      - note: The driving idea, and the diagram that explains it.
+      - note: How it answers the brief — the three requirements it meets best.
+  - column: Site & context
+    cards:
+      - note: "▣ Site photos, the aerial, the neighbours"
+      - note: Sun path, views, access, what's next door and what's coming.
+  - column: Precedents
+    cards:
+      - note: "▣ Buildings that inform this one"
+      - note: One line under each on what you're taking from it.
+  - break
+  - column: Drawings
+    width: 340
+    cards:
+      - note: "▣ Site plan"
+      - note: "▣ Plans"
+      - note: "▣ Sections and elevations"
+  - column: Renders & models
+    cards:
+      - note: "▣ Interior and exterior views, model photos, a walkthrough clip"
+  - column: Materials & specs
+    cards:
+      - note: "▣ Material samples and finishes"
+      - note: "Key specs — areas, heights, structure, performance targets"
+  - column: Next steps
+    cards:
+      - note: Questions the client needs to answer.
+      - todo: ""
+        items: [Client feedback gathered, Cost check, Planning pre-application, Move to developed design]

@@ -1,0 +1,50 @@
+name: Brand SWOT analysis
+use_when: Sizing up a brand — its internal strengths and weaknesses and the outside opportunities and threats — before a rebrand or a new strategy.
+source: https://milanote.com/templates/branding/brand-swot-analysis
+also: [brand-strategy-workshops, market-research]
+cards:
+  - note: |
+      # *Brand* — SWOT
+      **Scope:** the whole company, the brand, the marketing, or one product.
+      **Compared against:** the competitors you're measuring yourself by.
+    color: amber
+    width: 360
+  - note: |
+      **Inside vs outside**
+      Strengths and weaknesses are things you control. Opportunities and threats come from the market, whether you act or not.
+  - break
+  - column: Strengths
+    color: green
+    cards:
+      - note: What do customers choose you for?
+      - note: What do you do better than anyone, or own that others don't?
+  - column: Weaknesses
+    color: clay
+    cards:
+      - note: Where do you lose sales, or get complaints?
+      - note: What do competitors do better?
+  - column: Opportunities
+    color: cyan
+    cards:
+      - note: Trends, gaps or customer needs nobody is serving well.
+      - note: Partnerships, channels or markets you could open.
+  - column: Threats
+    color: magenta
+    cards:
+      - note: Competitors, new entrants, changing tastes or costs.
+      - note: What could make the brand look out of date?
+  - break
+  - column: Strategies
+    width: 340
+    cards:
+      - note: "**Use strengths to take opportunities:**"
+      - note: "**Use strengths to blunt threats:**"
+      - note: "**Fix weaknesses to take opportunities:**"
+      - note: "**Avoid the spot where weakness meets threat:**"
+  - column: Priorities
+    cards:
+      - todo: Top three actions
+        items:
+          - "Action · owner · by when"
+          - "Action · owner · by when"
+          - "Action · owner · by when"

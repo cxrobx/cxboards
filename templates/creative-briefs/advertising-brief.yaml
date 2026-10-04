@@ -1,0 +1,48 @@
+name: Advertising brief
+use_when: Briefing a creative team on an ad campaign — the business problem, the audience, and the one idea the work has to land.
+also: [agencies]
+source: https://milanote.com/templates/creative-briefs/advertising-brief
+cards:
+  - note: |
+      # *Campaign* — *client*
+      **The problem:** what this campaign has to fix, in one sentence.
+      **The proposition:** the single thing people should take away. Short enough to remember, odd enough to notice.
+    color: amber
+    width: 360
+  - note: |
+      **A good proposition**
+      Says one thing, not three. A creative team reads it and ideas start arriving.
+  - break
+  - column: Business objective
+    cards:
+      - note: What the business needs from this — trial, switching, a price rise that sticks, a launch.
+      - note: "The number that says it worked, and by when."
+  - column: Communication objective
+    cards:
+      - note: What people believe about the brand today.
+      - note: What they should think, feel or do after seeing the work.
+  - column: Audience
+    cards:
+      - note: Who, described as people rather than demographics.
+      - note: The insight — a true thing about them the idea can stand on.
+      - note: Where they'll meet the ad, and what else is competing for them there.
+  - column: Proposition
+    cards:
+      - note: The one line. Write five versions, keep the sharpest.
+      - note: Reasons to believe — the proof behind it.
+      - note: Tone — three words for how it should feel.
+  - break
+  - column: Mandatories
+    cards:
+      - todo: Must include
+        items: [Logo and end line, Legal and disclaimer copy, Offer or call to action, Formats and sizes per channel]
+      - note: What the work must never say or show.
+  - column: Media & timing
+    cards:
+      - note: Channels and placements, if they're already decided.
+      - note: "Key dates: briefing · first ideas · approval · in market."
+      - note: Production budget.
+  - column: References
+    cards:
+      - note: "▣ Drop past campaigns, competitor ads and work from other categories you admire"
+      - note: One line on each — what to take, what to steer clear of.

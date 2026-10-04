@@ -1,0 +1,49 @@
+name: Fashion moodboard
+also: [fashion]
+use_when: Setting the look for a collection, a shoot or a styling job — references, silhouettes, fabrics and palette — before anything gets made.
+source: https://milanote.com/templates/moodboards/fashion-moodboard
+cards:
+  - note: |
+      # *Collection or project*
+      **Season / occasion:**
+      **The look in one sentence:** who's wearing it, where, and how they feel in it.
+    color: amber
+    width: 340
+  - note: |
+      **Seasonal or timeless?**
+      Decide early — it changes the palette, the fabrics and how hard you lean on trends.
+  - break
+  - column: References
+    width: 320
+    cards:
+      - note: "▣ Drop runway shots, editorial pages and street photos here"
+      - note: Pull the best five forward. One line under each on what you're taking from it.
+      - note: Mix portrait and landscape, and give the hero image the most room.
+  - column: Silhouette & details
+    cards:
+      - note: The shapes — cut, length, volume, where it sits on the body.
+      - note: Details that repeat — collars, hardware, seams, trims.
+      - note: "▣ Drop accessories, shoes and jewellery ideas"
+  - column: Fabric & texture
+    cards:
+      - note: "▣ Drop fabric photos or scans of swatches"
+      - note: Weight, drape, finish. What should it feel like to touch?
+  - break
+  - column: Palette
+    cards:
+      - swatch: "#2E2A26"
+        text: Base
+      - swatch: "#C9B79C"
+        text: Neutral
+      - swatch: "#8A3B2E"
+        text: Accent
+      - swatch: "#E8E1D6"
+        text: Light
+      - note: Which colour carries the collection, and which only shows up in small doses.
+  - column: Type & graphics
+    cards:
+      - note: Fonts for labels, tags and the lookbook — bold and current, or quiet and classic?
+      - note: "▣ Drop prints, logos or graphic references"
+  - column: Feedback
+    cards:
+      - note: What the team, the client or the stylist said, and what you changed because of it.

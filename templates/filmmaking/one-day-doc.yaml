@@ -1,0 +1,52 @@
+name: One day doc
+use_when: Planning a short documentary you'll shoot in a single day — the subject, the interview, the shots you need and an hour-by-hour plan.
+source: https://milanote.com/templates/filmmaking/one-day-doc
+cards:
+  - note: |
+      # *Subject* — one day doc
+      **Shoot day:**  **Running time:** *n* minutes
+      **The story in one line:** who they are, and the thing that changes or is revealed.
+    color: amber
+    width: 360
+  - note: |
+      **The question the film answers**
+      If a viewer remembers one thing, what is it?
+  - break
+  - column: Subject & story
+    cards:
+      - note: Who they are, in their words from the first call.
+      - note: The beginning, the tension, the ending you hope for — and what you'll do if it doesn't come.
+      - note: "▣ Drop photos of them, their place, their work"
+  - column: Interview
+    cards:
+      - note: Where you'll sit them, and what's behind them.
+      - todo: Questions
+        items:
+          - Warm-up — something easy and specific
+          - What does a normal day look like?
+          - When did that change?
+          - What do people get wrong about this?
+          - What's next?
+      - note: Ask for full sentences. Stay quiet after the answer.
+  - column: Shot plan
+    cards:
+      - todo: Must-get shots
+        items: [Establishing wide, Subject at work, Hands and details, The place without them, A closing image]
+      - note: Moments you can only get once — be rolling before they happen.
+  - break
+  - column: Day timeline
+    cards:
+      - note: "*time* — arrive, set up, meet"
+      - note: "*time* — interview"
+      - note: "*time* — observational and B-roll"
+      - note: "*time* — golden hour and the closing image"
+      - note: "*time* — wrap and back up the cards"
+  - column: Crew & gear
+    cards:
+      - note: Who's on it and what each one does. Solo? Write down what you'll skip.
+      - todo: ""
+        items: [Camera and lenses, Lav and boom, Lights for the interview, Batteries and cards, Release forms]
+  - column: Edit
+    cards:
+      - todo: ""
+        items: [Footage backed up twice, Interview transcribed, Paper edit, Rough cut, Music and grade, Subject sees it first]

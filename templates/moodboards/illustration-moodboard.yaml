@@ -1,0 +1,44 @@
+name: Illustration moodboard
+use_when: Finding the style for an illustration job — line, colour, texture, characters and composition — before you start drawing for real.
+source: https://milanote.com/templates/moodboards/illustration-moodboard
+cards:
+  - note: |
+      # *Project*
+      **What the illustrations are for:** a book, a brand, an editorial, a product…
+      **The feeling:** what someone should feel before they read a word.
+    color: amber
+    width: 340
+  - note: |
+      **The job in short**
+      Format, sizes, how many pieces, and the deadline.
+  - break
+  - column: Style references
+    width: 320
+    cards:
+      - note: "▣ Drop work by illustrators you admire"
+      - note: One line on each — is it the line, the colour, the humour, the restraint?
+      - note: Close but not it, and why.
+  - column: Line & texture
+    cards:
+      - note: Clean vector, ink, pencil, paint, collage — or a mix?
+      - note: "▣ Drop close-ups of textures, brushes and grain"
+  - column: Characters & subjects
+    cards:
+      - note: Who or what appears, and how stylised they get.
+      - note: "▣ Drop poses, faces, animals or objects to study"
+  - break
+  - column: Palette
+    cards:
+      - swatch: "#264653"
+      - swatch: "#E9C46A"
+      - swatch: "#F4A261"
+      - swatch: "#E76F51"
+      - note: Limited or full? Decide how many colours each piece is allowed.
+  - column: Composition & motion
+    cards:
+      - note: Framing, negative space, where the eye lands first.
+      - note: "▣ Drop GIFs or clips if any of it moves"
+  - column: Your sketches
+    cards:
+      - note: "▣ Drop early thumbnails and test pieces here"
+      - note: Which direction to take further, and which to drop.

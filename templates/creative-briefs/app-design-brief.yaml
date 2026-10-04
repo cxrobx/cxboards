@@ -1,0 +1,43 @@
+name: App design brief
+use_when: Briefing the design of a mobile app — who it's for, what it does in its first version, the platforms and the constraints — before any screens are drawn.
+source: https://milanote.com/templates/creative-briefs/app-design-brief
+cards:
+  - note: |
+      # *App name*
+      **The job:** what people open it to get done.
+      **A year from now:** how you'll know it's working.
+    color: amber
+    width: 340
+  - break
+  - column: The brand
+    cards:
+      - note: Who's behind it and what you stand for.
+      - note: Brand assets that already exist — logo, colours, type, voice.
+  - column: Users & value
+    cards:
+      - note: The person you're designing for, and the moment they reach for their phone.
+      - note: The problem they have today, and what they use instead.
+      - note: Why they'd keep it after the first week.
+  - column: Market & competitors
+    cards:
+      - note: The apps they already use for this. What each gets right and wrong.
+      - note: "▣ Drop screenshots of competitor flows"
+  - column: Features
+    cards:
+      - todo: Version one must
+        items: [Feature, Feature, Feature]
+      - note: Later, not now — the list you're deliberately parking.
+  - break
+  - column: Platform & tech
+    cards:
+      - note: iOS, Android or both? Phone only, or tablet and watch too?
+      - note: Accounts, payments, notifications, offline use, integrations.
+      - note: Who builds it, and in what.
+  - column: Budget & timing
+    cards:
+      - note: Budget range.
+      - note: Launch date and the milestones before it.
+  - column: Deliverables
+    cards:
+      - todo: ""
+        items: [User flows, Wireframes, Visual design, Clickable prototype, Component library and handoff, App store screenshots]

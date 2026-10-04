@@ -1,0 +1,48 @@
+name: Story arc
+use_when: Laying your plot points along the rise and fall of a story — the opening, the build, the peak and the way down — to see whether the tension climbs where it should.
+also: [novel-outline]
+source: https://milanote.com/templates/creative-writing/story-arc
+cards:
+  - note: |
+      # *Story title*
+      **The question the story asks:** will they…?
+      **The answer at the end:**
+      Mark each plot point with its tension, 1–5. Read the numbers left to right — they should climb to the climax.
+    color: amber
+    width: 380
+  - break
+  - column: Exposition
+    cards:
+      - note: The world and the hero before anything happens.
+      - note: "*Plot point* · tension 1"
+  - column: Inciting incident
+    cards:
+      - note: The event that starts the story moving.
+      - note: "*Plot point* · tension 2"
+  - column: Rising action
+    width: 340
+    cards:
+      - note: Obstacles that get harder, one after another.
+      - note: "*Plot point* · tension 2"
+      - note: "*Plot point* · tension 3"
+      - note: "*Plot point* · tension 4"
+  - column: Climax
+    color: clay
+    cards:
+      - note: The highest point — the choice or fight everything has been building to.
+      - note: "*Plot point* · tension 5"
+  - column: Falling action
+    cards:
+      - note: The consequences landing.
+      - note: "*Plot point* · tension 3"
+  - column: Resolution
+    cards:
+      - note: The new normal. What's different from the opening?
+      - note: "*Plot point* · tension 1"
+  - break
+  - note: |
+      **Sagging middle?**
+      If the rising action has two points at the same tension in a row, cut one or raise the stakes.
+    color: cyan
+    width: 340
+  - note: "▣ Drop images for the key moments"

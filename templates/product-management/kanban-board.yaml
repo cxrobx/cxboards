@@ -1,0 +1,39 @@
+name: Kanban board
+use_when: Running a project's work as cards that move left to right — from backlog to done — so everyone can see what's in flight and what's stuck.
+also: [productivity]
+source: https://milanote.com/templates/product-management/kanban-board
+cards:
+  - note: |
+      # *Project* board
+      **Work-in-progress limit:** no more than *n* cards in Doing.
+      **Done means:** shipped, checked and nobody has to touch it again.
+    color: amber
+    width: 340
+  - note: |
+      **How cards move**
+      One card per task. Owner's name on it. Move it the moment its state changes — the board is only useful if it's true.
+  - break
+  - column: Backlog
+    cards:
+      - note: Everything that might get done. Unsorted is fine.
+  - column: To do
+    cards:
+      - note: Ready to start — clear enough that anyone could pick it up.
+  - column: Doing
+    color: amber
+    cards:
+      - note: "*Task* · owner · started *date*"
+  - column: Blocked
+    color: clay
+    cards:
+      - note: What it's waiting on, and who can unblock it.
+  - column: Review
+    cards:
+      - note: Done by the owner, waiting for a second look.
+  - column: Done
+    color: green
+    cards:
+      - note: Clear this out at the end of each week.
+  - break
+  - todo: Weekly reset
+    items: [Clear the Done column, Pull the next cards into To do, Chase anything Blocked more than two days, Check nothing in Doing has gone quiet]

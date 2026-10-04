@@ -1,0 +1,50 @@
+name: User interview notes
+use_when: Capturing one customer interview as it happens — who they are, what they said, what you saw — and sorting it into needs, pains and themes the team can use.
+also: [ux-research]
+source: https://milanote.com/templates/ux-design/user-interview-notes
+cards:
+  - note: |
+      # Interview — *participant*
+      **Date:**  **Interviewer:**  **Note-taker:**
+      **Role and context:** who they are and how they use the product today.
+    color: amber
+    width: 360
+  - column: Questions to ask
+    cards:
+      - note: Tell me about the last time you…
+      - note: What's the hardest part of that?
+      - note: What have you tried to fix it?
+      - note: If you had a magic wand…
+  - break
+  - column: Quotes
+    width: 320
+    cards:
+      - note: "\"Their exact words\" — the moment it came up"
+  - column: Observations
+    cards:
+      - note: What they did, not what they said — hesitations, workarounds, tools on their screen.
+      - note: "▣ Drop photos, screenshots or a recording clip"
+  - column: Needs
+    color: green
+    cards:
+      - note: What they're trying to achieve.
+  - column: Pain points
+    color: clay
+    cards:
+      - note: What gets in the way.
+  - column: Surprises
+    color: violet
+    cards:
+      - note: Anything you didn't expect to hear.
+  - break
+  - note: |
+      **Themes**
+      The two or three patterns this interview adds to. Sort the cards above into them after the call.
+    color: cyan
+    width: 360
+  - todo: After the call
+    items:
+      - Notes cleaned up within the hour
+      - Top three takeaways written
+      - Recording and consent filed
+      - Thank-you and incentive sent

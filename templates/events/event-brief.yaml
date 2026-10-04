@@ -1,0 +1,48 @@
+name: Event brief
+use_when: Briefing a production team on an event — what it's for, where it happens, what guests should experience and how it should look — before the run sheet gets written.
+also: [creative-briefs]
+source: https://milanote.com/templates/events/event-brief
+cards:
+  - note: |
+      # *Event name*
+      **Date:**  **Venue:**  **Guests:** *n*
+      **Why we're holding it:** one sentence.
+      **A great night means guests leave:** *feeling / doing what*
+    color: amber
+    width: 360
+  - note: |
+      **Contacts**
+      Who owns the event · who signs off spend · who's the day-of lead.
+  - break
+  - column: Objectives
+    cards:
+      - note: What the event has to achieve — for the business and for the guests.
+      - note: How you'll measure it afterwards.
+  - column: Audience
+    cards:
+      - note: Who's coming, and what they expect from a night like this.
+      - note: Who matters most in the room.
+  - column: The venue
+    cards:
+      - note: "▣ Drop venue photos and the floor plan"
+      - note: Capacity, access, curfews, sound limits, what's included.
+  - column: Guest journey
+    cards:
+      - note: "Invite → arrival → first moment → the main event → the way out."
+      - note: The one moment people will talk about the next day.
+  - break
+  - column: Look & feel
+    cards:
+      - note: "▣ Drop references for styling, lighting and theme"
+      - note: Words for the atmosphere, and words it should never be.
+  - column: Requirements
+    cards:
+      - todo: ""
+        items: [Catering and dietaries, AV and staging, Signage and branding, Accessibility, Security and permits, Photography / video]
+  - column: Budget & timing
+    cards:
+      - note: The total, and what's fixed versus flexible.
+      - note: "Key dates — brief signed off, suppliers locked, run sheet final, event day."
+  - column: Watch-outs
+    cards:
+      - note: What went wrong last time, and the plan B for weather or no-shows.

@@ -1,0 +1,90 @@
+name: Interior design project plan
+use_when: Running a whole interior project in one place — the brief, the moodboard and the shopping list as boards, plus the checklists that get it from idea to installed.
+also: [project-plans]
+source: https://milanote.com/templates/interior-design/interior-design-plan
+cards:
+  - note: |
+      # *Project* — *address or client*
+      **The space:** which rooms, and what they're for.
+      **Budget:**  **Finish by:**
+      Work left to right: brief, then moodboard, then shopping list.
+    color: amber
+    width: 360
+  - break
+  - board: Brief
+    cards:
+      - note: |
+          # Brief
+          **Why it's happening:** the problem with the space today.
+          **Keep / change:** what stays, what goes.
+        color: amber
+        width: 320
+      - column: Requirements
+        cards:
+          - note: Must-haves — storage, seating, access, light.
+          - note: "▣ Drop the floor plan and site photos"
+      - column: People
+        cards:
+          - note: Who uses the space, and how it should feel to them.
+  - board: Moodboard
+    cards:
+      - note: |
+          # Moodboard
+          **The feel in three words:**
+        color: amber
+        width: 320
+      - column: Images
+        cards:
+          - note: "▣ Drop rooms, lighting and furniture you love"
+      - column: Materials
+        cards:
+          - note: "▣ Drop fabric, flooring, tile and finish samples"
+      - column: Colour
+        cards:
+          - swatch: "#F3ECDD"
+            text: Base
+          - swatch: "#859900"
+            text: Mid tone
+          - swatch: "#CB4B16"
+            text: Accent
+  - board: Shopping list
+    cards:
+      - note: |
+          # Shopping list
+          Name · supplier · price · lead time. Tick it when it's ordered.
+        color: amber
+        width: 320
+      - column: Furniture
+        cards:
+          - todo: ""
+            items: [Item]
+      - column: Lighting
+        cards:
+          - todo: ""
+            items: [Item]
+      - column: Finishes
+        cards:
+          - todo: ""
+            items: [Flooring, Paint, Tile]
+  - break
+  - column: Goals & deliverables
+    cards:
+      - todo: ""
+        items: [Room · goal, Room · goal, Floor plan and layout, Lighting plan, Final presentation to client]
+  - column: Workflow
+    cards:
+      - todo: ""
+        items:
+          - Site visit and measurements
+          - Brief signed off
+          - Moodboard signed off
+          - Layout and lighting plan
+          - Products specified and quoted
+          - Orders placed
+          - Trades booked
+          - Install and styling
+          - Handover and photos
+  - column: Decisions & notes
+    cards:
+      - note: What the client decided, and when — so nobody has to remember.
+      - note: Open questions for the next meeting.

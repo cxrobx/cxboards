@@ -1,0 +1,78 @@
+name: Fashion project plan
+use_when: Running a fashion project from one hub — the brief, the brainstorm, the moodboard and the collection — with the tasks and dates beside them.
+source: https://milanote.com/templates/fashion/fashion-project-plan
+cards:
+  - note: |
+      # *Project name*
+      **What it is:** a collection, a capsule, a commission, a wardrobe.
+      **Due:** *date* · **For:** *client or label*
+    color: amber
+    width: 360
+  - note: |
+      **How this board works**
+      Brief first, then ideas, then the look of it, then the pieces. Each has its own board.
+  - break
+  - board: Brief
+    cards:
+      - note: |
+          # Brief
+          The ask, the wearer, the constraints, the deliverables.
+        color: amber
+      - column: The ask
+        cards:
+          - note: What's being designed, for whom, by when.
+      - column: Constraints
+        cards:
+          - note: Budget, season, sizing, sourcing.
+  - board: Brainstorm
+    cards:
+      - note: Start from one word or image and fill the board before judging anything.
+      - column: Ideas
+        cards:
+          - note: Shapes, materials, details, influences.
+      - column: Strongest
+        cards:
+          - note: The ones worth developing.
+  - board: Moodboard
+    cards:
+      - note: "▣ Drop the anchor image here"
+      - column: References
+        cards:
+          - note: "▣ Silhouettes, fabrics, places, people"
+      - column: Palette
+        cards:
+          - swatch: "#2B2B2B"
+            text: Base
+          - swatch: "#C9B79C"
+            text: Neutral
+          - swatch: "#7A3B3B"
+            text: Accent
+  - board: Collection
+    cards:
+      - note: One column per look. Add more as the line-up grows.
+      - column: Look 1
+        cards:
+          - note: "▣ Sketch or photo"
+          - note: Pieces and fabrics.
+      - column: Look 2
+        cards:
+          - note: "▣ Sketch or photo"
+          - note: Pieces and fabrics.
+  - break
+  - column: Tasks
+    cards:
+      - todo: ""
+        items:
+          - Brief agreed
+          - Moodboard signed off
+          - Sketches and line-up
+          - Fabrics sourced
+          - Patterns and samples
+          - Fittings
+          - Final pieces
+  - column: Dates
+    cards:
+      - note: "*Milestone* · *date*"
+  - column: Feedback
+    cards:
+      - note: What the client or team said, and what you changed because of it.

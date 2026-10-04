@@ -1,0 +1,51 @@
+name: 5 whys
+use_when: Getting past the symptom of a problem to its root cause by asking why five times, then deciding what to change so it doesn't come back.
+source: https://milanote.com/templates/brainstorming/5-whys
+cards:
+  - note: |
+      # *The problem*
+      **What happened:** the symptom as a plain fact — what, where, when, how often.
+      **Why it matters:** what it costs if it keeps happening.
+    color: amber
+    width: 340
+  - note: |
+      **Ground rules**
+      Ask about the process, not the person. Each answer needs evidence you could point to, not a hunch.
+  - break
+  - column: Why 1
+    cards:
+      - note: Why did the problem happen? The most direct cause you can see.
+      - note: "Evidence:"
+  - column: Why 2
+    cards:
+      - note: Why did *that* happen?
+      - note: "Evidence:"
+  - column: Why 3
+    cards:
+      - note: Why did *that* happen?
+      - note: "Evidence:"
+  - column: Why 4
+    cards:
+      - note: Why did *that* happen?
+      - note: "Evidence:"
+  - column: Why 5
+    cards:
+      - note: Why did *that* happen? Stop early if you've reached something you can actually change.
+      - note: "Evidence:"
+  - break
+  - column: Root cause
+    color: clay
+    cards:
+      - note: The cause that, once fixed, stops the problem returning. One sentence.
+      - note: Read the chain backwards with "so…". If a link doesn't follow, go back and redo it.
+  - column: Countermeasures
+    cards:
+      - todo: Actions
+        items:
+          - "Action · owner · by when"
+          - "Action · owner · by when"
+      - note: Which fix is cheap and fast, and which is the real one? You may need both.
+  - column: Follow-up
+    cards:
+      - note: How you'll know it worked, and the date you'll check.
+      - note: Any why that had two answers — start a second chain for the other one.

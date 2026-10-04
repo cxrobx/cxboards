@@ -1,0 +1,94 @@
+name: Agency hub
+use_when: Running an agency from one board — strategy, every client project in its own board, new business, operations and the team, with the week's priorities on top.
+source: https://milanote.com/templates/agencies/agency-hub
+cards:
+  - note: |
+      # *Agency name*
+      **What we're known for:** the one thing clients hire us for.
+      **This quarter:** the goal everyone's working toward.
+    color: amber
+    width: 360
+  - todo: This week
+    items:
+      - "Priority — owner"
+      - "Priority — owner"
+      - "Priority — owner"
+  - break
+  - board: Clients
+    folder: true
+    cards:
+      - note: One board per client project. Duplicate *Project template* for each new one.
+      - board: Project template
+        cards:
+          - note: |
+              # *Client — project*
+              **Deliverable:**  **Due:**  **Budget:**  **Lead:**
+            color: amber
+          - column: Brief
+            cards:
+              - note: What the client asked for, and what they actually need.
+          - column: Inspiration
+            cards:
+              - note: "▣ Drop references and the client's assets"
+          - column: Work
+            cards:
+              - todo: ""
+                items: [Kickoff, First concepts, Client feedback, Final delivery, Invoice]
+  - board: Strategy
+    cards:
+      - note: |
+          # Strategy
+          **Who we serve:**  **What we won't do:**
+        color: amber
+      - column: Services & pricing
+        cards:
+          - note: What we sell and how it's priced.
+      - column: Goals
+        cards:
+          - note: Revenue, client mix and the work we want more of.
+  - board: New business
+    cards:
+      - note: |
+          # New business
+          Every lead from first contact to signed.
+        color: amber
+      - column: Leads
+        cards:
+          - note: "*Company* · contact · source"
+      - column: Proposal sent
+        cards:
+          - note: "*Company* · value · follow-up date"
+      - column: Won
+        cards:
+          - note: Move it to Clients once it's signed.
+  - board: Operations
+    cards:
+      - note: |
+          # Operations
+          How the agency runs.
+        color: amber
+      - column: Processes
+        cards:
+          - note: Onboarding, review, invoicing — written down once.
+      - column: Tools & accounts
+        cards:
+          - note: What we use and who owns each.
+  - board: Team
+    cards:
+      - note: |
+          # Team
+          Who's here and what they're on.
+        color: amber
+      - column: People
+        cards:
+          - note: "*Name* — role · current projects"
+      - column: Hiring & freelancers
+        cards:
+          - note: Who we call when we're stretched.
+  - break
+  - column: Brand & assets
+    cards:
+      - note: "▣ Drop the logo, case studies, credentials deck and templates"
+  - column: Wins & lessons
+    cards:
+      - note: What went well this month, and what we'd change.

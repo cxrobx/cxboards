@@ -1,0 +1,63 @@
+name: Website content
+also: [graphic-design]
+use_when: Planning a website's words, images and layout one page at a time, so the team can see each page before anyone designs or builds it.
+source: https://milanote.com/templates/website-design/website-content
+cards:
+  - note: |
+      # *Site* — content plan
+      **Pages:** Home · *page* · *page* · *page*
+      **Voice:** how the site should sound, in a few words.
+    color: amber
+    width: 340
+  - note: |
+      **One page at a time**
+      Start with the home page below. For every other page, duplicate the page template and fill it the same way.
+  - break
+  - column: Purpose
+    cards:
+      - note: Why does this page exist? What problem does it solve for the visitor?
+      - note: The one thing it has to get across, and the action you want next.
+  - column: Headline & intro
+    cards:
+      - note: The headline that tells visitors they're in the right place.
+      - note: Two or three sentences that set the scene.
+  - column: Body copy
+    width: 320
+    cards:
+      - note: Key messages, roughly in order. Drafts are fine — get it out of your head.
+      - note: Subheadings, and the search terms this page should rank for.
+  - column: Layout
+    cards:
+      - note: "▣ Drop a photo of a rough sketch — boxes and arrows are enough"
+      - note: What comes first, what's biggest, what can wait below the fold.
+  - column: Images & video
+    cards:
+      - note: "▣ Drop example images or clips for this page"
+      - note: What still needs shooting, sourcing or licensing.
+  - break
+  - board: Other pages
+    folder: true
+    cards:
+      - note: One board per page. Duplicate *Page template* for each and rename it.
+      - board: Page template
+        cards:
+          - note: |
+              # *Page name*
+              **Purpose:**  **Next action:**
+            color: amber
+          - column: Words
+            cards:
+              - note: Headline, intro, key messages.
+          - column: Layout & images
+            cards:
+              - note: "▣ Drop a sketch and example images"
+          - todo: Ready when
+            items: [Copy approved, Images final, Layout agreed]
+  - column: Review
+    cards:
+      - note: Comments from the team or client, and what changed.
+      - todo: Before design starts
+        items:
+          - Every page has a purpose and a headline
+          - Copy reviewed by someone who didn't write it
+          - Image list handed to whoever sources them

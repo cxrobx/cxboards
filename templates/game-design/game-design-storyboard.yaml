@@ -1,0 +1,49 @@
+name: Game design storyboard
+use_when: Laying out a game's key scenes panel by panel — what the player sees, what they do, where the camera goes — before it's built.
+also: [storyboards]
+source: https://milanote.com/templates/game-design/game-design-storyboard
+cards:
+  - note: |
+      # *Game title* — storyboard
+      **What this covers:** the opening, a level, a cutscene, the whole arc.
+      **Under each panel:** what happens, what the player does, the camera.
+    color: amber
+    width: 360
+  - note: |
+      **Style notes**
+      The palette and the visual rules every panel should follow.
+  - break
+  - column: 1 · *Scene*
+    cards:
+      - note: "▣ Drop the panel here — sketch, screenshot or render"
+      - note: What happens.
+      - note: "**Player:** watching, moving, choosing?"
+  - column: 2 · *Scene*
+    cards:
+      - note: "▣ Drop the panel here"
+      - note: What happens.
+      - note: "**Camera:** angle, move, cut"
+  - column: 3 · *Scene*
+    cards:
+      - note: "▣ Drop the panel here"
+      - note: What happens.
+      - note: "**Dialogue:** who speaks, and where the text box sits"
+  - break
+  - column: 4 · *Scene*
+    cards:
+      - note: "▣ Drop the panel here"
+      - note: What happens.
+  - column: 5 · *Scene*
+    cards:
+      - note: "▣ Drop the panel here"
+      - note: What happens.
+  - column: 6 · *Scene*
+    cards:
+      - note: "▣ Drop the panel here"
+      - note: What happens.
+  - todo: Before it goes to the team
+    items:
+      - Every panel has a caption
+      - Interactive moments marked
+      - Transitions between scenes noted
+      - Feedback round done

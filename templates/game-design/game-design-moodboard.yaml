@@ -1,0 +1,51 @@
+name: Game design moodboard
+use_when: Setting the look and feel of a game — characters, places, textures, colour, motion and sound — so the team shares one picture of it before production.
+also: [moodboards]
+source: https://milanote.com/templates/game-design/game-design-moodboard
+cards:
+  - note: |
+      # *Game title* — look & feel
+      **Three words for the mood:**
+      **It looks like:** *this game* meets *this film* meets *this place*.
+    color: amber
+    width: 340
+  - note: "▣ Drop the anchor image here and make it the biggest thing on the board"
+    width: 400
+  - break
+  - column: Characters
+    cards:
+      - note: "▣ Faces, silhouettes, costume, gear"
+  - column: Environments
+    cards:
+      - note: "▣ Landscapes, interiors, light at the time of day the game lives in"
+  - column: Textures & objects
+    cards:
+      - note: "▣ Surfaces, props, materials up close"
+  - column: Motion & sound
+    cards:
+      - note: "▣ Clips and GIFs of how things should move"
+      - note: Music and sound you'd play under the game.
+  - break
+  - swatch: "#1B1F2A"
+    text: Night
+  - swatch: "#3E5C76"
+    text: Cool mid
+  - swatch: "#C9A227"
+    text: Light source
+  - swatch: "#B23A48"
+    text: Danger
+  - swatch: "#E8E1D3"
+    text: Highlight
+  - break
+  - note: |
+      **What it isn't**
+      The looks you're steering away from, and one image of each.
+  - note: |
+      **Pulled from the images**
+      Pick the palette from the references you added, not from a colour wheel.
+  - todo: Before sharing
+    items:
+      - Anchor image chosen
+      - Sizes show what matters most
+      - Palette taken from the references
+      - Team feedback in, conflicts resolved

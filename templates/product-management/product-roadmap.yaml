@@ -1,0 +1,43 @@
+name: Product roadmap
+use_when: Planning what a product team builds next — a backlog of ideas, the features being specced, estimated and built, and the order they ship in.
+source: https://milanote.com/templates/product-management/product-roadmap
+cards:
+  - note: |
+      # *Product* roadmap
+      **The goal for this stretch:** the outcome the features add up to.
+      **Sprint length:** *n* weeks  **Team capacity:** *n* points per sprint
+    color: amber
+    width: 340
+  - note: |
+      **On each feature card**
+      What it does · who asked · the problem it solves · story points · owner.
+  - break
+  - column: Backlog
+    cards:
+      - note: Every idea and request, unranked. *Feature* · source.
+      - note: Move a card right only when someone can say why it matters now.
+  - column: Requirements
+    cards:
+      - note: What done looks like, written as user stories.
+      - note: Edge cases and what's explicitly out of scope.
+  - column: Estimated
+    cards:
+      - note: "*Feature* · *n* points · confidence high / low"
+  - column: In development
+    color: amber
+    cards:
+      - note: "*Feature* · sprint *n* · owner"
+  - column: Shipped
+    color: green
+    cards:
+      - note: "*Feature* · date · did it move the goal?"
+  - break
+  - column: This quarter
+    cards:
+      - note: The few features committed for the quarter, in order.
+  - column: Next quarter
+    cards:
+      - note: Likely, not promised.
+  - column: Parked
+    cards:
+      - note: Good ideas with no slot, and why they're waiting.

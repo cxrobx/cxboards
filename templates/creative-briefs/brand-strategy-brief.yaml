@@ -1,0 +1,47 @@
+name: Brand strategy brief
+use_when: Setting up a brand strategy project — the story so far, the value it offers, who buys and why — so the team works toward one picture.
+source: https://milanote.com/templates/creative-briefs/brand-strategy-brief
+cards:
+  - note: |
+      # *Brand* — strategy brief
+      **Why now:** what changed that makes this work necessary.
+      **The question the strategy has to answer:** one sentence.
+    color: amber
+    width: 360
+  - break
+  - column: Brand story
+    cards:
+      - note: Where it came from and who started it.
+      - note: What it believes that its competitors don't.
+  - column: Value proposition
+    cards:
+      - note: The jobs customers are trying to get done.
+      - note: Their pains — and which ones you remove.
+      - note: The gains you add that they'd miss if you left.
+  - column: Objectives
+    cards:
+      - note: What the strategy should change — perception, price, market, team.
+      - note: How you'll know, and by when.
+  - column: Research
+    cards:
+      - note: What you already know, and where it came from.
+      - note: What you still need to find out.
+      - note: "▣ Drop past research, surveys and reports here"
+  - break
+  - column: Persona
+    cards:
+      - note: If the brand were a person — how they talk, dress, behave in a room.
+      - note: "Voice: three words it is, three it isn't."
+  - column: Buyer journey
+    cards:
+      - note: "Hear about it → consider → buy → stay → recommend."
+      - note: Where people drop off today, and why.
+  - column: Competitors
+    cards:
+      - note: The three that matter. Their position in one line each.
+      - note: The space none of them owns.
+  - column: Deliverables & timing
+    cards:
+      - todo: ""
+        items: [Positioning statement, Brand story, Messaging framework, Voice guidelines, Presentation to leadership]
+      - note: Budget and key dates.

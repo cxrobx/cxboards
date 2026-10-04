@@ -1,0 +1,40 @@
+name: Market research brief
+use_when: Briefing a research study so the researcher can pick the right method — the decision it informs, who to study, and what's already known.
+also: [market-research]
+source: https://milanote.com/templates/creative-briefs/market-research-brief
+cards:
+  - note: |
+      # *Study name*
+      **The decision this informs:** what you'll do with the answer.
+      **If the answer is A we'll… if it's B we'll…** — if both lead to the same place, you don't need the study.
+    color: amber
+    width: 360
+  - break
+  - column: Background
+    cards:
+      - note: What's happening in the business and the market that raised the question.
+  - column: Objectives
+    cards:
+      - note: The questions the research must answer, most important first.
+      - note: Your hunches — the hypotheses you want tested, not confirmed.
+  - column: Product or service
+    cards:
+      - note: What's being studied, at what stage — idea, prototype, live.
+      - note: Prices, variants, anything respondents will see.
+  - column: Target market
+    cards:
+      - note: Who to talk to, and who to screen out.
+      - note: Where they are, and roughly how many you need.
+  - break
+  - column: Past research
+    cards:
+      - note: "▣ Drop earlier studies, data and reports here"
+      - note: What they found, and what's changed since.
+  - column: Dates & budget
+    cards:
+      - note: When you need the findings, and the meeting they're for.
+      - note: Budget.
+  - column: Deliverables
+    cards:
+      - todo: ""
+        items: [Research plan and method, Screener and discussion guide or survey, Fieldwork, Topline findings, Full report and recommendations]

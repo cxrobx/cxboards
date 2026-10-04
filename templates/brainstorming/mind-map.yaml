@@ -1,0 +1,52 @@
+name: Mind map
+use_when: Exploring a topic outward from one central idea — branches, then sub-branches — to see everything it touches before you organise it.
+source: https://milanote.com/templates/brainstorming/mind-map
+cards:
+  - note: |
+      # *Central topic*
+      **The question underneath it:** what you're trying to understand or decide.
+    color: amber
+    width: 340
+  - note: |
+      **As you go**
+      Short phrases, not sentences. Get everything down first; tidy later. Draw lines between branches that affect each other.
+  - break
+  - column: Branch 1
+    color: cyan
+    cards:
+      - note: "**Branch:** *a main sub-topic*"
+      - note: "· *sub-branch*"
+      - note: "· *sub-branch*"
+  - column: Branch 2
+    color: violet
+    cards:
+      - note: "**Branch:**"
+      - note: "· *sub-branch*"
+      - note: "· *sub-branch*"
+  - column: Branch 3
+    color: green
+    cards:
+      - note: "**Branch:**"
+      - note: "· *sub-branch*"
+      - note: "· *sub-branch*"
+  - column: Branch 4
+    color: magenta
+    cards:
+      - note: "**Branch:**"
+      - note: "· *sub-branch*"
+      - note: "· *sub-branch*"
+  - break
+  - note: "▣ Drop images, sketches or clips next to the branch they explain"
+    width: 300
+  - column: Connections
+    cards:
+      - note: Branches that relate, depend on each other, or cause one another.
+  - column: Organise
+    cards:
+      - todo: ""
+        items:
+          - Move the most important branches closest to the centre
+          - Merge branches that say the same thing
+          - Colour or size what matters most
+          - Mark what needs more digging
+      - note: What surprised you once it was all on the board?

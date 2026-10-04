@@ -1,0 +1,41 @@
+name: SEO brief
+use_when: Planning search work for a site — the goals, the searches worth winning, the pages to fix and the links worth earning.
+source: https://milanote.com/templates/creative-briefs/seo-brief
+cards:
+  - note: |
+      # *Site* — SEO brief
+      **The goal:** more of which visitors, doing what?
+      **Measured by:** the number you'll check every month.
+    color: amber
+    width: 340
+  - break
+  - column: Objectives
+    cards:
+      - note: What organic search should deliver — leads, sales, sign-ups, reach.
+      - note: Where you rank today, and for what.
+  - column: Audience & intent
+    cards:
+      - note: The questions your audience types, in their words.
+      - note: Which ones mean they're ready to act, and which mean they're just learning.
+  - column: Keywords
+    cards:
+      - note: Main terms — the few you most want to win.
+      - note: Supporting terms and questions.
+      - note: Terms that look good but bring the wrong people.
+  - column: Key pages
+    cards:
+      - note: The sections and pages that matter most, and the term each should own.
+      - note: New pages you need.
+  - break
+  - column: On-page
+    cards:
+      - todo: Each key page
+        items: [Title and description, One clear heading, Content answers the search, Internal links, Images named and described, Speed and mobile checked]
+  - column: Off-page
+    cards:
+      - note: Partners, suppliers and press who could link to you.
+      - note: Content worth linking to that you don't have yet.
+  - column: Measurement & timing
+    cards:
+      - note: Tools, baseline numbers, and the report you'll send.
+      - note: Milestones and budget.

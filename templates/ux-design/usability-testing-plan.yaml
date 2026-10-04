@@ -1,0 +1,55 @@
+name: Usability testing plan
+use_when: Setting up a usability study — why you're testing, who with, the tasks and sessions, and how you'll measure what happened — so the team agrees before anyone books a participant.
+also: [ux-research]
+source: https://milanote.com/templates/ux-design/usability-testing-plan
+cards:
+  - note: |
+      # *Product* — test plan
+      **What we're testing:** the feature, flow or prototype.
+      **The decision this will inform:**
+      **Owner:**  **Dates:**
+    color: amber
+    width: 360
+  - break
+  - column: Background
+    cards:
+      - note: Why now? What prompted this round?
+      - note: What we already know from past research and data.
+  - column: Goals
+    cards:
+      - note: The three questions this test must answer.
+      - note: What's out of scope.
+  - column: Audience
+    cards:
+      - note: Who we need — behaviours, not just demographics.
+      - note: How many, and how we'll recruit them.
+      - todo: Screener
+        items: [Uses a similar product, Not a colleague or friend, Mix of new and experienced]
+  - column: Method
+    cards:
+      - note: Moderated or not · remote or in person · how long.
+      - note: Tools for the prototype, the call and the recording.
+  - break
+  - column: Tasks & scenarios
+    width: 340
+    cards:
+      - note: "1. *Scenario* — what you'll ask them to do, and what success looks like."
+      - note: "2. *Scenario* — "
+      - note: "3. *Scenario* — "
+      - note: Follow-up questions for the end of the session.
+  - column: Sessions
+    cards:
+      - note: "*Participant* · *date / time* · moderator · note-taker"
+  - column: Metrics
+    cards:
+      - note: "Task success · time on task · errors · confidence rating"
+      - note: What would count as a pass for this release?
+  - column: Logistics
+    cards:
+      - todo: ""
+        items:
+          - Prototype ready and tested
+          - Consent form
+          - Incentives sorted
+          - Dry run with a colleague
+          - Notes template shared

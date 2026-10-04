@@ -1,0 +1,46 @@
+name: Renovation design brief
+use_when: Writing down what a renovation has to achieve — the goals, the rooms, the budget, the timeline and the look — so everyone building it works to the same vision.
+source: https://milanote.com/templates/diy-home-renovations/renovation-design-brief
+cards:
+  - note: |
+      # *Address* — *room or project*
+      **Why now:** what isn't working in the space today.
+      **Budget:** *amount*, with *n*% held back for surprises.
+      **Done by:** *date*
+    color: amber
+    width: 360
+  - note: |
+      **Who's involved**
+      You, the household, the builder or trades, the designer, the inspector. Who decides when you disagree?
+  - break
+  - column: Goals
+    cards:
+      - note: How you want to *use* the space when it's finished.
+      - note: The problems it has to fix — light, storage, flow, noise, damp.
+      - note: What success looks like a year after you move back in.
+  - column: Scope
+    cards:
+      - note: Rooms and areas included, and what's explicitly left alone.
+      - todo: Must-haves
+        items: ["item", "item", "item"]
+      - note: Nice-to-haves, in the order you'd cut them.
+  - column: Constraints
+    cards:
+      - note: Walls that can't move, pipes and wiring, permits, a listed building, the HOA.
+      - note: Living at home during the work? What needs to keep working?
+  - column: Timeline
+    cards:
+      - note: "Design · approvals · demolition · build · finishes · move back in"
+      - note: Dates that can't slip — a baby, a holiday, a lease ending.
+  - break
+  - column: The look
+    cards:
+      - note: "▣ Drop reference photos of rooms you love"
+      - note: Three words for how it should feel.
+      - note: What you definitely don't want.
+  - swatch: "#EDE8DF"
+    text: Walls
+  - swatch: "#8A6F55"
+    text: Wood
+  - swatch: "#3E4A43"
+    text: Accent

@@ -1,0 +1,38 @@
+name: Stakeholder map
+use_when: Sorting the people around a project by how much power they hold and how much they care, so you know who to keep close and who to keep informed.
+source: https://milanote.com/templates/strategy/stakeholder-mapping
+cards:
+  - note: |
+      # *Project* — stakeholders
+      **What the project needs from people:** decisions, money, time, sign-off…
+      **Owner:** *name*
+    color: amber
+    width: 340
+  - column: Everyone involved
+    cards:
+      - note: List them all first — name · role · what they want out of the project.
+  - break
+  - column: High power · low interest
+    cards:
+      - note: "**Keep satisfied.** Short updates; never let them be surprised."
+  - column: High power · high interest
+    color: clay
+    cards:
+      - note: "**Manage closely.** Bring them into decisions; meet regularly."
+  - break
+  - column: Low power · low interest
+    cards:
+      - note: "**Monitor.** A light touch; check in now and then."
+  - column: Low power · high interest
+    cards:
+      - note: "**Keep informed.** Regular news — they're often your best advocates."
+  - break
+  - column: Communication plan
+    width: 360
+    cards:
+      - note: Name · what they need to hear · how · how often
+      - note: Who's likely to push back, and what would change their mind.
+  - todo: Keep it current
+    items:
+      - Check the map with someone who knows the politics
+      - Revisit it at each milestone

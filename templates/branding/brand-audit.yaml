@@ -1,0 +1,53 @@
+name: Brand audit
+use_when: Taking stock of an existing brand before a rebrand — its audience, place in the market, visuals, values and messaging — and deciding what to keep, fix or drop.
+source: https://milanote.com/templates/branding/brand-audit
+cards:
+  - note: |
+      # *Brand* — audit
+      **Why now:** what's prompting the review — growth, a new market, a brand that's drifted.
+      **Decision it feeds:** refresh, rebuild, or leave alone.
+    color: amber
+    width: 360
+  - todo: Gather first
+    items:
+      - Logo files and current guidelines
+      - Website, social and ad examples
+      - Customer reviews and survey answers
+      - Sales and marketing numbers
+      - Competitor examples
+  - break
+  - column: Audience
+    cards:
+      - note: Who the brand says it's for, and who actually buys.
+      - note: What customers say about it, in their own words.
+  - column: Market position
+    cards:
+      - note: Where it sits against the three closest competitors — price, quality, personality.
+      - note: What it's known for, if anything.
+  - column: Visual identity
+    cards:
+      - note: "▣ Drop the logo, colours, type and real examples in use here"
+      - note: Where it looks consistent, and where it falls apart.
+  - column: Values
+    cards:
+      - note: The values on paper, and the ones you can see in how the business behaves.
+  - column: Messaging
+    cards:
+      - note: The tagline, the website headline, the elevator pitch. Do they say the same thing?
+      - note: Tone of voice across channels.
+  - break
+  - column: Keep
+    color: green
+    cards:
+      - note: What's working and has earned recognition.
+  - column: Fix
+    color: amber
+    cards:
+      - note: Right idea, poor execution.
+  - column: Drop
+    color: clay
+    cards:
+      - note: What's off-brand, dated or confusing.
+  - column: Recommendation
+    cards:
+      - note: The verdict in three sentences, and the first three things to do.

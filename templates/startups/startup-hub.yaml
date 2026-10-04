@@ -1,0 +1,91 @@
+name: Startup hub
+use_when: Running a young company from one board — strategy, product roadmap, growth, funding and team each in their own board, with this week's priorities on top.
+source: https://milanote.com/templates/startups/startup-hub
+cards:
+  - note: |
+      # *Company name*
+      **Mission:** what you exist to do, in one line.
+      **This quarter's one goal:**
+      **Runway:** *n* months
+    color: amber
+    width: 360
+  - todo: This week
+    items:
+      - "Priority — owner"
+      - "Priority — owner"
+      - "Priority — owner"
+  - break
+  - board: Strategy
+    cards:
+      - note: |
+          # Strategy
+          **Where we win:**  **Where we won't play:**
+        color: amber
+      - column: Customers
+        cards:
+          - note: Who we serve and what they need.
+      - column: Competitors
+        cards:
+          - note: Who else, and why customers would choose us.
+      - column: Goals
+        cards:
+          - note: This year, this quarter.
+  - board: Product roadmap
+    cards:
+      - note: |
+          # Roadmap
+          What we're building, in order of what we need to learn.
+        color: amber
+      - column: Now
+        cards:
+          - note: "*Feature* — why it's first"
+      - column: Next
+        cards:
+          - note: "*Feature* — "
+      - column: Later
+        cards:
+          - note: "*Idea* — "
+  - board: Growth
+    cards:
+      - note: |
+          # Growth
+          **North-star metric:**
+        color: amber
+      - column: Channels
+        cards:
+          - note: Where customers come from today.
+      - column: Experiments
+        cards:
+          - note: "*Idea* · expected result · when you'll know"
+  - board: Funding
+    cards:
+      - note: |
+          # Funding
+          **Raising:** *amount* for *n* months of runway.
+        color: amber
+      - column: Investors
+        cards:
+          - note: "*Name* · stage · last contact · next step"
+      - column: Materials
+        cards:
+          - todo: ""
+            items: [Pitch deck, Financial model, Data room, One-page update]
+  - board: Team
+    cards:
+      - note: |
+          # Team
+          Who's here, who we need next.
+        color: amber
+      - column: Roles
+        cards:
+          - note: "*Name* — owns what"
+      - column: Hiring
+        cards:
+          - note: The next hire and why that one first.
+  - break
+  - column: Decisions
+    cards:
+      - note: "*Date* — what was decided and why, so nobody re-argues it."
+  - column: Assets
+    cards:
+      - note: "▣ Drop the logo, deck, screenshots and key documents here"

@@ -1,0 +1,45 @@
+name: Weekly plan
+use_when: Planning your week on Sunday or Monday — the few goals that matter, what lands on each day, and a look back on Friday at what actually happened.
+source: https://milanote.com/templates/productivity/weekly-plan
+cards:
+  - note: |
+      # Week of *date*
+      **If I only get one thing done:**
+      **This week is a success if:**
+    color: amber
+    width: 340
+  - todo: Goals this week
+    items: [Goal 1, Goal 2, Goal 3]
+  - column: Waiting for
+    cards:
+      - note: Replies, approvals and deliveries you're expecting. Name and date.
+  - break
+  - column: Monday
+    cards:
+      - todo: ""
+        items: [Most important task]
+  - column: Tuesday
+    cards:
+      - todo: ""
+        items: [Most important task]
+  - column: Wednesday
+    cards:
+      - todo: ""
+        items: [Most important task]
+  - column: Thursday
+    cards:
+      - todo: ""
+        items: [Most important task]
+  - column: Friday
+    cards:
+      - todo: ""
+        items: [Most important task]
+  - break
+  - column: Not this week
+    cards:
+      - note: Things that came up but can wait. Move them to next week's plan.
+  - column: Friday review
+    cards:
+      - note: What got done? What slipped, and why?
+      - note: Where did the time actually go?
+      - note: One thing to do differently next week.

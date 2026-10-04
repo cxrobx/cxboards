@@ -1,0 +1,41 @@
+name: Three act structure
+use_when: Planning a story in three acts — setup, confrontation, resolution — with the plot points that hinge each act into the next.
+also: [novel-outline]
+source: https://milanote.com/templates/creative-writing/three-act-structure-outline
+cards:
+  - note: |
+      # *Story title*
+      **Protagonist and goal:**
+      **The central conflict:**
+      Roughly a quarter, a half, a quarter — the middle act is the long one.
+    color: amber
+    width: 360
+  - break
+  - column: Act 1 · Setup
+    color: cyan
+    width: 300
+    cards:
+      - note: "**The hook** — the opening image or moment."
+      - note: "**The ordinary world** — who they are and what they lack."
+      - note: "**Inciting incident** — what disrupts it."
+      - note: "**First plot point** — the decision that pushes them into act two."
+  - column: Act 2 · Confrontation
+    color: clay
+    width: 300
+    cards:
+      - note: "**Rising obstacles** — each one harder than the last."
+      - note: "**Midpoint** — a reversal; the goal or the stakes change."
+      - note: "**Things fall apart** — the lowest point."
+      - note: "**Second plot point** — the discovery or choice that makes the ending possible."
+  - column: Act 3 · Resolution
+    color: green
+    width: 300
+    cards:
+      - note: "**Climax** — the final confrontation."
+      - note: "**Resolution** — the new normal."
+      - note: "**Closing image** — how it mirrors the opening."
+  - break
+  - note: How does each plot point cause the next? Write the *because* between them.
+    color: violet
+    width: 360
+  - note: "▣ Drop images for the turning points"

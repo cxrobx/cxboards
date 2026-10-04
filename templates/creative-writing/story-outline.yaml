@@ -1,0 +1,46 @@
+name: Story outline
+use_when: Outlining a story in five acts — the key scenes, a line on each, moved around until the sequence and pacing work — before you start the draft.
+also: [novel-outline]
+source: https://milanote.com/templates/creative-writing/story-outline
+cards:
+  - note: |
+      # *Story title* — outline
+      **The shape:** five acts. Get the big scenes down first, in any order, then sort them.
+      **Each scene:** what happens · where · who's in it · how it hands to the next.
+    color: amber
+    width: 360
+  - break
+  - column: Act 1 · Setup
+    cards:
+      - note: The world, the people, the thing that starts it.
+      - note: "*Scene* — "
+  - column: Act 2 · Rising action
+    cards:
+      - note: Complications pile up; the stakes grow.
+      - note: "*Scene* — "
+  - column: Act 3 · Climax
+    cards:
+      - note: The turning point everything has been heading for.
+      - note: "*Scene* — "
+  - column: Act 4 · Falling action
+    cards:
+      - note: The fallout, and the last attempts to fix things.
+      - note: "*Scene* — "
+  - column: Act 5 · Resolution
+    cards:
+      - note: How it ends, and what's left behind.
+      - note: "*Scene* — "
+  - break
+  - todo: Sequence check
+    items:
+      - Every character is introduced before they matter
+      - Each scene leads into the next
+      - Action, tension and quiet moments take turns
+      - Nothing out of place — move it if it is
+  - column: Needs work
+    color: clay
+    cards:
+      - note: Scenes or transitions you're not sure about yet.
+  - column: Images & clips
+    cards:
+      - note: "▣ Drop pictures or clips that catch a scene or a character"

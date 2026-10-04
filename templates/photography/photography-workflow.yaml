@@ -1,0 +1,41 @@
+name: Photography workflow
+use_when: Running a commercial or client shoot from first enquiry to final delivery, so every job moves through the same steps and nothing gets skipped.
+also: []
+source: https://milanote.com/templates/photography/photography-workflow
+cards:
+  - note: |
+      # *Client* — *job*
+      **Shoot date:**  **Delivery due:**
+      **Done means:** *n* finished images, delivered and invoiced.
+    color: amber
+    width: 340
+  - note: |
+      **Make it yours**
+      Rename, reorder or drop any stage. The checklists are a starting point for how *you* work.
+  - break
+  - column: Enquiry & booking
+    cards:
+      - todo: ""
+        items: [Discovery call, Quote sent, Contract signed, Deposit paid, Date held]
+      - note: What the client actually wants, in their words.
+  - column: Pre-production
+    cards:
+      - todo: ""
+        items: [Brief agreed, Moodboard signed off, Shot list written, Location and permits, Crew and talent booked, Call sheet out]
+  - column: Shoot day
+    cards:
+      - todo: ""
+        items: [Gear checked and charged, Test shots approved, Every shot on the list covered, Cards backed up twice before leaving]
+      - note: What went off-plan, and why.
+  - column: Edit
+    cards:
+      - todo: ""
+        items: [Import and back up, First cull, Contact sheet to client, Client picks in, Retouch and grade]
+  - column: Delivery
+    cards:
+      - todo: ""
+        items: [Export at every size, Gallery or files sent, Final invoice, Archive the raws]
+  - column: After
+    cards:
+      - note: Ask for a testimonial and permission to use the work.
+      - note: What you'd change about this job next time.

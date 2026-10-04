@@ -10,6 +10,7 @@ import { ContextMenu, type MenuItem, type MenuState } from './ContextMenu'
 import { rememberBoard, SearchPalette } from './Search'
 import { BoardTree, childrenByParent, PinIcon, subtreeOf, type TreeEdit, useDock } from './Sidebar'
 import { applyPalette } from './theme'
+import { NewBoardDialog } from './TemplatePicker'
 import { ThemePicker } from './ThemePicker'
 import { TrashPanel } from './Trash'
 
@@ -19,76 +20,6 @@ function routeFromPath(): { board: string | null; card: string | null } {
   const match = window.location.pathname.match(/^\/b\/([^/]+)/)
   const card = window.location.hash.match(/^#(c_[0-9a-f]+)/)?.[1] ?? null
   return { board: match ? decodeURIComponent(match[1]) : null, card }
-}
-
-function NewBoardDialog({
-  templates,
-  inside,
-  onCreate,
-  onClose,
-}: {
-  templates: Board[]
-  inside: string | null
-  onCreate: (title: string, template: string | null) => void
-  onClose: () => void
-}) {
-  const [title, setTitle] = useState('')
-  const [template, setTemplate] = useState<string>('')
-  return (
-    <div className="overlay" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
-      <form
-        className="panel dialog"
-        onSubmit={(e) => {
-          e.preventDefault()
-          if (title.trim()) onCreate(title.trim(), template || null)
-        }}
-      >
-        <header>
-          <h2>{inside ? `New board inside “${inside}”` : 'New board'}</h2>
-        </header>
-        <div className="dialog-body">
-          <input
-            autoFocus
-            className="field"
-            placeholder="Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            onKeyDown={(e) => e.key === 'Escape' && onClose()}
-          />
-          <div className="template-grid">
-            <button type="button" className={`template-tile${template === '' ? ' on' : ''}`} onClick={() => setTemplate('')}>
-              <span className="glyph">▢</span>
-              <span>Blank</span>
-            </button>
-            {templates.map((t) => (
-              <button
-                type="button"
-                key={t.id}
-                className={`template-tile${template === t.id ? ' on' : ''}`}
-                onClick={() => {
-                  setTemplate(t.id)
-                  if (!title) setTitle(t.title)
-                }}
-              >
-                <span className="glyph">▦</span>
-                <span>{t.title}</span>
-                <span className="muted">{t.card_count} cards</span>
-              </button>
-            ))}
-          </div>
-          {!templates.length && <p className="muted">Any board can become a template from its Board menu.</p>}
-        </div>
-        <footer>
-          <button type="button" className="ghost" onClick={onClose}>
-            Cancel
-          </button>
-          <button className="primary" disabled={!title.trim()}>
-            Create
-          </button>
-        </footer>
-      </form>
-    </div>
-  )
 }
 
 function ClipperPanel({ onClose }: { onClose: () => void }) {
@@ -147,7 +78,7 @@ function Shell() {
   const [editingTitle, setEditingTitle] = useState(false)
   const [searching, setSearching] = useState(false)
   const [trashOpen, setTrashOpen] = useState(false)
-  const [creating, setCreating] = useState<false | { parent: string | null }>(false)
+  const [creating, setCreating] = useState<false | { parent: string | null; browse?: boolean }>(false)
   const [clipperOpen, setClipperOpen] = useState(false)
   const [boardMenu, setBoardMenu] = useState<MenuState | null>(null)
   const [sideMenu, setSideMenu] = useState<MenuState | null>(null)
@@ -447,6 +378,7 @@ function Shell() {
       items: [
         { label: 'New folder', run: () => setTreeEdit({ kind: 'folder', parent: null }) },
         { label: 'New board…', run: () => setCreating({ parent: null }) },
+        { label: 'New board from template…', run: () => setCreating({ parent: null, browse: true }) },
       ],
     })
   }
@@ -469,6 +401,7 @@ function Shell() {
         : [
             { label: 'New folder inside', run: () => setTreeEdit({ kind: 'folder', parent: board.id }) },
             { label: 'New board inside…', run: () => setCreating({ parent: board.id }) },
+            { label: 'New board from template inside…', run: () => setCreating({ parent: board.id, browse: true }) },
             { kind: 'sep' },
             rename,
             { label: 'Duplicate', run: () => duplicateBoard(board) },
@@ -771,8 +704,9 @@ function Shell() {
       {sideMenu && <ContextMenu state={sideMenu} onClose={() => setSideMenu(null)} />}
       {creating && boards && (
         <NewBoardDialog
-          templates={boards.filter((b) => b.is_template)}
+          yours={boards.filter((b) => b.is_template)}
           inside={creating.parent ? boards.find((b) => b.id === creating.parent)?.title ?? null : null}
+          browse={!!creating.browse}
           onCreate={(t, tpl) => void createBoard(t, tpl)}
           onClose={() => setCreating(false)}
         />

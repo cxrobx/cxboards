@@ -1,0 +1,59 @@
+name: Podcast episode plan
+use_when: Planning one episode from the first idea to publishing — ideas, research and outline in one place, with the production checklist beside them.
+source: https://milanote.com/templates/podcasting/podcast-episode-plan
+cards:
+  - note: |
+      # Ep *n* — *title*
+      **The listener leaves with:** one thing, in one line.
+      **Guest:**  **Record date:**  **Publish date:**
+    color: amber
+    width: 360
+  - break
+  - column: Ideas
+    cards:
+      - note: Angles on the topic — get them all out before choosing one.
+      - note: Stories, examples or moments you already want to tell.
+      - note: "▣ Drop anything that sparked the episode"
+  - board: Research
+    cards:
+      - note: |
+          # Research
+          What you already know first, then what you go and find.
+        color: amber
+      - column: Known
+        cards:
+          - note: Facts about the topic or guest you can say without looking.
+      - column: Sources
+        cards:
+          - note: Articles, episodes, clips — one line on why each matters.
+      - column: Quotes & data
+        cards:
+          - note: "\"Quote\" — *source*"
+  - board: Outline
+    cards:
+      - note: |
+          # Outline
+          Short cues, not sentences. You'll glance at these while talking.
+        color: amber
+      - column: Beginning
+        cards:
+          - note: The hook, and why this matters now.
+      - column: Middle
+        cards:
+          - note: Talking point or question.
+          - note: Talking point or question.
+      - column: End
+        cards:
+          - note: The takeaway, said plainly.
+  - break
+  - column: Before recording
+    cards:
+      - todo: ""
+        items: [Research done, Outline in order, Guest briefed, Mic and levels checked, Backup recorder running]
+  - column: After recording
+    cards:
+      - todo: ""
+        items: [Edit, Mix and loudness, Show notes and timestamps, Cover and title, Publish, Clips for socials]
+  - column: Notes for next time
+    cards:
+      - note: What worked, what dragged, and what listeners said.

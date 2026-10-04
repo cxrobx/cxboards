@@ -1,0 +1,46 @@
+name: Novel moodboard
+use_when: Collecting the images, colours, clips and textures that hold the feeling of your story, so you can return to it every time you sit down to write.
+also: [moodboards]
+source: https://milanote.com/templates/creative-writing/novel-moodboard
+cards:
+  - note: |
+      # *Book title* — the mood
+      **The feeling in three words:**
+      **Era and place:**
+      **A book or film that's in the same weather:**
+    color: amber
+    width: 340
+  - note: "▣ Drop the one image that *is* the book — make it the biggest thing on the board"
+    width: 420
+  - break
+  - column: What you already have
+    cards:
+      - note: "▣ Drop the saved images, screenshots and photos you've been hoarding"
+  - column: Places
+    cards:
+      - note: "▣ Drop settings — rooms, streets, landscapes, light"
+  - column: People
+    cards:
+      - note: "▣ Drop faces, clothes and gestures for your characters"
+  - column: Motion & sound
+    cards:
+      - note: "▣ Drop clips and songs that carry the tone"
+  - break
+  - swatch: "#2F3B45"
+    text: Shadow
+  - swatch: "#7E8C7A"
+    text: Mid tone
+  - swatch: "#C9A66B"
+    text: Light
+  - swatch: "#8C3B2E"
+    text: The accent — the colour of the turning point
+  - note: |
+      **Pick the colours from the images**
+      Change these swatches to colours taken straight from the pictures above.
+  - break
+  - note: |
+      **Unexpected pairs**
+      Put two images side by side that don't belong together. What scene do they suggest?
+    color: violet
+    width: 340
+  - note: Words, lines and textures — anything that isn't a picture but belongs here.

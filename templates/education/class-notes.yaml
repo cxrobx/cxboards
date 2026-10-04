@@ -1,0 +1,57 @@
+name: Class notes
+use_when: Keeping a course's notes organised — one board per lecture or seminar, with the readings, key dates and questions to revisit before the exam.
+source: https://milanote.com/templates/education/class-notes
+cards:
+  - note: |
+      # *Course name*
+      **Lecturer / tutor:**
+      **When and where:**
+      **What you need to get out of it:** a grade, a skill, a foundation for next year.
+    color: amber
+    width: 360
+  - column: Key dates
+    cards:
+      - todo: ""
+        items:
+          - "Assignment · due date"
+          - "Test · date"
+          - "Exam · date"
+  - break
+  - board: Lectures
+    folder: true
+    cards:
+      - note: One board per lecture or seminar. Duplicate *Week template* for each new one and move it in here.
+      - board: Week template
+        cards:
+          - note: |
+              # Week *n* — *topic*
+              **Date:**  **Reading:**
+          - column: Key ideas
+            cards:
+              - note: The two or three things that matter most from today.
+          - column: Notes
+            cards:
+              - note: Everything else, as it comes.
+              - note: "▣ Drop slides, diagrams and photos of the whiteboard here"
+          - column: Questions
+            cards:
+              - note: What didn't make sense. Ask it, or look it up, before next week.
+  - column: Readings
+    cards:
+      - todo: ""
+        items:
+          - "Author — title · week n"
+      - note: One line on each reading's main argument once you've done it.
+  - column: Glossary
+    cards:
+      - note: "**Term** — your own definition"
+  - break
+  - column: Revision
+    color: green
+    cards:
+      - note: The themes that keep coming up across weeks.
+      - todo: Before the exam
+        items:
+          - Summary of each week on one page
+          - Past papers attempted
+          - Open questions answered

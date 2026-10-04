@@ -1,0 +1,68 @@
+name: Renovation project plan
+use_when: Running a home renovation from first quote to final clean — the work in order, a board per room, the materials, the budget and the people doing it.
+source: https://milanote.com/templates/diy-home-renovations/renovation-project-plan
+cards:
+  - note: |
+      # *Address* — renovation
+      **Scope:** the rooms and the big moves.
+      **Budget:** *amount* · **Contingency:** *amount*
+      **Start:**  **Finish:**
+    color: amber
+    width: 360
+  - note: |
+      **Contacts**
+      Builder · electrician · plumber · supplier · inspector — name, phone, when they're on site.
+  - break
+  - column: Plan & approvals
+    cards:
+      - todo: ""
+        items: [Brief written, Quotes from three trades, Permits and approvals, Contract signed, Materials ordered]
+  - column: Strip-out & structure
+    cards:
+      - todo: ""
+        items: [Protect what stays, Demolition, Structural work, Skip booked]
+  - column: Rough-in
+    cards:
+      - todo: ""
+        items: [Plumbing first fix, Electrical first fix, Inspection]
+  - column: Close-up
+    cards:
+      - todo: ""
+        items: [Insulation, Plasterboard and plaster, Screed or subfloor]
+  - column: Finishes
+    cards:
+      - todo: ""
+        items: [Tiling, Flooring, Joinery and kitchen, Second fix, Paint, Snag list, Final clean]
+  - break
+  - board: Rooms
+    folder: true
+    cards:
+      - note: One board per room. Duplicate *Room template* and rename it.
+      - board: Room template
+        cards:
+          - note: |
+              # *Room*
+              **Size:**  **What changes:**
+            color: amber
+            width: 320
+          - note: "▣ Drop before photos, the plan and inspiration here"
+          - break
+          - column: Tasks
+            cards:
+              - todo: ""
+                items: ["task", "task"]
+          - column: Materials
+            cards:
+              - note: Everything this room needs, with quantities.
+          - column: Finishes
+            cards:
+              - swatch: "#EDE8DF"
+                text: Walls
+              - note: Floor, tiles, hardware.
+  - column: Budget
+    cards:
+      - note: "Line · quoted · actual · paid"
+      - note: Changes since the quote, and who agreed to them.
+  - column: Issues
+    cards:
+      - note: Surprises behind walls, delays, decisions waiting on you.

@@ -1,0 +1,46 @@
+name: Interior design moodboard
+use_when: Setting the look of a room or venue — images, colours, materials and furniture together — so the client agrees on a direction before anything is bought.
+also: [moodboards]
+source: https://milanote.com/templates/interior-design/interior-design-moodboard
+cards:
+  - note: |
+      # *Space* — moodboard
+      **The feel in three words:**
+      **Light:** morning or evening, bright or low?
+    color: amber
+    width: 340
+  - column: From the client
+    cards:
+      - note: The lines from the brief that matter most for the look.
+      - note: "▣ Drop the products and pictures the client sent"
+  - break
+  - column: The room
+    width: 340
+    cards:
+      - note: "▣ Drop the hero image — the one picture that sets the tone"
+      - note: "▣ Drop images of lighting and atmosphere"
+  - column: Furniture & objects
+    cards:
+      - note: "▣ Drop furniture, lighting and art here"
+      - note: The one piece the room is built around.
+  - column: Materials & textures
+    cards:
+      - note: "▣ Drop fabric, timber, stone, tile and metal samples"
+      - note: Matte or polished? Warm or cool?
+  - column: Colour
+    cards:
+      - swatch: "#F3ECDD"
+        text: Walls
+      - swatch: "#93A1A1"
+        text: Large surfaces
+      - swatch: "#859900"
+        text: Soft furnishings
+      - swatch: "#CB4B16"
+        text: Accent
+      - note: About 60 % main colour, 30 % second, 10 % accent.
+  - break
+  - column: Feedback
+    cards:
+      - note: What the client reacted to — yes, no, and not sure.
+      - todo: Agreed direction
+        items: [Palette signed off, Key materials signed off, Hero furniture piece chosen]

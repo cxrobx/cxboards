@@ -1,0 +1,36 @@
+name: Illustration design brief
+use_when: Commissioning an illustration — what it shows, where it'll be used, the style you're after, and the deadlines.
+source: https://milanote.com/templates/creative-briefs/illustration-brief
+cards:
+  - note: |
+      # *Project* — illustration brief
+      **What it's for:** a cover, a campaign, an editorial spread, a product…
+      **The one thing it should make people feel:**
+    color: amber
+    width: 340
+  - break
+  - column: Background
+    cards:
+      - note: Who it's for and why it's needed now.
+      - note: Where it sits next to the rest of the work — text, photography, other illustrations.
+  - column: Subject
+    cards:
+      - note: What's in the picture — people, places, objects, the scene.
+      - note: What it must not show.
+  - column: Style
+    cards:
+      - note: "▣ Drop reference images here"
+      - note: One line on each — the line, the texture, the colour, the mood.
+      - swatch: "#E0A33A"
+        text: Colour to use
+      - swatch: "#2AA198"
+        text: Colour to use
+  - column: Usage
+    cards:
+      - note: Print, web, packaging, motion? List every size and crop.
+      - note: Rights — where, how long, exclusive or not.
+  - column: Deliverables & dates
+    cards:
+      - todo: ""
+        items: [Rough sketches, Chosen direction, Final artwork, Layered source files, Crops for each format]
+      - note: Deadline for each stage, and the budget.

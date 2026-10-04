@@ -1,0 +1,44 @@
+name: Film storyboard
+use_when: Seeing a film scene by scene before the shoot — a frame for each key moment, with the action, the camera and the sound written under it.
+also: [storyboards]
+source: https://milanote.com/templates/filmmaking/filmmaking-storyboard
+cards:
+  - note: |
+      # *Film* — storyboard
+      **Draft:** *n*  **Script pages:** *n–n*
+      **The scene that has to land:** if one frame is right, which one?
+    color: amber
+    width: 340
+  - note: |
+      **For each frame**
+      A sketch, photo or screen grab, then three lines: what happens · what the camera does · what we hear.
+  - break
+  - column: Scene 1 — *name*
+    cards:
+      - note: "▣ Frame 1"
+      - note: "Action · camera · sound"
+      - note: "▣ Frame 2"
+      - note: "Action · camera · sound"
+  - column: Scene 2 — *name*
+    cards:
+      - note: "▣ Frame 1"
+      - note: "Action · camera · sound"
+      - note: "▣ Frame 2"
+      - note: "Action · camera · sound"
+  - column: Scene 3 — *name*
+    cards:
+      - note: "▣ Frame 1"
+      - note: "Action · camera · sound"
+      - note: "▣ Frame 2"
+      - note: "Action · camera · sound"
+  - column: Scene 4 — *name*
+    cards:
+      - note: "▣ Frame 1"
+      - note: "Action · camera · sound"
+  - break
+  - column: Transitions
+    cards:
+      - note: How each scene hands to the next — a cut on action, a sound bridge, a match.
+  - column: Feedback
+    cards:
+      - note: What the team read differently from what you meant. Reorder or redraw from here.

@@ -1,0 +1,57 @@
+name: Video storyboard
+use_when: Planning a video scene by scene before the shoot — the shots, the people, the props, the lines and the camera — so the day runs to plan and nothing gets reshot.
+also: []
+source: https://milanote.com/templates/storyboards/video-storyboard
+cards:
+  - note: |
+      # *Video title*
+      **Length:**  **Format:** 16:9 · 9:16 · 1:1
+      **What it's for:** a brand film, a music video, an ad, a short…
+      **The story in one line:**
+    color: amber
+    width: 360
+  - note: |
+      **For each scene**
+      Picture it moving: the action, how the camera sees it, what we hear, and how it cuts to the next.
+  - break
+  - column: "Scene 1 — *name*"
+    cards:
+      - note: "▣ Sketch or reference frame"
+      - note: "**Action:** who does what"
+      - note: "**Shot:** wide · mid · close · move"
+      - note: "**Dialogue / VO:** "
+      - note: "**Sound & FX:** "
+  - column: "Scene 2 — *name*"
+    cards:
+      - note: "▣ Sketch or reference frame"
+      - note: "**Action:** "
+      - note: "**Shot:** "
+      - note: "**Dialogue / VO:** "
+      - note: "**Sound & FX:** "
+  - column: "Scene 3 — *name*"
+    cards:
+      - note: "▣ Sketch or reference frame"
+      - note: "**Action:** "
+      - note: "**Shot:** "
+      - note: "**Dialogue / VO:** "
+  - column: "Scene 4 — *name*"
+    cards:
+      - note: "▣ Sketch or reference frame"
+      - note: "**Action:** "
+      - note: "**Shot:** "
+      - note: "**Dialogue / VO:** "
+  - break
+  - column: Cast
+    cards:
+      - note: Who's in it, and what each person needs to bring to the part.
+  - column: Locations & props
+    cards:
+      - note: "▣ Location photos"
+      - note: Props and wardrobe, scene by scene.
+  - column: Effects
+    cards:
+      - note: Anything done in post — graphics, VFX, titles — and which scene it belongs to.
+  - column: Before the shoot
+    cards:
+      - todo: ""
+        items: [Script locked, Boards reviewed by the team, Shot list made from the boards, Locations and cast confirmed]

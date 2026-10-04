@@ -1,0 +1,53 @@
+name: UX storyboard
+use_when: Sketching how one person moves through a website or app to get something done — what they do, what they feel, where it breaks — before designing screens.
+also: [ux-design, ux-research]
+source: https://milanote.com/templates/storyboards/ux-storyboard
+cards:
+  - note: |
+      # *Scenario*
+      **Who:** the person, in one line.
+      **What they're trying to do:**
+      **Where they are when it starts:** place, device, mood.
+    color: amber
+    width: 360
+  - note: |
+      **Keep it rough**
+      Stick figures and boxes. This is about the journey, not the interface.
+  - break
+  - column: 1 · The trigger
+    cards:
+      - note: "▣ Sketch"
+      - note: What makes them reach for the product right now?
+      - note: "**Feeling:** "
+  - column: 2 · Getting in
+    cards:
+      - note: "▣ Sketch"
+      - note: How they find it and land on the first screen.
+      - note: "**Feeling:** "
+  - column: 3 · Doing the task
+    cards:
+      - note: "▣ Sketch"
+      - note: The steps, in their words not ours.
+      - note: "**Feeling:** "
+  - column: 4 · The snag
+    cards:
+      - note: "▣ Sketch"
+      - note: Where it gets confusing, slow or risky.
+      - note: "**Feeling:** "
+  - column: 5 · The outcome
+    cards:
+      - note: "▣ Sketch"
+      - note: Did they get it done? What do they do next?
+      - note: "**Feeling:** "
+  - break
+  - column: Pain points
+    cards:
+      - note: Every moment someone could give up, and why.
+  - column: Opportunities
+    cards:
+      - note: Where a change would make the biggest difference.
+  - column: Open questions
+    cards:
+      - note: What you're assuming that research should check.
+      - todo: ""
+        items: [Shared with the team, Feedback gathered, Next version sketched]

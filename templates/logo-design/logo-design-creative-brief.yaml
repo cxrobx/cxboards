@@ -1,0 +1,58 @@
+name: Logo design brief
+also: [brand-strategy-workshops, branding, creative-briefs]
+use_when: Writing the brief for a new logo — purpose, personality, audience, where it'll be used and what the client likes — so the designer starts with everything.
+source: https://milanote.com/templates/logo-design/logo-design-creative-brief
+cards:
+  - note: |
+      # *Company* — logo brief
+      **What the company does, in one sentence:**
+      **Why a new logo now:** a launch, a rebrand, outgrowing the old one…
+    color: amber
+    width: 360
+  - note: |
+      **Timing & budget**
+      Concepts by *date* · final files by *date* · budget *amount*
+  - break
+  - column: Purpose
+    cards:
+      - note: What does the company stand for? Let the client tell its history in their own words.
+      - note: What should the logo help them do over the next few years?
+      - note: How should people feel the first time they see it?
+  - column: Personality
+    cards:
+      - note: Modern or classic? Formal or playful? Loud or quiet? Young or grown-up?
+      - note: Three words it should be, and three it must not be.
+  - column: Audience
+    cards:
+      - note: The people you most want to reach, and what matters to them.
+      - note: Brands they already love, and the styles they're drawn to.
+  - column: Competitors
+    cards:
+      - note: Who they're up against, and how those brands look.
+      - note: "▣ Drop competitors' logos"
+  - break
+  - column: Where it'll live
+    cards:
+      - todo: Deliverables
+        items:
+          - Primary logo
+          - Icon or small-size mark
+          - Business cards and stationery
+          - Website and social avatars
+          - Signage, packaging or merchandise
+      - note: It has to read as a phone icon and on the side of a building.
+  - column: Client references
+    width: 320
+    cards:
+      - note: "▣ Drop logos and images the client likes"
+      - note: Under each — is it the colour, the shape or the attitude? Or is it an example of what to avoid?
+  - column: Avoid
+    cards:
+      - note: Colours, symbols or styles that are off the table, and why.
+  - column: Kick-off
+    cards:
+      - todo: ""
+        items:
+          - Client has read and agreed the brief
+          - Kick-off meeting booked
+          - Open questions answered before sketching starts

@@ -1,0 +1,43 @@
+name: Inspiration board
+use_when: Starting any creative project by collecting what excites you — images, clips, words — and sorting it until a direction shows up.
+source: https://milanote.com/templates/moodboards/inspiration-board
+cards:
+  - note: |
+      # *Project*
+      **What I'm making:**
+      **The direction I'm leaning toward:** a few words, even if it changes.
+    color: amber
+    width: 340
+  - note: |
+      **Rule for this board**
+      Collect first, judge later. Sort once there's more here than you can hold in your head.
+  - break
+  - column: Unsorted
+    width: 320
+    cards:
+      - note: "▣ Drop anything that catches your eye — images, clips, screenshots"
+      - note: No need to explain it yet.
+  - column: Images
+    cards:
+      - note: "▣ The pictures that keep pulling you back"
+  - column: Motion & sound
+    cards:
+      - note: "▣ Drop video, GIFs or audio with the right energy"
+  - column: Words
+    cards:
+      - note: Quotes, lines, titles or names that fit the mood.
+  - break
+  - column: Colour
+    cards:
+      - swatch: "#E0A33A"
+      - swatch: "#2AA198"
+      - swatch: "#6C71C4"
+      - note: The colours you keep seeing in what you've collected.
+  - column: Patterns
+    cards:
+      - note: What do your favourites have in common?
+      - note: What showed up that you didn't expect to like?
+  - column: Direction
+    cards:
+      - note: The two or three ways this could go, one line each.
+      - note: The one you're taking, and what you're leaving behind.

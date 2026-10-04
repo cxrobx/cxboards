@@ -1,0 +1,50 @@
+name: Logo design assets handover
+use_when: Handing a finished logo to the client — every file, colour, font and rule in one place they can still find a year from now.
+source: https://milanote.com/templates/logo-design/logo-design-assets-handover
+cards:
+  - note: |
+      # *Client* — brand assets
+      **Delivered:** *date*  **Designer:** *name*
+      **Start here:** which file to use for what, one line each.
+    color: amber
+    width: 340
+  - todo: Handover checklist
+    items:
+      - Every logo version exported
+      - Colour values written out
+      - Font files or licence details
+      - Usage rules
+      - Source files archived
+  - break
+  - column: Primary logo
+    cards:
+      - note: "▣ Drop the main logo in full colour"
+      - note: Formats — SVG and EPS for print and scaling, PNG for screens.
+  - column: Variations
+    cards:
+      - note: "▣ Drop the horizontal, stacked and icon-only versions"
+      - note: "▣ Drop the one-colour, black and reversed (white) versions"
+  - column: Colour
+    cards:
+      - swatch: "#1F2A44"
+        text: Primary · HEX · RGB · CMYK · Pantone
+      - swatch: "#E0A33A"
+        text: Secondary · HEX · RGB · CMYK · Pantone
+      - swatch: "#F4EFE6"
+        text: Neutral · HEX · RGB · CMYK · Pantone
+  - column: Type
+    cards:
+      - note: "**Primary font:** *name, weights*"
+      - note: "**Secondary font:** *name, weights*"
+      - note: Where to get them, and what the licence covers.
+  - break
+  - column: Usage rules
+    cards:
+      - note: Clear space and minimum size.
+      - note: "▣ Drop examples of misuse — stretched, recoloured, on a busy photo"
+  - column: Imagery & extras
+    cards:
+      - note: "▣ Drop patterns, icons, photography or mock-ups made for the brand"
+  - column: Source & contacts
+    cards:
+      - note: Where the working files live, and who to ask about changes.

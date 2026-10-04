@@ -1,0 +1,41 @@
+name: Visual art research
+use_when: Researching the subject of an artwork before you make it — the facts, the history, the way other artists have handled it — so the piece carries more meaning.
+source: https://milanote.com/templates/visual-art/visual-art-research
+cards:
+  - note: |
+      # Research — *subject*
+      **Why this subject:** what drew you to it.
+      **What you don't know yet:** the questions this board should answer.
+    color: amber
+    width: 340
+  - note: |
+      **Keep it honest**
+      Write where each thing came from. Separate what you read from what you think.
+  - break
+  - column: The subject
+    cards:
+      - note: The basic facts — what, where, when, who.
+      - note: What it means to the people closest to it.
+      - note: "▣ Drop photos of the subject here"
+  - column: History & context
+    cards:
+      - note: How it got to be this way. Dates and turning points.
+      - note: What's contested or misunderstood about it.
+  - column: Other artists
+    cards:
+      - note: "*Artist* · *work* · how they handled the subject"
+      - note: "▣ Drop images of their work here"
+  - column: Techniques
+    cards:
+      - note: Materials and methods worth trying for this piece.
+      - note: A technique you'd need to learn first.
+  - break
+  - column: Sources
+    cards:
+      - note: "Books, articles, interviews, places visited · one line each"
+  - column: Concepts
+    color: green
+    cards:
+      - note: The ideas this research gave you that you'd never have had cold.
+  - todo: Still to find out
+    items: [Visit or see the subject in person, Talk to someone who knows it, Find the primary source]

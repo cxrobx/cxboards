@@ -1,0 +1,53 @@
+name: UX project plan
+use_when: Running a UX design project — the objectives, the people you're designing for, research and testing, milestones and tasks — in one place.
+source: https://milanote.com/templates/project-plans/UX-project-plan
+cards:
+  - note: |
+      # *Project name*
+      **The problem:** who struggles with what, today.
+      **Success looks like:** the change you'll be able to measure.
+    color: amber
+    width: 360
+  - note: |
+      **Team & stakeholders**
+      Who decides, who builds, who you check with.
+  - break
+  - column: Objectives
+    cards:
+      - note: Business goal — what the organisation needs.
+      - note: User goal — what the person needs.
+      - note: What's out of scope this time.
+  - column: Personas
+    cards:
+      - note: "*Name* · role · goal · the frustration that matters here"
+      - note: "▣ Drop photos or quotes that make them real"
+  - column: Research
+    cards:
+      - note: What you already know, and what you need to find out.
+      - note: Methods — interviews, analytics, a competitor review.
+  - column: Testing notes
+    cards:
+      - note: "*Session* · what they tried · where they got stuck"
+      - note: Patterns across sessions.
+  - break
+  - column: Milestones
+    cards:
+      - note: "Research done · *date*"
+      - note: "Flows and wireframes · *date*"
+      - note: "Prototype tested · *date*"
+      - note: "Handover to build · *date*"
+  - column: Tasks
+    cards:
+      - todo: ""
+        items:
+          - Kickoff with stakeholders
+          - Research plan
+          - Interviews
+          - User flows
+          - Wireframes
+          - Prototype
+          - Usability tests
+          - Design handover
+  - column: Decisions
+    cards:
+      - note: What was decided, when, and the evidence behind it.

@@ -1,0 +1,51 @@
+name: Lean canvas
+use_when: Getting a startup idea onto one page — the problem, the customer, the promise, the solution and how the money works — so the riskiest assumptions are in plain sight.
+source: https://milanote.com/templates/startups/lean-canvas
+cards:
+  - note: |
+      # *Startup name* — lean canvas
+      **Version:** *n* · *date*
+      Fill it in this order: problem and customer first, money last. Mark every guess you haven't tested with a ?
+    color: amber
+    width: 360
+  - break
+  - column: 1. Problem
+    cards:
+      - note: The top three problems your customers have.
+      - note: How they solve them today.
+  - column: 4. Solution
+    cards:
+      - note: The simplest thing that fixes each problem.
+  - column: 3. Unique value proposition
+    color: amber
+    cards:
+      - note: One clear sentence on why you're different and worth paying attention to.
+      - note: "The short version — *X for Y*."
+  - column: 9. Unfair advantage
+    cards:
+      - note: What can't be easily copied or bought?
+  - column: 2. Customer segments
+    cards:
+      - note: Who has the problem.
+      - note: The early adopters — who'll try it first?
+  - break
+  - column: 8. Key metrics
+    cards:
+      - note: The few numbers that tell you it's working.
+  - column: 5. Channels
+    cards:
+      - note: How you'll reach the customer segments.
+  - column: 7. Cost structure
+    color: clay
+    cards:
+      - note: What it costs to build, run and acquire customers.
+  - column: 6. Revenue streams
+    color: green
+    cards:
+      - note: How you make money, and at what price.
+  - break
+  - todo: Riskiest assumptions to test
+    items:
+      - "Assumption — the cheapest test"
+      - "Assumption — "
+      - "Assumption — "

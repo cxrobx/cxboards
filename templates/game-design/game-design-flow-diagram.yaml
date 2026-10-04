@@ -1,0 +1,47 @@
+name: Game design flow diagram
+use_when: Mapping every screen a player passes through — title, menus, levels, pause, scoreboard, credits — so the team can see how the whole game connects.
+source: https://milanote.com/templates/game-design/game-design-flow-diagram
+cards:
+  - note: |
+      # *Game title* — flow
+      **Read it left to right:** from launching the game to the credits.
+      **For every screen, answer:** how do you get here, and where can you go next?
+    color: amber
+    width: 360
+  - note: |
+      **How to write a screen**
+      *Screen name* · what's on it · → where each button or event leads.
+  - break
+  - column: Launch
+    cards:
+      - note: "Splash / logos · → title"
+      - note: "Title screen · press start · → main menu"
+  - column: Menus
+    cards:
+      - note: "Main menu · new game · continue · settings · quit"
+      - note: "Settings · audio · controls · display · → back"
+      - note: "Save / load · how many slots, and what each shows"
+  - column: Play
+    width: 320
+    cards:
+      - note: "Level select or world map · → level"
+      - note: "Level · → pause · → level complete · → game over"
+      - note: "Pause · resume · restart · settings · quit to menu"
+      - note: Cutscenes and where they interrupt the flow.
+  - column: Endings
+    cards:
+      - note: "Level complete · score · rewards · → next level"
+      - note: "Game over · retry · → menu"
+      - note: "Scoreboard · local or online?"
+      - note: "Credits · → title"
+  - break
+  - column: Loose ends
+    cards:
+      - note: Screens with no way back. Every one is a bug waiting to happen.
+      - note: Places the player can get lost — count the presses from title to playing.
+  - todo: Before you build menus
+    items:
+      - Every screen has a way in and a way out
+      - Back button behaves the same everywhere
+      - Controller, keyboard and touch all reach every screen
+      - Flow walked through by someone who didn't draw it

@@ -1,0 +1,44 @@
+name: Website ideas
+also: [ux-design]
+use_when: Brainstorming a new website with the team — how it could look, what it could do and how visitors should feel — before anything is decided.
+source: https://milanote.com/templates/website-design/website-ideas
+cards:
+  - note: |
+      # *Site* — ideas
+      **What the site is for:** one sentence.
+      **Who visits it:** and what they come to do.
+    color: amber
+    width: 340
+  - todo: How to run it
+    items:
+      - Ten minutes per column, everyone adds at once
+      - No idea is too big yet
+      - Then react — mark the ones you'd fight for
+  - break
+  - column: Look
+    cards:
+      - note: How could it look? Colour, type, imagery, the overall mood.
+      - note: "▣ Drop screenshots of sites you admire"
+  - column: Features
+    cards:
+      - note: What should visitors be able to do here?
+      - note: The one feature that would make it worth coming back.
+  - column: Feeling
+    cards:
+      - note: How should someone feel when they land — calm, excited, reassured, curious?
+      - note: What should they say about it afterwards?
+  - column: Content
+    cards:
+      - note: Stories, pages, tools or media that could live on it.
+  - break
+  - column: Sketches
+    width: 320
+    cards:
+      - note: "▣ Drop photos of quick sketches — pages, flows, a single screen"
+  - column: Wild cards
+    cards:
+      - note: The ideas that are probably too much. Keep them anyway.
+  - column: Shortlist
+    color: green
+    cards:
+      - note: The ideas the team backed, and who will take each one forward.

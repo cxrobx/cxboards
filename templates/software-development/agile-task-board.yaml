@@ -1,0 +1,45 @@
+name: Agile task board
+use_when: Running a sprint — the goal, the backlog, and every task moving from to-do through review to done where the whole team can see it.
+source: https://milanote.com/templates/software-development/agile-task-board
+cards:
+  - note: |
+      # Sprint *n* — *dates*
+      **Sprint goal:** one sentence the team can say from memory.
+      **Done means:** merged, reviewed, tested and released (or behind a flag).
+    color: amber
+    width: 340
+  - note: |
+      **On each task card**
+      What · who · estimate · link to the ticket or branch.
+  - break
+  - column: Backlog
+    cards:
+      - note: Everything not in this sprint, most valuable at the top.
+      - note: "*Task* · *estimate*"
+  - column: To do
+    cards:
+      - note: Committed for this sprint.
+      - note: "*Task* · *owner* · *estimate*"
+  - column: In progress
+    color: amber
+    cards:
+      - note: No more than one or two per person.
+  - column: Review
+    color: violet
+    cards:
+      - note: Waiting for code review or QA. Who's reviewing?
+  - column: Done
+    color: green
+    cards:
+      - note: Shipped this sprint.
+  - break
+  - column: Blocked
+    color: clay
+    cards:
+      - note: What's stuck, on whom, and since when.
+  - column: Retro
+    cards:
+      - note: What went well.
+      - note: What didn't.
+      - todo: Try next sprint
+        items: [One change]

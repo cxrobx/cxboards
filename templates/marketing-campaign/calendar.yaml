@@ -1,0 +1,45 @@
+name: Marketing calendar
+use_when: Laying out a month of marketing on one board — the dates that matter, what goes out each week on which channel, and what has to be ready before it does.
+source: https://milanote.com/templates/marketing-campaign/calendar
+cards:
+  - note: |
+      # *Month* marketing calendar
+      **This month's focus:** the one campaign or message everything else supports.
+      **Channels in play:** email · social · blog · ads · events
+    color: amber
+    width: 340
+  - column: Key dates
+    cards:
+      - note: Launches, holidays, events and deadlines this month. *Date* · what · who owns it.
+      - note: The date nothing can slip past, and what depends on it.
+  - break
+  - column: Week 1
+    cards:
+      - note: "*Day* · *channel* · what goes out"
+      - todo: Ready by Monday
+        items: [Copy written, Visuals done, Scheduled]
+  - column: Week 2
+    cards:
+      - note: "*Day* · *channel* · what goes out"
+      - todo: Ready by Monday
+        items: [Copy written, Visuals done, Scheduled]
+  - column: Week 3
+    cards:
+      - note: "*Day* · *channel* · what goes out"
+      - todo: Ready by Monday
+        items: [Copy written, Visuals done, Scheduled]
+  - column: Week 4
+    cards:
+      - note: "*Day* · *channel* · what goes out"
+      - todo: Ready by Monday
+        items: [Copy written, Visuals done, Scheduled]
+  - break
+  - column: Always on
+    cards:
+      - note: The recurring things — the weekly newsletter, the Friday post — so they don't have to be re-planned.
+  - column: Waiting on
+    cards:
+      - note: Approvals, assets from someone else, budget sign-off. Name and the date you need it.
+  - column: Next month
+    cards:
+      - note: Ideas and dates that came up but belong to the month after.

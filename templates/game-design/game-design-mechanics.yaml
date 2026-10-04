@@ -1,0 +1,50 @@
+name: Game mechanics
+use_when: Writing down the rules of a game — how the player moves, what they can do, how scoring works and how they progress — before anyone starts tuning numbers.
+source: https://milanote.com/templates/game-design/game-design-mechanics
+cards:
+  - note: |
+      # *Game title* — mechanics
+      **The core loop:** what the player does again and again, in one line.
+      **Why it's fun:** the feeling the loop is built to deliver.
+    color: amber
+    width: 360
+  - note: |
+      **A rule is written like this**
+      When *the player does X*, *Y happens*, unless *Z*.
+  - break
+  - column: Movement & controls
+    cards:
+      - note: Walk, run, jump, climb — speed and weight for each.
+      - note: The control mapping, per platform.
+      - note: "▣ Drop reference clips of movement that feels right"
+  - column: Actions
+    cards:
+      - note: Attack, defend, interact, use an item.
+      - note: What each costs (time, stamina, ammo) and what it risks.
+  - column: Scoring & economy
+    cards:
+      - note: What earns points, money or resources.
+      - note: What they're spent on, and how fast they run out.
+  - column: Progression
+    cards:
+      - note: How a level is won. How the game is won.
+      - note: What unlocks when, and why the player wants it.
+      - note: How difficulty rises across the game.
+  - column: Failure
+    cards:
+      - note: How the player loses, and what they lose.
+      - note: How quickly they're back in — checkpoints, retries, saves.
+  - break
+  - column: Numbers to tune
+    cards:
+      - note: "*Value* · starting number · why · what playtests said"
+  - column: Edge cases
+    cards:
+      - note: Two rules that fight each other, and which one wins.
+      - note: Exploits you can already see coming.
+  - todo: Proving it
+    items:
+      - Core loop playable with placeholder art
+      - Every rule tested on its own
+      - Someone new plays without being told the rules
+      - Numbers changed only after a playtest says so

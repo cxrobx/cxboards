@@ -1,0 +1,41 @@
+name: Craft project brainstorm
+use_when: Turning a first idea for something you want to make into several directions worth trying, with sketches and pictures side by side.
+source: https://milanote.com/templates/craft-and-making/craft-brainstorm
+cards:
+  - note: |
+      # *The idea*
+      **What sparked it:** a material, a gift, a picture, a problem at home.
+      **Rule for now:** every idea goes on the board. Judge later.
+    color: amber
+    width: 340
+  - note: "▣ Drop the photo or object that started it here"
+  - break
+  - column: Directions
+    cards:
+      - note: The obvious version.
+      - note: The version in a completely different material.
+      - note: The version ten times bigger, or ten times smaller.
+      - note: The version for someone else.
+  - column: Sketches
+    cards:
+      - note: "▣ Drop photos of quick sketches here — rough is fine"
+      - note: Shapes, layouts or patterns worth a second try.
+  - column: Inspiration
+    cards:
+      - note: "▣ Drop pictures, makers and finished pieces you love here"
+      - note: One line on each — what it is you're drawn to.
+  - column: Materials to try
+    cards:
+      - note: Things you already have.
+      - note: Things you've wanted an excuse to use.
+  - break
+  - column: Connections
+    cards:
+      - note: Two ideas on this board that would be better together.
+      - note: Techniques you know that could carry over.
+  - column: The pick
+    color: green
+    cards:
+      - note: The direction you're going with, and why it beat the others.
+      - todo: Next
+        items: [Make a small test piece, List what you need, Start a project plan]

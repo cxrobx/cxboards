@@ -1,0 +1,56 @@
+name: World building
+use_when: Inventing the world a story happens in — its land, climate, places and peoples, their history and the rules they live by — before the characters move in.
+source: https://milanote.com/templates/creative-writing/world-building
+cards:
+  - note: |
+      # *World name*
+      **In one line:** what makes this world unlike ours.
+      **The rule that matters most to the plot:**
+    color: amber
+    width: 360
+  - note: "▣ Drop or sketch the map here — big"
+    width: 420
+  - break
+  - column: Landscape
+    cards:
+      - note: Mountains, coasts, rivers, deserts — the shape of the land.
+      - note: What's under the ground, and who wants it.
+  - column: Climate & nature
+    cards:
+      - note: Seasons, weather, the hardest month of the year.
+      - note: Plants and animals people depend on — or fear.
+  - column: Settlements
+    cards:
+      - note: Cities, towns, outposts. Where power sits.
+      - note: What a street sounds and smells like.
+  - column: Peoples & cultures
+    cards:
+      - note: Who lives here, and what they believe.
+      - note: Language, food, clothes, what's taboo.
+      - note: Who's in conflict with whom, and why.
+  - column: History
+    cards:
+      - note: The event everyone still talks about.
+      - note: What's been forgotten, and who remembers it.
+  - column: Rules
+    cards:
+      - note: Magic, technology, law — what's possible and what it costs.
+  - break
+  - board: Regions
+    folder: true
+    cards:
+      - note: One board per region or city. Duplicate *Region template* for each.
+      - board: Region template
+        cards:
+          - note: |
+              # *Region name*
+              **Known for:**  **Ruled by:**
+            color: amber
+          - note: "▣ Drop images of the place"
+          - note: The stories and characters that start here.
+  - todo: Consistency check
+    items:
+      - The rules hold in every scene
+      - Every culture wants something
+      - Geography explains where cities are
+      - History explains current conflicts

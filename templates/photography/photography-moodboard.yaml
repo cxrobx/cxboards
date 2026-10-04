@@ -1,0 +1,49 @@
+name: Photography moodboard
+use_when: Setting the look of a shoot before it happens — the light, the framing, the colour — so photographer, crew and client picture the same images.
+also: [moodboards]
+source: https://milanote.com/templates/photography/photography-moodboard
+cards:
+  - note: |
+      # *Shoot* — the look
+      **In three words:** *word · word · word*
+      **The one image that says it best** goes in the hero spot. Everything else supports it.
+    color: amber
+    width: 340
+  - column: Hero
+    width: 420
+    cards:
+      - note: "▣ Drop the anchor image here and make it the biggest thing on the board"
+      - note: What exactly you're taking from it — the light, the crop, the skin tone, the mood.
+  - break
+  - column: Light
+    cards:
+      - note: "▣ References for the quality of light"
+      - note: Hard or soft? Where's the key, and how dark do the shadows go?
+  - column: Framing
+    cards:
+      - note: "▣ References for crop and composition"
+      - note: Tight or wide, centred or off, eye level or not.
+  - column: Styling & texture
+    cards:
+      - note: "▣ Wardrobe, props, surfaces, grain"
+      - note: Pull anything from past shoots or what the client sent over.
+  - column: Palette
+    cards:
+      - note: Sample these from the images above, then replace the defaults.
+      - swatch: "#2B2622"
+        text: Shadows
+      - swatch: "#C9A27E"
+        text: Skin / midtone
+      - swatch: "#E9E1D3"
+        text: Highlights
+      - swatch: "#5E6B57"
+        text: Accent
+  - break
+  - column: Not this
+    cards:
+      - note: "▣ The close-but-wrong images, with a line on why they miss"
+  - column: Feedback
+    cards:
+      - note: Client and crew reactions. What they loved, what they'd lose.
+      - todo: ""
+        items: [Client signed off on the look, Shared with photographer and stylist, Edit / grade direction agreed]

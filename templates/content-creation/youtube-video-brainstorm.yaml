@@ -1,0 +1,44 @@
+name: YouTube video brainstorming
+use_when: Turning a rough idea for a YouTube video into something specific — the angle, the title, the thumbnail and the references — before you commit to making it.
+source: https://milanote.com/templates/content-creation/youtube-video-brainstorm
+cards:
+  - note: |
+      # *Rough idea*
+      **Who it's for:** the viewer and what they want from it.
+      **Why now:** what makes this worth making this month.
+    color: amber
+    width: 340
+  - note: |
+      **Push it further**
+      The first version of an idea is usually the one everyone has already made. Keep going until it sounds like yours.
+  - break
+  - column: Angles
+    cards:
+      - note: Ten ways into the same topic — a challenge, a mistake, a comparison, a story, a test.
+      - note: "*angle*"
+      - note: "*angle*"
+  - column: Titles
+    cards:
+      - note: Write twenty. Short, specific, and something you'd click.
+      - note: "*title*"
+  - column: Thumbnails
+    cards:
+      - note: One image and three words, max. What does the viewer see in half a second?
+      - note: "▣ Drop sketches and reference thumbnails here"
+  - column: References
+    cards:
+      - note: Videos on the topic that did well, and what they missed.
+      - note: "▣ Drop links, clips and screenshots here"
+  - break
+  - column: Moments
+    cards:
+      - note: The scenes, reveals or examples that would make it worth watching to the end.
+  - column: Pick
+    color: green
+    cards:
+      - note: "**Angle:**  **Title:**  **Thumbnail:**"
+      - todo: Next
+        items:
+          - Gather research
+          - Draft the script
+          - Add it to the schedule

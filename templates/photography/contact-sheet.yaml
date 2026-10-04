@@ -1,0 +1,40 @@
+name: Photography contact sheet
+use_when: Narrowing a shoot down to a shortlist so the client can choose the finals before anything gets retouched.
+also: []
+source: https://milanote.com/templates/photography/contact-sheet
+cards:
+  - note: |
+      # *Shoot name* — selects
+      **Shot:** *date*  **Finals needed:** *n*  **Choose by:** *date*
+      **How to use this sheet:** mark the frames you want and say why in a line. Only the picks get retouched.
+    color: amber
+    width: 360
+  - note: |
+      **Why these frames**
+      What ties the shortlist back to the brief — the light, the composition, the moment you were waiting for.
+    width: 320
+  - break
+  - column: Landscape
+    cards:
+      - note: "▣ Drop the horizontal selects here, cropped the way you'd deliver them"
+      - note: "*Frame no.* — one line on what works"
+      - note: "*Frame no.* — "
+  - column: Portrait
+    cards:
+      - note: "▣ Drop the vertical selects here"
+      - note: "*Frame no.* — one line on what works"
+      - note: "*Frame no.* — "
+  - column: Details & alternates
+    cards:
+      - note: "▣ Close-ups, texture shots and near-misses worth a second look"
+      - note: Frames you'd fight for, even if they're off-brief.
+  - column: Client picks
+    cards:
+      - note: Move the chosen frames here. Note any crop or retouch request beside each one.
+      - todo: Before handover
+        items:
+          - Picks confirmed in writing
+          - Retouch the picks
+          - Export at every delivery size
+          - Files named by frame number
+          - Sent, and receipt confirmed

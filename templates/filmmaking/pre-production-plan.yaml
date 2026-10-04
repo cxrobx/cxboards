@@ -1,0 +1,116 @@
+name: Film pre-production
+use_when: Running a film's whole pre-production from one hub — the ideas, the look, the storyboard, the shot list and the call sheet, with the workflow and gear checklists beside them.
+also: [project-plans]
+source: https://milanote.com/templates/filmmaking/pre-production-plan
+theme: film
+cards:
+  - note: |
+      # *Film title*
+      **Format:** short · feature · music video · documentary
+      **Logline:** one sentence.
+      **Shoot dates:**  **Delivery:**
+    color: amber
+    width: 360
+  - todo: Workflow
+    items:
+      - Concept and logline agreed
+      - Script locked
+      - Look agreed (moodboard)
+      - Storyboard done
+      - Shot list done
+      - Locations confirmed
+      - Cast and crew booked
+      - Call sheets sent
+  - todo: Gear
+    items: [Camera package, Lighting, Sound, Grip and support, Power and media, Rentals booked and insured]
+  - break
+  - board: Ideas
+    cards:
+      - note: |
+          # The concept
+          Write it in the middle, then give it five minutes per theme below.
+        color: amber
+        width: 320
+      - break
+      - column: Plot & characters
+        cards:
+          - note: The conflict, how it resolves, and who changes.
+      - column: Setting & visuals
+        cards:
+          - note: Locations, atmosphere, motifs, iconic moments.
+      - column: Themes & genre
+        cards:
+          - note: What it's saying underneath, and the tone.
+      - column: Camera & sound
+        cards:
+          - note: Techniques, lighting, music, the sound of the world.
+  - board: Moodboard
+    cards:
+      - note: "▣ Drop the anchor image first, then build around it"
+        width: 340
+      - break
+      - column: Light
+        cards:
+          - note: "▣ Frames with the light you want"
+      - column: Sets & wardrobe
+        cards:
+          - note: "▣ Rooms, textures, costume"
+      - column: Framing
+        cards:
+          - note: "▣ Compositions and lenses"
+      - break
+      - swatch: "#1C1A17"
+        text: Shadows
+      - swatch: "#C08A4A"
+        text: Warm light
+      - swatch: "#5E7469"
+        text: Cool fill
+  - board: Storyboard
+    cards:
+      - note: One column per key scene. A frame, then what happens · what the camera does · what we hear.
+        width: 340
+      - break
+      - column: Scene 1
+        cards:
+          - note: "▣ Frame"
+          - note: "Action · camera · sound"
+      - column: Scene 2
+        cards:
+          - note: "▣ Frame"
+          - note: "Action · camera · sound"
+      - column: Scene 3
+        cards:
+          - note: "▣ Frame"
+          - note: "Action · camera · sound"
+  - board: Shot list
+    cards:
+      - note: "Each shot as size · angle · movement · what it shows."
+        width: 340
+      - break
+      - column: Scene 1
+        cards:
+          - todo: Shots
+            items: ["WS · eye level · static — ", "MCU · over the shoulder — ", "Insert — "]
+      - column: Scene 2
+        cards:
+          - todo: Shots
+            items: ["WS — ", "CU — "]
+  - board: Call sheet
+    cards:
+      - note: |
+          # Day *n* — *date*
+          **General crew call:**  **In charge:** *name* · *phone*
+        color: amber
+        width: 320
+      - break
+      - column: Location
+        cards:
+          - note: Address, parking, the way in.
+      - column: Cast & crew
+        cards:
+          - note: "*Name* · *role* · *phone* · call *time*"
+      - column: Schedule
+        cards:
+          - note: "*time* — crew call"
+          - note: "*time* — lunch"
+          - note: "*time* — wrap"

@@ -1,0 +1,42 @@
+name: Visual art brief
+use_when: Starting a commission or a personal piece with a brief — what you're making, who it's for, the references, your own goals and exactly what you'll hand over.
+source: https://milanote.com/templates/visual-art/visual-art-brief
+cards:
+  - note: |
+      # *Project title*
+      **For:** a client, a show, an open call, yourself.
+      **Due:** *date*
+      **The finished piece in one sentence:**
+    color: amber
+    width: 340
+  - note: |
+      **The test**
+      Read this back before every session. If the work drifts from it, change the work or change the brief — on purpose.
+  - break
+  - column: Background
+    cards:
+      - note: Where the piece will live and who will see it.
+      - note: The story, theme or subject behind it.
+      - note: Constraints — size, medium, budget, rules of the venue or client.
+  - column: Vision
+    cards:
+      - note: The feeling someone should have in front of it.
+      - note: What it must not be.
+  - column: Reference images
+    width: 320
+    cards:
+      - note: "▣ Drop reference images here"
+      - note: One line under each on what you're taking — colour, composition, mark-making.
+  - column: Personal goals
+    cards:
+      - note: The skill or idea you want to push on this one.
+      - note: What would make you proud of it, whatever anyone else thinks?
+  - break
+  - column: Deliverables
+    cards:
+      - todo: ""
+        items: ["Final piece · size · medium", Progress photos, High-res scans or photos of the finished work, Title and statement]
+  - column: Milestones
+    cards:
+      - todo: ""
+        items: [Studies done, Composition agreed, Work underway, Final details, Delivered]

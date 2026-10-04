@@ -1,0 +1,37 @@
+name: Press release brief
+use_when: Briefing whoever writes a press release — the news, the messages, the words to use and avoid, and who it's going to.
+source: https://milanote.com/templates/creative-briefs/press-release-brief
+cards:
+  - note: |
+      # *Announcement*
+      **The news in one sentence:** the headline a journalist would write.
+      **Why it matters today:** to their readers, not just to you.
+    color: amber
+    width: 340
+  - break
+  - column: Objective
+    cards:
+      - note: What you want the coverage to do — awareness, credibility, sign-ups, investor attention.
+  - column: Key messages
+    cards:
+      - note: The three points every story should carry.
+      - note: The fact, number or example behind each.
+  - column: Quotes
+    cards:
+      - note: Who's quoted, and the point their quote makes that the facts can't.
+  - column: Language
+    cards:
+      - note: Words and names to use exactly as written.
+      - note: Jargon to translate.
+  - break
+  - column: Don't mention
+    cards:
+      - note: Topics, numbers, partners or comparisons that stay out.
+  - column: Audience & outlets
+    cards:
+      - note: The publications and journalists you'd most like to see it in.
+      - note: Trade press versus general press — does it need two angles?
+  - column: Logistics
+    cards:
+      - todo: ""
+        items: [Embargo date and time, Boilerplate, Media contact, Images and assets, Sign-off from everyone quoted, Distribution list]

@@ -1,0 +1,52 @@
+name: Website design brief
+use_when: Briefing a website build before anyone writes code — why it's happening, what success looks like, who it's for and how the brand should come through.
+also: [ux-design, website-design]
+source: https://milanote.com/templates/creative-briefs/website-design-brief
+cards:
+  - note: |
+      # *Site* — design brief
+      **Why now:** what's wrong with what you have, or what's missing.
+      **Success in a year:** a number — enquiries, sales, sign-ups.
+    color: amber
+    width: 340
+  - note: |
+      **Ask the client**
+      What problem is this solving? What led here? What changes if it works?
+  - break
+  - column: Background
+    cards:
+      - note: The business in a paragraph — what you sell and to whom.
+      - note: The story behind the project, in the client's own words.
+  - column: Goals & deliverables
+    cards:
+      - note: The measurable goal, and the date to hit it.
+      - todo: Deliverables
+        items: [Sitemap, Wireframes, Page designs, Copy, Build, Launch and redirects]
+  - column: Audience
+    cards:
+      - note: Who visits, and what they came to do.
+      - note: Their problem, and what they think of you today.
+      - note: "Personas: one note each, a name and a sentence."
+  - column: Competitors
+    cards:
+      - note: Sites you're up against — what they do well, where they fall short.
+  - break
+  - column: Brand
+    cards:
+      - note: Tone of voice and values.
+      - swatch: "#2AA198"
+        text: Primary colour
+      - swatch: "#E0A33A"
+        text: Accent colour
+      - note: "▣ Drop the logo, fonts and brand guidelines here"
+  - column: Visual references
+    cards:
+      - note: "▣ Drop sites and screens you like here"
+      - note: One line on each — what exactly you like.
+  - column: Avoid
+    cards:
+      - note: Looks, features or phrases the client doesn't want.
+  - column: Budget & timing
+    cards:
+      - note: Budget range.
+      - note: Kickoff, review dates and launch.

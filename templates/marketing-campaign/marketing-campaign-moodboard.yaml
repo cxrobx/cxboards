@@ -1,0 +1,44 @@
+name: Marketing campaign moodboard
+use_when: Setting the look of a campaign before design starts — the colours, type, imagery and branding cues it should share, pinned up where everyone can see them.
+also: [agencies, moodboards]
+source: https://milanote.com/templates/marketing-campaign/marketing-campaign-moodboard
+cards:
+  - note: |
+      # *Campaign* moodboard
+      **The feeling in three words:**
+      **It should never look like:** the cliché you're steering away from.
+    color: amber
+    width: 340
+  - note: |
+      **How to read this board**
+      Every image earns its place. Under each one, a line on what you're taking — the light, the crop, the colour, the type.
+  - break
+  - column: Imagery
+    width: 340
+    cards:
+      - note: "▣ Drop photos, ads and stills that set the mood here"
+      - note: The single image that sums it up. Put it at the top.
+  - column: Colour
+    cards:
+      - swatch: "#D9C6A5"
+        text: Base
+      - swatch: "#2E3A46"
+        text: Depth
+      - swatch: "#CB4B16"
+        text: Accent
+      - note: Pull these from the images, then adjust. How much of each?
+  - column: Typography
+    cards:
+      - note: "▣ Drop type specimens or screenshots here"
+      - note: Headline voice vs body voice. Loud, quiet, classic, raw?
+  - column: Branding cues
+    cards:
+      - note: Which brand elements must show up, and how bold.
+      - note: Textures, patterns, motion or graphic devices to try.
+  - break
+  - column: Close, but not it
+    color: clay
+    cards:
+      - note: References that nearly work, and the reason they don't.
+  - todo: Next
+    items: [Agree the direction with the team, Pick three hero references, Hand to design with the brief]

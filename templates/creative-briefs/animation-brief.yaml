@@ -1,0 +1,49 @@
+name: Animation brief
+use_when: Commissioning or planning an animated piece — the story, the look, who it's for, what gets delivered and when.
+source: https://milanote.com/templates/creative-briefs/animation-brief
+cards:
+  - note: |
+      # *Project* — animation brief
+      **In one line:** what the animation shows, and where people will watch it.
+      **Length / format:** *seconds* · *aspect ratio* · sound on or off.
+    color: amber
+    width: 360
+  - note: |
+      **The test**
+      Someone watches it once with no context. What do they remember?
+  - break
+  - column: Overview & scope
+    cards:
+      - note: The story in three sentences — beginning, turn, end.
+      - note: In scope — scenes, voice-over, music, sound design.
+      - note: Out of scope, said plainly.
+  - column: Goals & audience
+    cards:
+      - note: What the viewer should understand or do afterwards.
+      - note: Who's watching, on what screen, and how much attention they're giving it.
+  - column: Look & feel
+    cards:
+      - note: 2D, 3D, stop motion, type-led, mixed?
+      - note: Pace and feel in three words.
+      - note: "▣ Drop style frames and reference clips here"
+      - note: Existing designs, characters or brand assets it has to match.
+  - column: Avoid
+    cards:
+      - note: Styles, clichés and moves you don't want to see.
+      - note: Anything a past version got wrong.
+  - break
+  - column: Deliverables
+    cards:
+      - todo: ""
+        items:
+          - Script and voice-over copy
+          - Storyboard
+          - Style frames
+          - Animatic
+          - Final render
+          - Cutdowns and other aspect ratios
+          - Project files
+  - column: Dates & budget
+    cards:
+      - note: "Script sign-off · storyboard · animatic · final — a date for each."
+      - note: Budget, and how many rounds of changes it covers.

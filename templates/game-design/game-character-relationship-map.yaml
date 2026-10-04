@@ -1,0 +1,47 @@
+name: Game character relationship map
+use_when: Working out who's who in a game's cast — who's on whose side, who owes whom, and which ties carry the story.
+source: https://milanote.com/templates/game-design/game-character-relationship-map
+cards:
+  - note: |
+      # *Game title* — the cast
+      **The centre:** the character every other tie runs through.
+      **The question:** which relationship changes the most by the end?
+    color: amber
+    width: 340
+  - note: |
+      **How to write a tie**
+      *A* → *B* · what A feels · what A wants from B · what B doesn't know.
+  - break
+  - column: The protagonist
+    cards:
+      - note: "*Name* — role, and what they need from the people around them."
+      - note: "▣ Drop their portrait here"
+  - column: Allies
+    cards:
+      - note: "*Name* — why they're loyal, and what would break it."
+      - note: "*Name* — "
+  - column: Rivals
+    cards:
+      - note: "*Name* — what they compete over with the protagonist."
+      - note: Who could switch sides, and when.
+  - column: Enemies
+    cards:
+      - note: "*Name* — what they want, and why it collides."
+      - note: Who's behind the enemy you meet first?
+  - column: Wildcards
+    cards:
+      - note: Neutral characters, traders, people with their own agenda.
+  - break
+  - column: Ties
+    width: 360
+    cards:
+      - note: "*A* → *B* · "
+      - note: "*A* → *C* · "
+      - note: Family, debts, old betrayals — the history that explains a scene.
+  - column: How ties change
+    cards:
+      - note: Which relationship turns, and which event turns it.
+      - note: Choices the player makes that move a character from one column to another.
+  - column: Gaps
+    cards:
+      - note: Characters with no ties yet. Connect them or cut them.

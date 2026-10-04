@@ -1,0 +1,50 @@
+name: Brainstorming workshop
+use_when: Running a brainstorm with a group — framing the question, getting ideas out fast, clustering them and leaving with a few to pursue.
+source: https://milanote.com/templates/brainstorming/workshop
+also: [education, graphic-design]
+cards:
+  - note: |
+      # *Workshop title* — *date*
+      **The question:** "How might we *…*?" — one, written so anyone can answer it.
+      **We're done when:** we've picked *n* ideas to take further.
+    color: amber
+    width: 360
+  - todo: Agenda
+    items:
+      - Frame the question (5 min)
+      - Warm-up (5 min)
+      - Silent ideas (10 min)
+      - Share and cluster (15 min)
+      - Vote (5 min)
+      - Next steps (10 min)
+  - break
+  - column: Context
+    cards:
+      - note: What we know already — the audience, the constraint, what's been tried.
+      - note: "▣ Drop reference images, data or examples here"
+  - column: Warm-up
+    cards:
+      - note: A quick, silly round so nobody's first idea has to be a good one.
+  - column: Ideas
+    width: 340
+    cards:
+      - note: One idea per card, a few words each. Quantity first — no judging yet.
+      - note: "*idea*"
+      - note: "*idea*"
+  - column: Clusters
+    cards:
+      - note: Group the ideas into themes and name each group.
+      - note: "**Theme:** *name* — the ideas in it"
+  - break
+  - column: Vote
+    color: green
+    cards:
+      - note: Everyone gets three votes. Mark them on the idea cards.
+      - note: "Top picks: *idea* · *idea* · *idea*"
+  - column: Next steps
+    cards:
+      - todo: ""
+        items:
+          - "Idea — owner — first small test"
+          - "Idea — owner — first small test"
+      - note: Ideas worth keeping that didn't make it this time.

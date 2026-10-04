@@ -1,0 +1,42 @@
+name: Craft project timeline
+use_when: Scheduling a run of handmade products from design to sale, with a date on each stage so you have stock ready when buyers are.
+source: https://milanote.com/templates/craft-and-making/craft-project-timeline
+cards:
+  - note: |
+      # *Collection* — timeline
+      **On sale from:** *date*
+      **How many pieces:** and how many you can make in a week.
+      **Work backwards** from the sale date, and add a week you don't think you need.
+    color: amber
+    width: 360
+  - break
+  - column: Design · *dates*
+    cards:
+      - todo: ""
+        items: [Sketch the range, Pick colours and materials, Price each piece]
+  - column: Prototype · *dates*
+    cards:
+      - todo: ""
+        items: [Make one of each, Use it or wear it for a week, Fix what's wrong]
+  - column: Source · *dates*
+    cards:
+      - todo: ""
+        items: [Order materials, Order packaging and labels, Check delivery times]
+  - column: Make · *dates*
+    cards:
+      - todo: ""
+        items: [Batch one, Batch two, Quality check]
+      - note: Pieces finished so far.
+  - break
+  - column: List · *dates*
+    cards:
+      - todo: ""
+        items: [Photograph everything, Write descriptions, Set up listings, Shipping prices]
+  - column: Launch · *date*
+    cards:
+      - todo: ""
+        items: [Tell your list, Post the launch, Pack and ship orders]
+  - column: Restock
+    cards:
+      - note: What sold out first, and how long it takes to make more.
+      - note: The date to start the next batch.

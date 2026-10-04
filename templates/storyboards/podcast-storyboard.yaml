@@ -1,0 +1,50 @@
+name: Podcast storyboard
+use_when: Laying out the shape of an episode — open, intro, interview, breaks and close — with the research, questions and audio each part needs.
+also: []
+source: https://milanote.com/templates/storyboards/podcast-storyboard
+cards:
+  - note: |
+      # *Show* — ep. *n*: *title*
+      **The listener leaves with:** one idea, said plainly.
+      **Guest:**  **Target length:** *min*
+    color: amber
+    width: 360
+  - note: |
+      **Production**
+      Record date · editor · publish date · where the files live.
+  - break
+  - column: Cold open
+    cards:
+      - note: The strongest 20 seconds of the episode, pulled forward.
+      - note: "▣ Drop the clip once it's recorded"
+  - column: Intro
+    cards:
+      - note: Theme music, who you are, what this episode is and why now.
+      - note: "▣ Intro music file"
+  - column: Interview
+    cards:
+      - note: "Part one — background and the setup."
+      - note: "Part two — the thing only this guest can tell you."
+      - note: Where the conversation should turn.
+  - column: Break
+    cards:
+      - note: Sponsor read or music break — the script, and how long it runs.
+      - note: The line that brings you back in.
+  - column: Close
+    cards:
+      - note: The take-away, said in one sentence.
+      - note: Where to find the guest, what's next week, the ask.
+      - note: "▣ Outro music file"
+  - break
+  - column: Guest research
+    cards:
+      - note: Who they are, what they've said elsewhere, what nobody's asked them.
+  - column: Questions
+    cards:
+      - note: Openers.
+      - note: The question you most want answered.
+      - note: Follow-ups if they go short.
+  - column: Post
+    cards:
+      - todo: ""
+        items: [Edit, Music and levels, Show notes and links, Title and artwork, Clips for social, Publish]

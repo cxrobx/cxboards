@@ -1,0 +1,48 @@
+name: YouTube video plan
+use_when: Planning one YouTube video end to end — the idea, the research, the script, the shoot, the edit and the upload — with the tasks to get it out.
+source: https://milanote.com/templates/content-creation/youtube-video-plan
+cards:
+  - note: |
+      # *Video title*
+      **Publish date:**
+      **The promise:** what the viewer gets.
+      **Pillar:** which part of the channel it feeds.
+    color: amber
+    width: 340
+  - note: "▣ Drop the thumbnail draft here"
+    width: 260
+  - break
+  - column: Idea
+    cards:
+      - note: The angle in one sentence, and why someone would click.
+      - note: Title options.
+  - column: Research
+    cards:
+      - note: Facts, sources and examples you'll use.
+      - note: "▣ Drop links and references here"
+  - column: Script
+    cards:
+      - note: Hook · intro · chapters · call to action · outro.
+      - note: Paste the draft here, or link a separate script board.
+  - column: Shoot
+    cards:
+      - todo: ""
+        items: [Location booked, Gear checked, Shot list written, A-roll filmed, B-roll filmed]
+  - column: Edit
+    cards:
+      - todo: ""
+        items: [Rough cut, Music and sound, Graphics and captions, Final cut watched start to finish]
+  - column: Publish
+    cards:
+      - todo: ""
+        items:
+          - Title, description and chapters
+          - Thumbnail final
+          - End screen and cards
+          - Scheduled
+          - Shared where your audience is
+  - break
+  - note: |
+      **After a week**
+      Views, watch time, click-through. What one change would have helped most?
+    width: 340

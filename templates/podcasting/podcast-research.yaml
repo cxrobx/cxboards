@@ -1,0 +1,40 @@
+name: Podcast research
+use_when: Gathering what you know and what you find about an episode's topic or guest — notes, sources, quotes, clips and images — side by side.
+source: https://milanote.com/templates/podcasting/podcast-research
+cards:
+  - note: |
+      # *Topic or guest* — research
+      **The question this episode answers:**
+      **Collect first, read later:** save it now, judge it once it's all here.
+    color: amber
+    width: 360
+  - break
+  - column: What you already know
+    cards:
+      - note: Facts about the guest, topic, period or event — even the obvious ones.
+      - note: Your own opinion, before the research shifts it.
+  - column: Articles & sources
+    cards:
+      - note: "*Title* — *source* — one line on why it matters."
+  - column: Quotes & data
+    cards:
+      - note: "\"Quote\" — *who*, *where*"
+      - note: Numbers worth saying out loud, with where they came from.
+  - column: Video & audio
+    cards:
+      - note: "▣ Drop clips, interviews and other episodes on the topic here"
+      - note: What other shows already said — and what they missed.
+  - column: Images
+    cards:
+      - note: "▣ Drop images that put you in the time or place"
+  - break
+  - column: Patterns
+    color: green
+    cards:
+      - note: Things that keep coming up across sources.
+      - note: Contradictions worth digging into on air.
+  - column: Questions to ask
+    cards:
+      - note: For the guest, or for yourself to answer in the episode.
+  - todo: Before the outline
+    items: [Every quote has a source, Facts double-checked, Angle chosen]

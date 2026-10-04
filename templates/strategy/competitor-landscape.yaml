@@ -1,0 +1,49 @@
+name: Competitor landscape
+use_when: Mapping everyone in your market on two axes, so you can see the whole category at a glance and where you fit in it.
+source: https://milanote.com/templates/strategy/competitor-landscape
+cards:
+  - note: |
+      # *Market* — landscape
+      **Axis across:** *e.g. niche ↔ broad*
+      **Axis up:** *e.g. do-it-yourself ↔ done-for-you*
+      **What you want to learn from it:**
+    color: amber
+    width: 360
+  - note: |
+      **Placing a company**
+      Put each one where its customers would put it, not where its homepage says it sits.
+  - break
+  - column: High · left
+    cards:
+      - note: Company · one line on what they do
+  - column: High · right
+    cards:
+      - note: Company · one line on what they do
+  - column: The players
+    cards:
+      - note: "▣ Drop logos here first, then move each into a quadrant"
+      - note: Direct competitors, adjacent ones, and the newcomers.
+  - break
+  - column: Low · left
+    cards:
+      - note: Company · one line on what they do
+  - column: Low · right
+    cards:
+      - note: Company · one line on what they do
+  - column: Reading the map
+    cards:
+      - note: Where is it crowded? Where is it empty — and is it empty for a reason?
+      - note: Where you are now, and where you want to be in a year.
+  - break
+  - column: Strengths
+    cards:
+      - note: What the leaders do better than anyone.
+  - column: Weaknesses
+    cards:
+      - note: Where they're slow, expensive, or ignoring someone.
+  - column: Opportunities
+    cards:
+      - note: The opening that's yours to take.
+  - column: Threats
+    cards:
+      - note: Who could move into your space, and how fast.

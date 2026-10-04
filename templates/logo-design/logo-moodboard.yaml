@@ -1,0 +1,48 @@
+name: Logo moodboard
+also: [brand-strategy-workshops, branding, market-research, moodboards]
+use_when: Exploring the visual direction for a logo — references, imagery, colour, type and pattern — and getting it agreed before you draw.
+source: https://milanote.com/templates/logo-design/logo-moodboard
+cards:
+  - note: |
+      # *Brand* — logo direction
+      **Personality:** *word* · *word* · *word*
+      **From the brief:** the positioning line or tagline you're designing for.
+    color: amber
+    width: 340
+  - note: |
+      **Refine as you go**
+      Give the strongest reference the most room. Group what belongs together; cut what doesn't earn its place.
+  - break
+  - column: From the client
+    cards:
+      - note: "▣ Drop the client's own references and existing brand material"
+      - note: What they like in each, in their words.
+  - column: Imagery
+    width: 320
+    cards:
+      - note: "▣ Drop images that set the tone"
+      - note: What each image says about the brand — mood, energy, era.
+  - column: Marks we admire
+    cards:
+      - note: "▣ Drop logos from any industry that get something right"
+      - note: One line on what to borrow.
+  - break
+  - column: Colour
+    cards:
+      - swatch: "#14213D"
+        text: Primary
+      - swatch: "#FCA311"
+        text: Accent
+      - swatch: "#E5E5E5"
+        text: Neutral
+      - note: The feeling each colour carries for this brand.
+  - column: Type
+    cards:
+      - note: "▣ Drop font specimens that fit the personality"
+      - note: Serif, sans, script, custom lettering?
+  - column: Pattern & texture
+    cards:
+      - note: "▣ Drop patterns, textures and shapes that could grow out of the mark"
+  - column: Feedback
+    cards:
+      - note: What the client said, and the direction you've agreed.

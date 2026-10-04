@@ -1,0 +1,89 @@
+name: Target audience
+use_when: Working out who a product or service is for, by writing up the main audience segments as personas the whole team can design for.
+also: []
+source: https://milanote.com/templates/marketing/target-audience
+cards:
+  - note: |
+      # *Product* — who it's for
+      **The audience in one line:**
+      **Who it's not for** matters too — say it.
+    color: amber
+    width: 340
+  - note: |
+      **Build from evidence**
+      Interviews, reviews, support tickets, analytics. Mark anything you're guessing.
+  - break
+  - board: "Persona 1 — *name*"
+    cards:
+      - note: |
+          # *Name*, *age*
+          **Role / life stage:**
+          **In a sentence:** who they are and what they're trying to do.
+        color: amber
+      - note: "▣ A photo that feels like them"
+      - column: Goals
+        cards:
+          - note: What they want to achieve.
+      - column: Frustrations
+        cards:
+          - note: What gets in their way today.
+      - column: Motivations
+        cards:
+          - note: What makes them act — and what makes them trust.
+      - column: Where to reach them
+        cards:
+          - note: Channels, communities, the people they listen to.
+  - board: "Persona 2 — *name*"
+    cards:
+      - note: |
+          # *Name*, *age*
+          **Role / life stage:**
+          **In a sentence:**
+        color: amber
+      - note: "▣ A photo that feels like them"
+      - column: Goals
+        cards:
+          - note: What they want to achieve.
+      - column: Frustrations
+        cards:
+          - note: What gets in their way today.
+      - column: Motivations
+        cards:
+          - note: What makes them act.
+      - column: Where to reach them
+        cards:
+          - note: Channels and communities.
+  - board: "Persona 3 — *name*"
+    cards:
+      - note: |
+          # *Name*, *age*
+          **Role / life stage:**
+          **In a sentence:**
+        color: amber
+      - note: "▣ A photo that feels like them"
+      - column: Goals
+        cards:
+          - note: What they want to achieve.
+      - column: Frustrations
+        cards:
+          - note: What gets in their way today.
+      - column: Motivations
+        cards:
+          - note: What makes them act.
+      - column: Where to reach them
+        cards:
+          - note: Channels and communities.
+  - break
+  - column: Segments
+    cards:
+      - note: How the audience splits — by need, by stage, by budget — and roughly how big each group is.
+  - column: Shared needs
+    cards:
+      - note: What every persona has in common. Design for this first.
+  - column: Questions to answer
+    cards:
+      - todo: ""
+        items:
+          - "Which persona do we build for first?"
+          - "What would we need to learn to be sure?"
+          - "Who on the team has met these people?"

@@ -1,0 +1,53 @@
+name: Graphic design project plan
+use_when: Running a design project from brief to final files — the brief, research, concepts, development and delivery — with the dates and tasks in one place.
+source: https://milanote.com/templates/graphic-design/graphic-design-project-plan
+also: [project-plans]
+cards:
+  - note: |
+      # *Project* — plan
+      **Client:**
+      **Deliverables:**
+      **Due:** *date*
+    color: amber
+    width: 340
+  - todo: Timeline
+    items:
+      - "Brief agreed · date"
+      - "Research and moodboard · date"
+      - "Concepts presented · date"
+      - "Revisions · date"
+      - "Final files · date"
+  - break
+  - column: Brief
+    cards:
+      - note: The goal, audience and constraints in a few lines.
+      - note: Paste the signed-off brief here, or link a separate brief board.
+  - column: Research
+    cards:
+      - note: Competitors, references and what the audience already sees.
+      - note: "▣ Drop references and moodboard images here"
+  - column: Concepts
+    cards:
+      - note: Two or three distinct routes, one line on the thinking behind each.
+      - note: "▣ Drop sketches and early comps here"
+  - column: Development
+    cards:
+      - note: The chosen route, refined. Note each round of feedback here.
+      - note: "Round 1 feedback:"
+  - column: Delivery
+    cards:
+      - todo: Final files
+        items:
+          - Exported in every format needed
+          - Fonts and images licensed
+          - Files named and organised
+          - Handover notes
+          - Invoice sent
+  - break
+  - column: Contacts & resources
+    cards:
+      - note: Client contacts, printers, photographers, anyone else on the job.
+  - column: Budget
+    cards:
+      - note: "**Fee:**  **Hours estimated:**  **Hours used:**"
+      - note: Extra costs — stock, fonts, printing.
