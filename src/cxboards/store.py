@@ -132,6 +132,13 @@ CREATE TABLE IF NOT EXISTS chats (
     updated_at  TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS chats_board ON chats(board_id);
+CREATE TABLE IF NOT EXISTS sections (
+    id          TEXT PRIMARY KEY,
+    parent_id   TEXT,
+    at          TEXT,
+    title       TEXT NOT NULL DEFAULT '',
+    created_at  TEXT NOT NULL
+);
 CREATE TABLE IF NOT EXISTS journal (
     seq         INTEGER PRIMARY KEY AUTOINCREMENT,
     tbl         TEXT NOT NULL,
@@ -1980,6 +1987,56 @@ class Store:
         with self._lock:
             if self._db.execute("DELETE FROM chats WHERE id = ?", (chat_id,)).rowcount == 0:
                 raise NotFound(f"no chat {chat_id}")
+
+    # ------------------------------------------------------------------ sidebar sections
+    # Dividers in the sidebar's board list, as in Margin: a name or a plain line. The list is sorted
+    # by title, so a section sits above the first board under ``parent_id`` whose title sorts at or
+    # after ``at`` (None: after the last), and keeps its place through renames and deletes.
+    # Not board content: no undo, no trash, no rev bump.
+
+    def sections(self) -> list[dict[str, Any]]:
+        with self._lock:
+            rows = self._db.execute("SELECT * FROM sections ORDER BY created_at, rowid").fetchall()
+            return [dict(r) for r in rows]
+
+    def _section_fields(self, parent_id: str | None, at: str | None, title: str) -> tuple[str | None, str | None, str]:
+        if parent_id is not None:
+            self._board_row(parent_id)
+        return parent_id, (at if at else None), " ".join((title or "").split())[:80]
+
+    def add_section(self, parent_id: str | None, at: str | None, title: str = "") -> dict[str, Any]:
+        with self._lock:
+            parent_id, at, title = self._section_fields(parent_id, at, title)
+            section_id = _new_id("s")
+            self._db.execute(
+                "INSERT INTO sections (id, parent_id, at, title, created_at) VALUES (?, ?, ?, ?, ?)",
+                (section_id, parent_id, at, title, _now()),
+            )
+            return self._section(section_id)
+
+    def update_section(self, section_id: str, **fields: Any) -> dict[str, Any]:
+        """``title``, and/or a new place: ``parent_id`` + ``at`` (given together)."""
+        with self._lock:
+            row = self._section(section_id)
+            parent_id, at, title = self._section_fields(
+                fields.get("parent_id", row["parent_id"]), fields.get("at", row["at"]), fields.get("title", row["title"])
+            )
+            self._db.execute(
+                "UPDATE sections SET parent_id = ?, at = ?, title = ? WHERE id = ?", (parent_id, at, title, section_id)
+            )
+            return self._section(section_id)
+
+    def delete_section(self, section_id: str) -> dict[str, Any]:
+        with self._lock:
+            row = self._section(section_id)
+            self._db.execute("DELETE FROM sections WHERE id = ?", (section_id,))
+            return row
+
+    def _section(self, section_id: str) -> dict[str, Any]:
+        row = self._db.execute("SELECT * FROM sections WHERE id = ?", (section_id,)).fetchone()
+        if row is None:
+            raise NotFound(f"no section {section_id}")
+        return dict(row)
 
     # ------------------------------------------------------------------ media
 

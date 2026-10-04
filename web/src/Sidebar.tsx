@@ -3,7 +3,7 @@
 // window's left edge when the pointer rests there; its width is a drag of its right edge.
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type RefObject } from 'react'
-import type { Board } from './api'
+import type { Board, Section } from './api'
 
 /** Boards by parent (templates live in their own list), each list sorted by title. */
 export function childrenByParent(boards: Board[]): Map<string | null, Board[]> {
@@ -41,8 +41,32 @@ function remember(key: string, value: string) {
   }
 }
 
-/** A name being typed in the tree: a board's new name, or a new folder's. */
-export type TreeEdit = { kind: 'rename'; id: string } | { kind: 'folder'; parent: string | null } | null
+/** A name being typed in the tree: a board's new name, a new folder's, a section's, or a new section's. */
+export type TreeEdit =
+  | { kind: 'rename'; id: string }
+  | { kind: 'folder'; parent: string | null }
+  | { kind: 'section'; id: string }
+  | { kind: 'new-section'; parent: string | null; at: string | null }
+  | null
+
+const NEW_SECTION = '__new__'
+
+/** Sections, then, for one level of the tree: what goes above each board, and what goes last. */
+function placeSections(list: Board[], sections: Section[]): { above: Map<string, Section[]>; last: Section[] } {
+  const rest = [...sections].sort((a, b) => (a.at === null ? 1 : b.at === null ? -1 : a.at.localeCompare(b.at)))
+  const above = new Map<string, Section[]>()
+  for (const b of list) {
+    const here: Section[] = []
+    while (rest.length && rest[0].at !== null && rest[0].at.localeCompare(b.title) <= 0) here.push(rest.shift()!)
+    if (here.length) above.set(b.id, here)
+  }
+  return { above, last: rest }
+}
+
+/** The sidebar's own commands, from its right-click menu (App.tsx). */
+export function treeCommand(kind: 'collapse' | 'reveal') {
+  window.dispatchEvent(new CustomEvent('cxboards:tree', { detail: kind }))
+}
 
 const TOP = '__top__'
 const SHUT_KEY = 'cxboards.shut'
@@ -73,12 +97,14 @@ function NameField({
   depth,
   initial,
   folder,
+  section = false,
   onCommit,
   onCancel,
 }: {
   depth: number
   initial: string
   folder: boolean
+  section?: boolean
   onCommit: (name: string) => void
   onCancel: () => void
 }) {
@@ -90,14 +116,14 @@ function NameField({
     else onCommit(name)
   }
   return (
-    <div className="tree-item editing" style={{ paddingLeft: 6 + depth * 14 }}>
-      <span className="tree-chev" />
-      <span className="tree-glyph">{folder ? <FolderIcon /> : '▦'}</span>
+    <div className={`tree-item editing${section ? ' tree-section' : ''}`} style={{ paddingLeft: 6 + depth * 14 }}>
+      {!section && <span className="tree-chev" />}
+      {!section && <span className="tree-glyph">{folder ? <FolderIcon /> : '▦'}</span>}
       <input
         className="tree-input"
         autoFocus
         defaultValue={initial}
-        placeholder={folder ? 'New folder' : 'Board name'}
+        placeholder={section ? 'Section (blank for a line)' : folder ? 'New folder' : 'Board name'}
         spellCheck={false}
         onFocus={(e) => e.currentTarget.select()}
         onKeyDown={(e) => {
@@ -118,24 +144,39 @@ function NameField({
 
 export function BoardTree({
   boards,
+  sections,
   current,
   edit,
   onOpen,
   onMove,
   onMenu,
+  onSectionMenu,
+  onRenameSection,
+  onPlaceSection,
   onCommit,
   onCancel,
 }: {
   boards: Board[]
+  sections: Section[]
   current: string | null
   edit: TreeEdit
   onOpen: (id: string) => void
   onMove: (id: string, parent: string | null) => void
   onMenu: (e: React.MouseEvent, board: Board) => void
+  onSectionMenu: (e: React.MouseEvent, section: Section) => void
+  onRenameSection: (id: string) => void
+  onPlaceSection: (id: string, parent: string | null, at: string | null) => void
   onCommit: (name: string) => void
   onCancel: () => void
 }) {
   const kids = useMemo(() => childrenByParent(boards), [boards])
+  const sectionsBy = useMemo(() => {
+    const out = new Map<string | null, Section[]>()
+    const all = edit?.kind === 'new-section' ? [...sections, { id: NEW_SECTION, parent_id: edit.parent, at: edit.at, title: '' }] : sections
+    for (const sec of all) out.set(sec.parent_id, [...(out.get(sec.parent_id) ?? []), sec])
+    return out
+  }, [sections, edit])
+  const nav = useRef<HTMLElement>(null)
 
   // Folders you've closed, remembered. Opening a board opens the folders it's in, once per board,
   // so closing the folder you're in afterwards sticks.
@@ -165,6 +206,36 @@ export function BoardTree({
     }
   }, [current, boards, shut])
 
+  // Right-click ▸ Collapse all closes every folder; Show current board opens the folders above the
+  // open board, scrolls to it and flashes it (Onyx's reveal).
+  const [flashing, setFlashing] = useState(false)
+  useEffect(() => {
+    const onCommand = (e: Event) => {
+      const kind = (e as CustomEvent<string>).detail
+      if (kind === 'collapse') {
+        const next = new Set([...kids.keys()].filter((id): id is string => !!id && (kids.get(id)?.length ?? 0) > 0))
+        remember(SHUT_KEY, [...next].join(','))
+        setShut(next)
+      } else if (kind === 'reveal' && current) {
+        const byId = new Map(boards.map((b) => [b.id, b]))
+        setShut((prev) => {
+          const next = new Set(prev)
+          for (let b = byId.get(byId.get(current)?.parent_id ?? ''); b; b = byId.get(b.parent_id ?? '')) next.delete(b.id)
+          remember(SHUT_KEY, [...next].join(','))
+          return next
+        })
+        requestAnimationFrame(() => {
+          const row = nav.current?.parentElement?.querySelector<HTMLElement>('.tree-item.current')
+          row?.scrollIntoView({ block: 'center', behavior: 'smooth' })
+          setFlashing(true)
+          window.setTimeout(() => setFlashing(false), 1200)
+        })
+      }
+    }
+    window.addEventListener('cxboards:tree', onCommand)
+    return () => window.removeEventListener('cxboards:tree', onCommand)
+  }, [kids, boards, current])
+
   // Drag a board onto another to put it inside; onto "Top level" to bring it back out.
   const [dragging, setDragging] = useState<string | null>(null)
   const [over, setOver] = useState<string | null>(null)
@@ -175,10 +246,30 @@ export function BoardTree({
     if (draggedParent) out.add(draggedParent) // already there
     return out
   }, [dragging, draggedParent, kids])
+  // Drag a section onto a board (or another section) to put it just above that one.
+  const [movingSection, setMovingSection] = useState<string | null>(null)
   const end = () => {
     setDragging(null)
+    setMovingSection(null)
     setOver(null)
   }
+  const above = (key: string, parent: string | null, at: string | null) => ({
+    onDragOver: (e: React.DragEvent) => {
+      if (!movingSection) return
+      e.preventDefault()
+      e.dataTransfer.dropEffect = 'move'
+      setOver(key)
+    },
+    onDragLeave: (e: React.DragEvent) => {
+      if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setOver((o) => (o === key ? null : o))
+    },
+    onDrop: (e: React.DragEvent) => {
+      e.preventDefault()
+      const moving = movingSection
+      end()
+      if (moving) onPlaceSection(moving, parent, at)
+    },
+  })
   const target = (id: string | null) => {
     const key = id ?? TOP
     return {
@@ -201,10 +292,35 @@ export function BoardTree({
   }
 
   const naming = (parent: string | null) => edit?.kind === 'folder' && edit.parent === parent
-  const render = (parent: string | null, depth: number): React.ReactNode => (
+  const sectionRow = (sec: Section, depth: number, at: string | null) =>
+    (edit?.kind === 'section' && edit.id === sec.id) || sec.id === NEW_SECTION ? (
+      <NameField key={sec.id} depth={depth} initial={sec.title} folder={false} section onCommit={onCommit} onCancel={onCancel} />
+    ) : (
+      <div
+        key={sec.id}
+        className={`tree-section${sec.title ? '' : ' line'}${over === sec.id ? ' drop-above' : ''}${movingSection === sec.id ? ' dragging' : ''}`}
+        style={{ paddingLeft: 10 + depth * 14 }}
+        onContextMenu={(e) => onSectionMenu(e, sec)}
+        onDoubleClick={() => onRenameSection(sec.id)}
+        draggable
+        onDragStart={(e) => {
+          e.dataTransfer.setData('application/x-cxboards-section', sec.id)
+          e.dataTransfer.effectAllowed = 'move'
+          requestAnimationFrame(() => setMovingSection(sec.id))
+        }}
+        onDragEnd={end}
+        {...above(sec.id, sec.parent_id, at)}
+      >
+        {sec.title && <span className="tree-section-title">{sec.title}</span>}
+      </div>
+    )
+  const render = (parent: string | null, depth: number): React.ReactNode => {
+    const list = kids.get(parent) ?? []
+    const placed = placeSections(list, sectionsBy.get(parent) ?? [])
+    return (
     <>
       {naming(parent) && <NameField depth={depth} initial="" folder onCommit={onCommit} onCancel={onCancel} />}
-      {(kids.get(parent) ?? []).map((b) => {
+      {list.map((b) => {
         const inside = (kids.get(b.id)?.length ?? 0) > 0
         const open = inside && !shut.has(b.id)
         const folder = b.is_folder || inside
@@ -215,13 +331,14 @@ export function BoardTree({
         )
         return (
           <div key={b.id}>
+            {placed.above.get(b.id)?.map((sec) => sectionRow(sec, depth, sec.at))}
             {edit?.kind === 'rename' && edit.id === b.id ? (
               <NameField depth={depth} initial={b.title} folder={folder} onCommit={onCommit} onCancel={onCancel} />
             ) : (
               <button
-                className={`tree-item${b.id === current ? ' current' : ''}${over === b.id ? ' drop-into' : ''}${
-                  b.id === dragging ? ' dragging' : ''
-                }`}
+                className={`tree-item${b.id === current ? ` current${flashing ? ' flash' : ''}` : ''}${over === b.id ? ' drop-into' : ''}${
+                  over === `above:${b.id}` ? ' drop-above' : ''
+                }${b.id === dragging ? ' dragging' : ''}`}
                 style={{ paddingLeft: 6 + depth * 14 }}
                 onClick={() => {
                   onOpen(b.id)
@@ -237,7 +354,7 @@ export function BoardTree({
                   requestAnimationFrame(() => setDragging(b.id))
                 }}
                 onDragEnd={end}
-                {...target(b.id)}
+                {...(movingSection ? above(`above:${b.id}`, b.parent_id, b.title) : target(b.id))}
               >
                 <span
                   className={`tree-chev${inside ? ' has' : ''}${open ? ' open' : ''}`}
@@ -263,10 +380,12 @@ export function BoardTree({
           </div>
         )
       })}
+      {placed.last.map((sec) => sectionRow(sec, depth, null))}
     </>
-  )
+    )
+  }
   return (
-    <nav className="tree">
+    <nav className="tree" ref={nav}>
       {dragging && draggedParent && (
         <div className={`tree-top${over === TOP ? ' over' : ''}`} {...target(null)}>
           ↑ Top level

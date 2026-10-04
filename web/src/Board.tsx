@@ -2,7 +2,6 @@
 // sent to the API and the board reloads on the change event that comes back.
 
 import {
-  Background,
   Controls,
   MarkerType,
   ReactFlow,
@@ -27,6 +26,8 @@ import { BoardContext, COLORS, type BoardContextValue } from './context'
 import { FloatingEdge, type LineData } from './edges'
 import { MotionEditor } from './Motion'
 import { CardNode, ColumnNode } from './nodes'
+import { Dots } from './Dots'
+import { useScrollSpeed } from './prefs'
 import { CropModal, FocusEditor, LabelPicker, Lightbox } from './Overlays'
 import { SketchEditor } from './Sketch'
 import { Toolbar } from './Toolbar'
@@ -142,6 +143,24 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
   const [sketching, setSketching] = useState<Card | null>(null)
   const [motionCard, setMotionCard] = useState<Card | null>(null)
   const wrapper = useRef<HTMLDivElement>(null)
+  const scrollSpeed = useScrollSpeed()
+
+  // Panning stays off the main thread's paint path: the viewport is its own GPU layer (styles.css),
+  // and while the board moves, cards ignore the pointer so ones sliding under it don't run their
+  // hover styles. A layer keeps the resolution it was drawn at, so after a zoom it is dropped for
+  // one frame and redrawn sharp at the new scale.
+  const moveZoom = useRef(1)
+  const onMoveStart = useCallback((_e: unknown, vp: { zoom: number }) => {
+    moveZoom.current = vp.zoom
+    wrapper.current?.classList.add('moving')
+  }, [])
+  const onMoveEnd = useCallback((_e: unknown, vp: { zoom: number }) => {
+    const el = wrapper.current
+    el?.classList.remove('moving')
+    if (!el || vp.zoom === moveZoom.current) return
+    el.classList.add('relayer')
+    requestAnimationFrame(() => requestAnimationFrame(() => el.classList.remove('relayer')))
+  }, [])
   const dragging = useRef(false)
   const dragStart = useRef<{ alt: boolean; positions: Map<string, { x: number; y: number }> } | null>(null)
   const deferred = useRef<BoardState | null>(null)
@@ -1072,13 +1091,16 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
           elementsSelectable={!presenting}
           nodesDraggable={!presenting}
           panOnScroll
+          panOnScrollSpeed={scrollSpeed}
+          onMoveStart={onMoveStart}
+          onMoveEnd={onMoveEnd}
           panOnDrag={presenting ? true : [1, 2]}
           minZoom={0.1}
           maxZoom={2.5}
           colorMode={state?.palette?.scheme ?? 'system'}
           proOptions={{ hideAttribution: true }}
         >
-          <Background gap={24} size={1.2} />
+          <Dots gap={24} size={1.2} />
           {!presenting && <Controls showInteractive={false} position="bottom-right" />}
         </ReactFlow>
         {state && !state.cards.length && (

@@ -171,8 +171,21 @@ async function req<T>(method: string, path: string, body?: unknown): Promise<T> 
   return resp.json() as Promise<T>
 }
 
+/** A divider in the sidebar: above the first board under `parent_id` whose title sorts at or after `at` (null: last). */
+export interface Section {
+  id: string
+  parent_id: string | null
+  at: string | null
+  title: string
+}
+
 export const api = {
   boards: () => req<Board[]>('GET', '/api/boards'),
+  sections: () => req<Section[]>('GET', '/api/sections'),
+  addSection: (parent_id: string | null, at: string | null, title = '') => req<Section>('POST', '/api/sections', { parent_id, at, title }),
+  updateSection: (id: string, patch: { title?: string; parent_id?: string | null; at?: string | null }) =>
+    req<Section>('PATCH', `/api/sections/${id}`, patch),
+  deleteSection: (id: string) => req<Section>('DELETE', `/api/sections/${id}`),
   board: (id: string) => req<BoardState>('GET', `/api/boards/${id}`),
   createBoard: (title: string, parent?: string, template?: string, folder?: boolean) =>
     req<Board>('POST', '/api/boards', { title, parent, template, folder }),

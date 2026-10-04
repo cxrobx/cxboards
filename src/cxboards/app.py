@@ -329,6 +329,37 @@ def create_app(
             folder=bool(body.get("folder")),
         )
 
+    # Sidebar sections (store.sections). Other windows hear about a change as a board-less event,
+    # which makes them reload the sidebar.
+    def sections_changed() -> None:
+        broadcaster.publish({"board_id": None, "sections": True, "card_ids": [], "actor": "chris"})
+
+    @app.get("/api/sections")
+    def list_sections() -> list[dict[str, Any]]:
+        return store.sections()
+
+    @app.post("/api/sections")
+    def add_section(body: dict[str, Any] = Body(...)) -> dict[str, Any]:
+        parent = body.get("parent_id")
+        section = store.add_section(board_id_of(parent) if parent else None, body.get("at"), body.get("title", ""))
+        sections_changed()
+        return section
+
+    @app.patch("/api/sections/{section_id}")
+    def update_section(section_id: str, body: dict[str, Any] = Body(...)) -> dict[str, Any]:
+        fields = {k: body[k] for k in ("title", "at") if k in body}
+        if "parent_id" in body:
+            fields["parent_id"] = board_id_of(body["parent_id"]) if body["parent_id"] else None
+        section = store.update_section(section_id, **fields)
+        sections_changed()
+        return section
+
+    @app.delete("/api/sections/{section_id}")
+    def delete_section(section_id: str) -> dict[str, Any]:
+        section = store.delete_section(section_id)
+        sections_changed()
+        return section
+
     @app.get("/api/templates")
     def list_templates(q: str = "", category: str = "") -> dict[str, Any]:
         """The library: categories (with counts) and the templates matching ``q`` / ``category``."""

@@ -3,14 +3,15 @@
 
 import { ReactFlowProvider } from '@xyflow/react'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { api, type Board, type BoardState, type ChangeEvent } from './api'
+import { api, type Board, type BoardState, type ChangeEvent, type Section } from './api'
 import { BoardCanvas, type Toast } from './Board'
 import { BOOKMARKLET, ClipPage } from './Clip'
 import { ContextMenu, type MenuItem, type MenuState } from './ContextMenu'
 import { rememberBoard, SearchPalette } from './Search'
-import { BoardTree, childrenByParent, PinIcon, subtreeOf, type TreeEdit, useDock } from './Sidebar'
+import { BoardTree, childrenByParent, PinIcon, subtreeOf, treeCommand, type TreeEdit, useDock } from './Sidebar'
 import { applyPalette } from './theme'
 import { NewBoardDialog } from './TemplatePicker'
+import { SettingsPanel } from './Settings'
 import { ThemePicker } from './ThemePicker'
 import { TrashPanel } from './Trash'
 
@@ -68,6 +69,7 @@ export function App() {
 function Shell() {
   const initial = routeFromPath()
   const [boards, setBoards] = useState<Board[] | null>(null)
+  const [sections, setSections] = useState<Section[]>([])
   const [current, setCurrent] = useState<string | null>(initial.board)
   const [focusId, setFocusId] = useState<string | null>(initial.card)
   const [state, setState] = useState<BoardState | null>(null)
@@ -80,6 +82,7 @@ function Shell() {
   const [trashOpen, setTrashOpen] = useState(false)
   const [creating, setCreating] = useState<false | { parent: string | null; browse?: boolean }>(false)
   const [clipperOpen, setClipperOpen] = useState(false)
+  const [settingsOpen, setSettingsOpen] = useState(false)
   const [boardMenu, setBoardMenu] = useState<MenuState | null>(null)
   const [sideMenu, setSideMenu] = useState<MenuState | null>(null)
   const [treeEdit, setTreeEdit] = useState<TreeEdit>(null)
@@ -135,7 +138,9 @@ function Shell() {
 
   const loadBoards = useCallback(async () => {
     try {
-      setBoards(await api.boards())
+      const [list, secs] = await Promise.all([api.boards(), api.sections()])
+      setBoards(list)
+      setSections(secs)
     } catch (e) {
       showToast((e as Error).message)
     }
@@ -213,6 +218,9 @@ function Shell() {
       } else if (e.key === ']') {
         e.preventDefault()
         window.history.forward()
+      } else if (e.key === ',') {
+        e.preventDefault()
+        setSettingsOpen(true)
       } else if (key === 'u' && state?.board.parent_id) {
         e.preventDefault()
         open(state.board.parent_id)
@@ -221,6 +229,13 @@ function Shell() {
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [open, state])
+
+  // CXBoards ▸ Settings… in the native app's menu.
+  useEffect(() => {
+    const onOpen = () => setSettingsOpen(true)
+    window.addEventListener('cxboards:open-settings', onOpen)
+    return () => window.removeEventListener('cxboards:open-settings', onOpen)
+  }, [])
 
   // A window left open across an update keeps running the old page (a new kind of card shows
   // as its bare name). The server says which build it serves; when that changes, offer a reload.
@@ -407,8 +422,9 @@ function Shell() {
       .then((b) => loadBoards().then(() => open(b.id)))
       .catch((e) => showToast((e as Error).message))
 
-  // Right-click in the sidebar: on its empty space, make a folder or a board; on a board, the same
-  // inside it, plus rename, duplicate, move and delete.
+  // Right-click in the sidebar: on its empty space, make a folder, a board or a section, collapse
+  // every folder, or find the open board; on a board, the same inside it, plus rename, duplicate,
+  // move and delete.
   const sidebarMenu = (e: React.MouseEvent) => {
     e.preventDefault()
     setSideMenu({
@@ -418,6 +434,49 @@ function Shell() {
         { label: 'New folder', run: () => setTreeEdit({ kind: 'folder', parent: null }) },
         { label: 'New board…', run: () => setCreating({ parent: null }) },
         { label: 'New board from template…', run: () => setCreating({ parent: null, browse: true }) },
+        { label: 'Add section here', run: () => addSection(null, null) },
+        { kind: 'sep' },
+        { label: 'Collapse all', run: () => treeCommand('collapse') },
+        { label: 'Show current board', disabled: !current, run: () => treeCommand('reveal') },
+      ],
+    })
+  }
+
+  // Sections (Margin's): named in place where they'll sit; a blank name leaves a plain line, Esc makes none.
+  const addSection = (parent: string | null, at: string | null) => setTreeEdit({ kind: 'new-section', parent, at })
+
+  const placeSection = async (id: string, parent: string | null, at: string | null) => {
+    try {
+      const sec = await api.updateSection(id, { parent_id: parent, at })
+      setSections((list) => list.map((s) => (s.id === id ? sec : s)))
+    } catch (e) {
+      showToast((e as Error).message)
+    }
+  }
+
+  const sectionMenu = (e: React.MouseEvent, sec: Section) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setSideMenu({
+      x: e.clientX,
+      y: e.clientY,
+      items: [
+        { label: sec.title ? 'Rename section' : 'Name section', run: () => setTreeEdit({ kind: 'section', id: sec.id }) },
+        {
+          label: 'Remove section',
+          danger: true,
+          run: () =>
+            void api
+              .deleteSection(sec.id)
+              .then(() => {
+                setSections((list) => list.filter((s) => s.id !== sec.id))
+                showToast(sec.title ? `Removed “${sec.title}”` : 'Removed the line', {
+                  label: 'Undo',
+                  run: () => void api.addSection(sec.parent_id, sec.at, sec.title).then(loadBoards),
+                })
+              })
+              .catch((err) => showToast((err as Error).message)),
+        },
       ],
     })
   }
@@ -441,6 +500,7 @@ function Shell() {
             { label: 'New folder inside', run: () => setTreeEdit({ kind: 'folder', parent: board.id }) },
             { label: 'New board inside…', run: () => setCreating({ parent: board.id }) },
             { label: 'New board from template inside…', run: () => setCreating({ parent: board.id, browse: true }) },
+            { label: 'Add section above', run: () => addSection(board.parent_id, board.title) },
             { kind: 'sep' },
             rename,
             { label: 'Duplicate', run: () => duplicateBoard(board) },
@@ -463,6 +523,14 @@ function Shell() {
         if (!board || !title || title === board.title) return
         await api.updateBoard(board.id, { title })
         await loadBoards()
+      } else if (edit?.kind === 'new-section') {
+        const sec = await api.addSection(edit.parent, edit.at, title)
+        setSections((list) => [...list, sec])
+      } else if (edit?.kind === 'section') {
+        const sec = sections.find((s) => s.id === edit.id)
+        if (!sec || title === sec.title) return
+        const saved = await api.updateSection(sec.id, { title })
+        setSections((list) => list.map((s) => (s.id === sec.id ? saved : s)))
       } else if (edit?.kind === 'folder') {
         const folder = await api.createBoard(title || 'New folder', edit.parent ?? undefined, undefined, true)
         await loadBoards()
@@ -577,11 +645,15 @@ function Shell() {
         {boards && (
           <BoardTree
             boards={boards}
+            sections={sections}
             current={current}
             edit={treeEdit}
             onOpen={(id) => open(id)}
             onMove={(id, parent) => void moveBoard(id, parent)}
             onMenu={boardRowMenu}
+            onSectionMenu={sectionMenu}
+            onRenameSection={(id) => setTreeEdit({ kind: 'section', id })}
+            onPlaceSection={(id, parent, at) => void placeSection(id, parent, at)}
             onCommit={(name) => void commitTreeEdit(name)}
             onCancel={() => setTreeEdit(null)}
           />
@@ -615,6 +687,9 @@ function Shell() {
           </button>
           <button className="ghost" onClick={() => setClipperOpen(true)}>
             Clipper
+          </button>
+          <button className="ghost settings-button" onClick={() => setSettingsOpen(true)} title="Settings (⌘,)" aria-label="Settings">
+            ⚙
           </button>
           <div className={`live${live ? ' on' : ''}`} title={live ? 'Live: agent edits appear as they happen' : 'Reconnecting…'}>
             <span className="dot" /> {live ? 'live' : 'reconnecting'}
@@ -756,6 +831,7 @@ function Shell() {
         />
       )}
       {clipperOpen && <ClipperPanel onClose={() => setClipperOpen(false)} />}
+      {settingsOpen && <SettingsPanel onClose={() => setSettingsOpen(false)} />}
       {theming && state && (
         <ThemePicker
           board={state.board}

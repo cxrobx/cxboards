@@ -633,6 +633,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
         webView.evaluateJavaScript("document.querySelector('.new-board')?.click()")
     }
 
+    @objc private func openSettings() {
+        webView.evaluateJavaScript("window.dispatchEvent(new CustomEvent('cxboards:open-settings'))")
+    }
+
     @objc private func reloadPage() {
         if ready { webView.reload() } else { retry() }
     }
@@ -651,6 +655,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
         let appItem = NSMenuItem()
         let app = NSMenu()
         app.addItem(withTitle: "About CXBoards", action: #selector(NSApplication.orderFrontStandardAboutPanel(_:)), keyEquivalent: "")
+        app.addItem(.separator())
+        app.addItem(withTitle: "Settings…", action: #selector(openSettings), keyEquivalent: ",").target = self
         app.addItem(.separator())
         app.addItem(withTitle: "Hide CXBoards", action: #selector(NSApplication.hide(_:)), keyEquivalent: "h")
         let others = app.addItem(withTitle: "Hide Others", action: #selector(NSApplication.hideOtherApplications(_:)), keyEquivalent: "h")

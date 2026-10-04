@@ -66,6 +66,18 @@ user, never deployed. Built 2026-10-02 to plan creative sessions next to the art
   progress); its right edge drags the width, 200 px to half the window, double-click resets. Pin,
   width and closed folders are per-browser localStorage (`cxboards.sidebar`, `cxboards.side-w`,
   `cxboards.shut`), written straight onto the elements so hovering doesn't re-render the board.
+  Empty-space right-click also has Collapse all and Show current board (Onyx's reveal). **Sections**
+  (Margin's): a named divider or a plain line, from Add section here / Add section above, renamed by
+  double-click, dragged above another board. The tree sorts by title, so a section is stored as
+  `(parent_id, at)` in the `sections` table and sits above the first board whose title sorts at or
+  after `at` (null: last); renames and deletes can't strand it. Not board content: no undo, no trash.
+
+- **Panning** must stay paint-free (measured 2026-10-04: React Flow's SVG `<Background>` repainted the
+  whole window every pan frame, ~28 ms of raster per scroll event). `web/src/Dots.tsx` replaces it
+  with a GPU layer that a pan only moves; the viewport is `will-change: transform`, re-rastered once
+  after a zoom (`.relayer`); cards ignore the pointer while the board moves. Settings (⌘,, the
+  sidebar's ⚙, CXBoards ▸ Settings…) holds Scroll speed (`web/src/prefs.ts`, per-browser
+  localStorage, default 1× = follows the fingers; React Flow's own default was 0.5×).
 
 - **Templates** (`templates/`, `src/cxboards/templates.py`): a library of boards as YAML files,
   `templates/<use case>/<slug>.yaml`, use cases ordered in `templates/categories.yaml` (Milanote's
@@ -121,7 +133,7 @@ Data lives in `~/Library/Application Support/CXBoards/` (`cxboards.db`, `uploads
 ## Run / verify
 
 ```bash
-.venv/bin/python -m pytest -q          # 357 tests: invariants, API, export, MCP, chat, themes, folders, templates (each built), animations, phases 1-3
+.venv/bin/python -m pytest -q          # 367 tests: invariants, API, export, MCP, chat, themes, folders, templates (each built), animations, phases 1-3
 app/build-app.sh                       # build + install CXBoards.app (Apple Development signed)
 scripts/selftest-app.sh                # the app's own end-to-end check (drops, dialogs, sidebar, downloads, links)
 scripts/install.sh                     # build UI, (re)install LaunchAgent, wait for health

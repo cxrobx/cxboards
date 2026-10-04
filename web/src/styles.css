@@ -173,6 +173,73 @@ a {
   box-shadow: inset 0 0 0 1px var(--amber);
 }
 
+/* Sections (Margin's): a small caps name over a hairline, or just the hairline. Dropping one shows
+   an amber line where it will land. */
+.tree-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 22px;
+  margin-top: 8px;
+  padding: 2px 8px 2px 10px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  cursor: default;
+  user-select: none;
+}
+
+.tree-section::after {
+  content: '';
+  flex: 1;
+  border-top: 1px solid var(--line);
+}
+
+.tree-section.line {
+  min-height: 12px;
+  margin-top: 4px;
+}
+
+.tree-section-title {
+  flex: none;
+  max-width: 70%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tree-section.editing::after {
+  display: none;
+}
+
+.tree-section.editing .tree-input {
+  text-transform: none;
+  letter-spacing: normal;
+  font-size: 12px;
+}
+
+.tree-section.dragging {
+  opacity: 0.45;
+}
+
+.tree-section.drop-above,
+.tree-item.drop-above {
+  box-shadow: inset 0 2px 0 var(--amber);
+}
+
+/* Show current board: a moment of amber on the row it scrolled to. */
+.tree-item.current.flash {
+  animation: tree-flash 1.2s ease-out;
+}
+
+@keyframes tree-flash {
+  0%,
+  35% {
+    background: color-mix(in srgb, var(--amber) 28%, transparent);
+  }
+}
+
 .tree-top {
   margin: 2px 0 4px;
   padding: 6px 10px;
@@ -548,6 +615,31 @@ html.side-resizing * {
 
 .react-flow__node {
   font-family: var(--font);
+}
+
+/* Smooth panning (Board.tsx, Dots.tsx): the cards and the dot grid are GPU layers that a pan only
+   moves, never repaints. .relayer drops the cards' layer for a frame after a zoom so it redraws sharp. */
+.react-flow__viewport {
+  will-change: transform;
+}
+
+.canvas.relayer .react-flow__viewport {
+  will-change: auto;
+}
+
+.canvas.moving .react-flow__node {
+  pointer-events: none;
+}
+
+.cx-dots {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.cx-dots-layer {
+  position: absolute;
+  will-change: transform;
 }
 
 .empty-board {
@@ -2699,4 +2791,31 @@ html[data-grain='film'] body::after {
 .custom-theme input[type='range'] {
   width: 100%;
   accent-color: var(--amber);
+}
+
+/* ---------- Settings (Settings.tsx) ---------- */
+
+.dialog.settings {
+  width: min(460px, 92vw);
+}
+
+.setting {
+  display: grid;
+  grid-template-columns: auto 1fr 3.5em auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.setting input[type='range'] {
+  width: 100%;
+  accent-color: var(--amber);
+}
+
+.setting-value {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.settings-button {
+  font-size: 15px;
 }
