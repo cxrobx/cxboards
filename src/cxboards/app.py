@@ -228,9 +228,10 @@ def create_app(
     # ------------------------------------------------------------------ animations (motion.py)
 
     def motion_context(card: dict[str, Any]) -> tuple[dict[str, str], Path | None]:
-        board = store.board(card["board_id"])
+        # The theme the board wears: its own, or (with none of its own) its project's.
+        worn, _ = store.effective_theme(card["board_id"])
         image = store.upload_path(card["data"]["file"]) if card["kind"] == "image" else None
-        return motionlib.board_palette(board.get("theme")), image
+        return motionlib.board_palette(worn), image
 
     def check_motion(card: dict[str, Any]) -> None:
         """Run new drawing code before it's saved, so a broken animation never reaches the board."""
@@ -866,7 +867,7 @@ def create_app(
         if not board:
             return motionlib.guide()
         board_id = board_id_of(board)
-        return motionlib.guide(store.board(board_id), store.cards(board_id))
+        return motionlib.guide({**store.board(board_id), "theme": store.effective_theme(board_id)[0]}, store.cards(board_id))
 
     @app.get("/motion/runner", response_class=HTMLResponse)
     def motion_runner() -> HTMLResponse:

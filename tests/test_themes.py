@@ -188,3 +188,13 @@ def test_fonts_are_fetched_once_and_served_locally(config) -> None:
         refused = c.patch(f"/api/boards/{board['id']}", json={"theme": {**PROJECT, "fonts": {"display": "Not A Font"}}}, headers=W)
         assert refused.status_code == 400 and "no family called" in refused.json()["error"]
         assert c.get("/fonts/file/../../etc.woff2").status_code == 404
+
+
+def test_animations_draw_in_the_theme_a_board_inherits(client) -> None:
+    # An animation's colours (its guide, preview and exports) come from the theme the board wears,
+    # which for a board inside a project is the project's.
+    album = client.post("/api/boards", json={"title": "Album"}, headers=W).json()
+    song = client.post("/api/boards", json={"title": "Song", "parent": album["id"]}, headers=W).json()
+    client.patch(f"/api/boards/{album['id']}", json={"theme": "film"}, headers=W)
+    guide = client.get("/api/motion/guide", params={"board": song["id"]}).text
+    assert themes.palette({"preset": "film"})["canvas"] in guide

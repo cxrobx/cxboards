@@ -38,6 +38,7 @@ DEFAULT_PALETTE = {
     "ink": "#111111",
     "muted": "#6B6B6B",
     "accent": "#B07A1E",
+    "accent2": "#B07A1E",
     "line": "#E0D7B8",
 }
 
@@ -87,6 +88,7 @@ def board_palette(theme: dict[str, Any] | None) -> dict[str, str]:
         "ink": tokens["ink"],
         "muted": tokens["muted"],
         "accent": tokens["accent"],
+        "accent2": tokens.get("accent2") or tokens["accent"],
         "line": tokens["line"],
     }
 
@@ -231,7 +233,7 @@ The code defines `function draw(env)` and, if it needs one, `function setup(env)
 return value is env.state). Frames are drawn at ~30 fps. env holds:
 - ctx, w, h: a 2D canvas context and the size in CSS pixels (already scaled for the screen)
 - t (seconds), p (0..1 through the loop), loop (seconds), frame
-- palette: {ground, card, ink, muted, accent, line} (hex), state (what setup returned)
+- palette: {ground, card, ink, muted, accent, accent2, line} (hex), state (what setup returned)
 - image (the card's picture, or null) and cover(image?, {zoom, dx, dy}) → draws it cover-fit and
   returns its {x, y, w, h}
 - pen, the hand-drawn marks (o = options; color defaults to palette.ink):

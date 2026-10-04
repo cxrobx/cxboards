@@ -23,6 +23,7 @@ export function boardPalette(): Record<string, string> {
     ink: get('--ink', '#111111'),
     muted: get('--muted', '#6b6b6b'),
     accent: get('--amber', '#b07a1e'),
+    accent2: get('--accent-2', '') || get('--amber', '#b07a1e'),
     line: get('--line', '#e0d7b8'),
     font: get('--font', 'Georgia, serif'),
   }
