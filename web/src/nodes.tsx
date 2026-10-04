@@ -1,6 +1,6 @@
 // The cards themselves: how each kind looks, edits, and sits in a column.
 
-import { NodeResizeControl, ResizeControlVariant, type NodeProps } from '@xyflow/react'
+import { NodeResizeControl, NodeResizer, ResizeControlVariant, type NodeProps } from '@xyflow/react'
 import DOMPurify from 'dompurify'
 import { marked } from 'marked'
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
@@ -535,18 +535,42 @@ function Tools({ card, index }: { card: Card; index?: number }) {
   )
 }
 
+/** Cards resize from every edge and corner (images keep their shape); a column only gets wider. */
 function Resizer({ id }: { id: string }) {
   const { actions, cards, presenting } = useBoard()
-  if (presenting || cards.get(id)?.locked) return null
+  const startHeight = useRef(0)
+  const card = cards.get(id)
+  if (presenting || !card || card.locked) return null
+  if (card.kind === 'column') {
+    return (
+      <>
+        {(['left', 'right'] as const).map((side) => (
+          <NodeResizeControl
+            key={side}
+            position={side}
+            variant={ResizeControlVariant.Line}
+            resizeDirection="horizontal"
+            minWidth={120}
+            maxWidth={1200}
+            className="resize-line"
+            onResizeEnd={(_, box) => actions.resized(id, box, false)}
+          />
+        ))}
+      </>
+    )
+  }
   return (
-    <NodeResizeControl
-      position="right"
-      variant={ResizeControlVariant.Line}
-      resizeDirection="horizontal"
+    <NodeResizer
       minWidth={120}
       maxWidth={1200}
-      className="resize-line"
-      onResizeEnd={(_, params) => actions.resized(id, params.width)}
+      minHeight={40}
+      keepAspectRatio={card.kind === 'image'}
+      lineClassName="resize-line"
+      handleClassName="resize-handle"
+      onResizeStart={(_, box) => (startHeight.current = box.height)}
+      onResizeEnd={(_, box) =>
+        actions.resized(id, box, card.kind !== 'image' && Math.abs(box.height - startHeight.current) > 2)
+      }
     />
   )
 }
@@ -586,7 +610,10 @@ export function CardNode({ id, selected }: NodeProps) {
   return (
     <div
       className={cardClass(card, `card${selected ? ' selected' : ''}${dropTarget === id ? ' drop' : ''}`, touched, focusId)}
-      style={card.color ? ({ '--accent': card.color } as React.CSSProperties) : undefined}
+      style={{
+        ...(card.color ? ({ '--accent': card.color } as React.CSSProperties) : {}),
+        ...(card.data.min_h ? { minHeight: card.data.min_h } : {}),
+      }}
       onDoubleClick={() => open(card)}
     >
       <Resizer id={id} />

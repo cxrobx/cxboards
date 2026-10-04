@@ -617,7 +617,16 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
       },
       renameBoard: (id, title) => guarded(() => api.updateBoard(id, { title })),
       openBoard: onOpenBoard,
-      resized: (id, width) => void guarded(() => api.updateCard(id, { w: Math.round(width) })),
+      resized: (id, box, tall) => {
+        const card = cardsRef.current.get(id)
+        if (!card) return
+        const patch: Record<string, unknown> = { w: Math.round(box.width) }
+        // Dragging the top or left edge moves the card too: one patch, so one undo step.
+        if (Math.round(box.x) !== Math.round(card.x)) patch.x = Math.round(box.x)
+        if (Math.round(box.y) !== Math.round(card.y)) patch.y = Math.round(box.y)
+        if (tall) Object.assign(patch, { h: Math.round(box.height), data: { min_h: Math.round(box.height) } })
+        void guarded(() => api.updateCard(id, patch))
+      },
       addAfter,
       openFile: (card, reveal) => void guarded(() => api.openFile(card.id, reveal)),
       menuFor: (event, card) => openMenu(event, cardMenu([card.id])),

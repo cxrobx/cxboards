@@ -933,6 +933,9 @@ class Store:
 
     def _normalize(self, kind: str, text: str, data: dict[str, Any]) -> dict[str, Any]:
         data = dict(data or {})
+        if data.get("min_h") is not None:  # a dragged height; 0 / null goes back to fitting the content
+            min_h = max(0.0, min(4000.0, float(data["min_h"])))
+            data["min_h"] = round(min_h) if min_h >= 40 else None
         if kind == "todo":
             items = data.get("items") or []
             norm = []
@@ -1140,11 +1143,15 @@ class Store:
         color: str | None = None,
         w: float | None = None,
         h: float | None = None,
+        x: float | None = None,
+        y: float | None = None,
         locked: bool | None = None,
         z: str | None = None,
         kind: str | None = None,
         actor: str = "chris",
     ) -> dict[str, Any]:
+        """``x``/``y`` come only with a resize from the top or left edge (one undo step, not a move
+        and a resize); ``data.min_h`` is the height Chris dragged a card to, never less than its content."""
         self._actor(actor)
         with self._tx() as db:
             row = self._card_row(card_id)
@@ -1166,11 +1173,17 @@ class Store:
                 if row["locked"]:
                     self._check_unlocked(row, "resize")
                 card["w"] = max(120.0, min(1200.0, float(w)))
+            if (x is not None or y is not None) and not row["column_id"]:
+                self._check_unlocked(row, "resize")
+                card["x"] = float(x) if x is not None else card["x"]
+                card["y"] = float(y) if y is not None else card["y"]
             if h is not None:
                 card["h"] = max(40.0, float(h))
             elif text is not None or data is not None:
                 if card["kind"] not in ("column",):
                     card["h"] = layout.estimate_height(card["kind"], card["text"], card["data"], card["w"])
+            if card["data"].get("min_h"):
+                card["h"] = max(card["h"], float(card["data"]["min_h"]))
             if locked is not None:
                 card["locked"] = bool(locked)
             if z in ("front", "back"):
@@ -1180,10 +1193,10 @@ class Store:
             # A system write (link preview, measured height) keeps the card's author.
             by = row["updated_by"] if actor == "system" else actor
             db.execute(
-                "UPDATE cards SET kind = ?, text = ?, data = ?, color = ?, w = ?, h = ?, locked = ?, z = ?, "
-                "updated_at = ?, updated_by = ? WHERE id = ?",
-                (card["kind"], card["text"], json.dumps(card["data"]), card["color"], card["w"], card["h"],
-                 int(card["locked"]), card["z"], _now(), by, card_id),
+                "UPDATE cards SET kind = ?, text = ?, data = ?, color = ?, x = ?, y = ?, w = ?, h = ?, locked = ?, "
+                "z = ?, updated_at = ?, updated_by = ? WHERE id = ?",
+                (card["kind"], card["text"], json.dumps(card["data"]), card["color"], card["x"], card["y"],
+                 card["w"], card["h"], int(card["locked"]), card["z"], _now(), by, card_id),
             )
             touched = [card_id]
             if card["kind"] == "column" and w is not None:

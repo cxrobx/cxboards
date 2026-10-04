@@ -452,6 +452,8 @@ def create_app(
             color=body.get("color"),
             w=body.get("w"),
             h=body.get("h"),
+            x=body.get("x"),
+            y=body.get("y"),
             locked=body.get("locked"),
             z=body.get("z"),
             kind=kind,

@@ -7,7 +7,8 @@ export interface BoardActions {
   remove: (card: Card) => Promise<void>
   renameBoard: (boardId: string, title: string) => Promise<void>
   openBoard: (boardId: string) => void
-  resized: (id: string, width: number) => void
+  /** A resize ended. `tall` = the height was dragged too, so it's kept (as a minimum). */
+  resized: (id: string, box: { x: number; y: number; width: number; height: number }, tall: boolean) => void
   /** ⌘↵ while editing: save, then start the next note below (or next in the column). */
   addAfter: (card: Card) => void
   openFile: (card: Card, reveal?: boolean) => void

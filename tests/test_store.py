@@ -174,3 +174,25 @@ def test_about_here_placement_avoids_covering_cards(store: Store) -> None:
     assert abs(card["x"] - 120) + abs(card["y"] - 120) < 900  # still near where it was asked for
     exact = store.add_card(board["id"], "note", text="exact", x=130, y=130)
     assert (exact["x"], exact["y"]) == (130, 130)  # a pointer drop keeps its spot
+
+
+def test_resize_from_any_edge_is_one_undo_step(store: Store) -> None:
+    """A resize from the top-left moves and sizes the card in one write; the dragged height
+    stays as a minimum (text edits and measured heights never shrink below it)."""
+    board = store.create_board("B")
+    card = store.add_card(board["id"], "note", text="short")
+    before = store.card(card["id"])
+    store.update_card(card["id"], w=400, h=300, x=before["x"] - 50, y=before["y"] - 40, data={"min_h": 300})
+    sized = store.card(card["id"])
+    assert (sized["x"], sized["y"], sized["w"], sized["h"]) == (before["x"] - 50, before["y"] - 40, 400, 300)
+    assert sized["data"]["min_h"] == 300
+    store.update_card(card["id"], text="edited")
+    store.update_card(card["id"], h=90, actor="system")  # the UI's measured height
+    assert store.card(card["id"])["h"] == 300
+    store.undo(board_id=board["id"])  # the text edit
+    store.undo(board_id=board["id"])  # the resize, position included
+    back = store.card(card["id"])
+    assert (back["x"], back["y"], back["w"]) == (before["x"], before["y"], before["w"])
+    assert not back["data"].get("min_h")
+    store.update_card(card["id"], data={"min_h": 0})
+    assert store.card(card["id"])["data"]["min_h"] is None
