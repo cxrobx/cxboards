@@ -221,7 +221,8 @@ def create_app(
         template = body.get("template")
         template_id = board_id_of(template) if template else None
         return store.create_board(
-            body.get("title", ""), body.get("description", ""), parent_id, actor_of(request), template_id=template_id
+            body.get("title", ""), body.get("description", ""), parent_id, actor_of(request), template_id=template_id,
+            folder=bool(body.get("folder")),
         )
 
     @app.get("/api/boards/{ref}")

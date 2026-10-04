@@ -2,12 +2,13 @@
 // live connection that makes agent edits appear (and glow) as they land.
 
 import { ReactFlowProvider } from '@xyflow/react'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { api, type Board, type BoardState, type ChangeEvent } from './api'
 import { BoardCanvas, type Toast } from './Board'
 import { BOOKMARKLET, ClipPage } from './Clip'
 import { ContextMenu, type MenuItem, type MenuState } from './ContextMenu'
 import { rememberBoard, SearchPalette } from './Search'
+import { BoardTree, childrenByParent, PinIcon, subtreeOf, type TreeEdit, useDock } from './Sidebar'
 import { applyPalette } from './theme'
 import { ThemePicker } from './ThemePicker'
 import { TrashPanel } from './Trash'
@@ -20,120 +21,14 @@ function routeFromPath(): { board: string | null; card: string | null } {
   return { board: match ? decodeURIComponent(match[1]) : null, card }
 }
 
-/** Boards by parent (templates live in their own list), each list sorted by title. */
-function childrenByParent(boards: Board[]): Map<string | null, Board[]> {
-  const out = new Map<string | null, Board[]>()
-  for (const b of boards) {
-    if (b.is_template) continue
-    out.set(b.parent_id, [...(out.get(b.parent_id) ?? []), b])
-  }
-  for (const list of out.values()) list.sort((a, b) => a.title.localeCompare(b.title))
-  return out
-}
-
-/** A board and every board nested in it: the places it can't be moved into. */
-function subtreeOf(kids: Map<string | null, Board[]>, id: string): Set<string> {
-  const out = new Set([id])
-  const walk = (parent: string) => (kids.get(parent) ?? []).forEach((b) => (out.add(b.id), walk(b.id)))
-  walk(id)
-  return out
-}
-
-const TOP = '__top__'
-
-function BoardTree({
-  boards,
-  current,
-  onOpen,
-  onMove,
-}: {
-  boards: Board[]
-  current: string | null
-  onOpen: (id: string) => void
-  onMove: (id: string, parent: string | null) => void
-}) {
-  const kids = useMemo(() => childrenByParent(boards), [boards])
-  // Drag a board onto another to put it inside; onto "Top level" to bring it back out.
-  const [dragging, setDragging] = useState<string | null>(null)
-  const [over, setOver] = useState<string | null>(null)
-  const draggedParent = dragging ? boards.find((b) => b.id === dragging)?.parent_id ?? null : null
-  const blocked = useMemo(() => {
-    if (!dragging) return new Set<string>()
-    const out = subtreeOf(kids, dragging)
-    if (draggedParent) out.add(draggedParent) // already there
-    return out
-  }, [dragging, draggedParent, kids])
-  const end = () => {
-    setDragging(null)
-    setOver(null)
-  }
-  const target = (id: string | null) => {
-    const key = id ?? TOP
-    return {
-      onDragOver: (e: React.DragEvent) => {
-        if (!dragging || (id ? blocked.has(id) : !draggedParent)) return
-        e.preventDefault()
-        e.dataTransfer.dropEffect = 'move'
-        setOver(key)
-      },
-      onDragLeave: (e: React.DragEvent) => {
-        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setOver((o) => (o === key ? null : o))
-      },
-      onDrop: (e: React.DragEvent) => {
-        e.preventDefault()
-        const moving = dragging
-        end()
-        if (moving) onMove(moving, id)
-      },
-    }
-  }
-  const render = (parent: string | null, depth: number): React.ReactNode =>
-    (kids.get(parent) ?? []).map((b) => (
-      <div key={b.id}>
-        <button
-          className={`tree-item${b.id === current ? ' current' : ''}${over === b.id ? ' drop-into' : ''}${
-            b.id === dragging ? ' dragging' : ''
-          }`}
-          style={{ paddingLeft: 12 + depth * 14 }}
-          onClick={() => onOpen(b.id)}
-          title={b.title}
-          draggable
-          onDragStart={(e) => {
-            e.dataTransfer.setData('application/x-cxboards-board', b.id)
-            e.dataTransfer.effectAllowed = 'move'
-            // Next frame: changing the list inside dragstart can cancel the drag.
-            requestAnimationFrame(() => setDragging(b.id))
-          }}
-          onDragEnd={end}
-          {...target(b.id)}
-        >
-          <span className="tree-glyph" style={b.swatch ? { color: b.swatch.accent } : undefined}>
-            {depth ? '└' : '▦'}
-          </span>
-          <span className="tree-title">{b.title}</span>
-          <span className="tree-count">{b.card_count}</span>
-        </button>
-        {render(b.id, depth + 1)}
-      </div>
-    ))
-  return (
-    <nav className="tree">
-      {dragging && draggedParent && (
-        <div className={`tree-top${over === TOP ? ' over' : ''}`} {...target(null)}>
-          ↑ Top level
-        </div>
-      )}
-      {render(null, 0)}
-    </nav>
-  )
-}
-
 function NewBoardDialog({
   templates,
+  inside,
   onCreate,
   onClose,
 }: {
   templates: Board[]
+  inside: string | null
   onCreate: (title: string, template: string | null) => void
   onClose: () => void
 }) {
@@ -149,7 +44,7 @@ function NewBoardDialog({
         }}
       >
         <header>
-          <h2>New board</h2>
+          <h2>{inside ? `New board inside “${inside}”` : 'New board'}</h2>
         </header>
         <div className="dialog-body">
           <input
@@ -252,9 +147,11 @@ function Shell() {
   const [editingTitle, setEditingTitle] = useState(false)
   const [searching, setSearching] = useState(false)
   const [trashOpen, setTrashOpen] = useState(false)
-  const [creating, setCreating] = useState(false)
+  const [creating, setCreating] = useState<false | { parent: string | null }>(false)
   const [clipperOpen, setClipperOpen] = useState(false)
   const [boardMenu, setBoardMenu] = useState<MenuState | null>(null)
+  const [sideMenu, setSideMenu] = useState<MenuState | null>(null)
+  const [treeEdit, setTreeEdit] = useState<TreeEdit>(null)
   const [presenting, setPresenting] = useState(false)
   const [theming, setTheming] = useState(false)
   const [chatOpen, setChatOpen] = useState(() => {
@@ -275,8 +172,20 @@ function Shell() {
   currentRef.current = current
   const stateRef = useRef<BoardState | null>(null)
   stateRef.current = state
-  const deletingHere = useRef<string | null>(null)
+  const deletingHere = useRef<Set<string>>(new Set())
   const missingRef = useRef<() => void>(() => {})
+
+  // The sidebar's dock (Sidebar.tsx): it stays out while its menu is open, a name is being typed
+  // in it, or a board is being dragged in it.
+  const appRef = useRef<HTMLDivElement>(null)
+  const asideRef = useRef<HTMLElement>(null)
+  const sideMenuRef = useRef(sideMenu)
+  sideMenuRef.current = sideMenu
+  const dock = useDock(appRef, asideRef, () => {
+    const aside = asideRef.current
+    const active = document.activeElement
+    return !!sideMenuRef.current || !!aside?.querySelector('.tree-item.dragging') || (!!active && active.tagName === 'INPUT' && !!aside?.contains(active))
+  })
 
   const showToast: Toast = useCallback((message, action) => {
     setToast({ id: Date.now() + Math.random(), message, action })
@@ -387,7 +296,7 @@ function Shell() {
     source.addEventListener('change', (msg) => {
       const event = JSON.parse((msg as MessageEvent).data) as ChangeEvent
       if (event.deleted) {
-        if (event.board_id === currentRef.current && deletingHere.current !== event.board_id) missingRef.current()
+        if (event.board_id === currentRef.current && !deletingHere.current.has(event.board_id)) missingRef.current()
         window.clearTimeout(listTimer)
         listTimer = window.setTimeout(() => void loadBoards(), 200)
         return
@@ -429,12 +338,13 @@ function Shell() {
     if (!theming) applyPalette(current ? state?.palette ?? null : null)
   }, [state, current, theming])
 
-  const newBoard = () => setCreating(true)
+  const newBoard = () => setCreating({ parent: null })
 
   const createBoard = async (title: string, template: string | null) => {
+    const parent = creating ? creating.parent : null
     setCreating(false)
     try {
-      const board = await api.createBoard(title, undefined, template ?? undefined)
+      const board = await api.createBoard(title, parent ?? undefined, template ?? undefined)
       await loadBoards()
       open(board.id)
     } catch (e) {
@@ -502,14 +412,7 @@ function Shell() {
             },
           ],
         },
-        {
-          label: 'Duplicate board',
-          run: () =>
-            void api
-              .duplicateBoard(board.id, { parent: board.parent_id ?? undefined })
-              .then((b) => loadBoards().then(() => open(b.id)))
-              .catch((e) => showToast((e as Error).message)),
-        },
+        { label: 'Duplicate board', run: () => duplicateBoard(board) },
         ...(board.is_template ? [] : [{ kind: 'sub' as const, label: 'Move board into', items: moveTargets(board) }]),
         board.is_template
           ? { label: 'Stop being a template', run: () => void api.updateBoard(board.id, { is_template: false }).then(loadBoards) }
@@ -523,9 +426,79 @@ function Shell() {
               .catch((e) => showToast((e as Error).message)),
         },
         { kind: 'sep' },
-        { label: 'Delete board', danger: true, run: () => void deleteBoard() },
+        { label: 'Delete board', danger: true, run: () => void deleteBoard(board) },
       ],
     })
+  }
+
+  const duplicateBoard = (board: Board) =>
+    void api
+      .duplicateBoard(board.id, { parent: board.parent_id ?? undefined })
+      .then((b) => loadBoards().then(() => open(b.id)))
+      .catch((e) => showToast((e as Error).message))
+
+  // Right-click in the sidebar: on its empty space, make a folder or a board; on a board, the same
+  // inside it, plus rename, duplicate, move and delete.
+  const sidebarMenu = (e: React.MouseEvent) => {
+    e.preventDefault()
+    setSideMenu({
+      x: e.clientX,
+      y: e.clientY,
+      items: [
+        { label: 'New folder', run: () => setTreeEdit({ kind: 'folder', parent: null }) },
+        { label: 'New board…', run: () => setCreating({ parent: null }) },
+      ],
+    })
+  }
+
+  const boardRowMenu = (e: React.MouseEvent, board: Board) => {
+    e.preventDefault()
+    e.stopPropagation()
+    const rename: MenuItem = { label: 'Rename', run: () => setTreeEdit({ kind: 'rename', id: board.id }) }
+    const remove: MenuItem = { label: 'Delete', danger: true, run: () => void deleteBoard(board) }
+    setSideMenu({
+      x: e.clientX,
+      y: e.clientY,
+      items: board.is_template
+        ? [
+            rename,
+            { label: 'Stop being a template', run: () => void api.updateBoard(board.id, { is_template: false }).then(loadBoards) },
+            { kind: 'sep' },
+            remove,
+          ]
+        : [
+            { label: 'New folder inside', run: () => setTreeEdit({ kind: 'folder', parent: board.id }) },
+            { label: 'New board inside…', run: () => setCreating({ parent: board.id }) },
+            { kind: 'sep' },
+            rename,
+            { label: 'Duplicate', run: () => duplicateBoard(board) },
+            { kind: 'sub', label: 'Move into', items: moveTargets(board) },
+            { kind: 'sep' },
+            remove,
+          ],
+    })
+  }
+
+  // A name typed in the tree: a board's new name, or a new folder (a blank name is "New folder";
+  // Esc made nothing).
+  const commitTreeEdit = async (name: string) => {
+    const edit = treeEdit
+    setTreeEdit(null)
+    const title = name.trim()
+    try {
+      if (edit?.kind === 'rename') {
+        const board = boards?.find((b) => b.id === edit.id)
+        if (!board || !title || title === board.title) return
+        await api.updateBoard(board.id, { title })
+        await loadBoards()
+      } else if (edit?.kind === 'folder') {
+        const folder = await api.createBoard(title || 'New folder', edit.parent ?? undefined, undefined, true)
+        await loadBoards()
+        showToast(`Made “${folder.title}”. Drag boards onto it to put them inside.`)
+      }
+    } catch (e) {
+      showToast((e as Error).message)
+    }
   }
 
   const moveBoard = async (id: string, parent: string | null) => {
@@ -570,21 +543,24 @@ function Shell() {
     return all.length ? all : [{ label: 'No other boards yet', disabled: true, run: () => {} }]
   }
 
-  const deleteBoard = async () => {
-    if (!state) return
-    const { board } = state
-    if (!window.confirm(`Move “${board.title}” and every board inside it to the trash?`)) return
+  const deleteBoard = async (board: Board) => {
+    const doomed = subtreeOf(childrenByParent(boards ?? []), board.id)
+    const inside = doomed.size - 1
+    const what = inside ? `“${board.title}” and the ${inside === 1 ? 'board' : `${inside} boards`} inside it` : `“${board.title}”`
+    if (!window.confirm(`Move ${what} to the trash?`)) return
+    const here = !!current && doomed.has(current)
     try {
-      deletingHere.current = board.id  // this window is moving off it already
+      if (here) deletingHere.current = doomed // this window is moving off it already
       await api.deleteBoard(board.id)
-      const parent = board.parent_id
       await loadBoards()
-      if (parent) open(parent, true)
-      else {
-        setCurrent(null)
-        window.history.replaceState(null, '', '/')
+      if (here) {
+        if (board.parent_id) open(board.parent_id, true)
+        else {
+          setCurrent(null)
+          window.history.replaceState(null, '', '/')
+        }
       }
-      showToast(`Moved “${board.title}” to the trash`, { label: 'Open trash', run: () => setTrashOpen(true) })
+      showToast(`Moved ${what} to the trash`, { label: 'Open trash', run: () => setTrashOpen(true) })
     } catch (e) {
       showToast((e as Error).message)
     }
@@ -604,11 +580,20 @@ function Shell() {
   const onError = useCallback((m: string) => showToast(m), [showToast])
 
   return (
-    <div className={`app${presenting ? ' presenting' : ''}`}>
-      <aside className="sidebar" data-drag>
+    <div ref={appRef} className={`app${presenting ? ' presenting' : ''}${dock.pinned ? '' : ' side-unpinned'}`}>
+      <aside ref={asideRef} className="sidebar" data-drag {...dock.asideProps} onContextMenu={sidebarMenu}>
         <div className="brand" data-drag>
           <img src="/icon.png" alt="" />
           <span>CXBoards</span>
+          <button
+            className="side-pin"
+            aria-pressed={dock.pinned}
+            aria-label="Pin sidebar"
+            title={`${dock.pinned ? 'Unpin' : 'Pin'} sidebar (⌘\\)`}
+            onClick={() => dock.setPinned(!dock.pinned)}
+          >
+            <PinIcon />
+          </button>
         </div>
         <button className="new-board" onClick={newBoard}>
           + New board
@@ -617,14 +602,30 @@ function Shell() {
           <span>Search</span>
           <span className="hint">⌘F</span>
         </button>
-        {boards && <BoardTree boards={boards} current={current} onOpen={(id) => open(id)} onMove={(id, parent) => void moveBoard(id, parent)} />}
+        {boards && (
+          <BoardTree
+            boards={boards}
+            current={current}
+            edit={treeEdit}
+            onOpen={(id) => open(id)}
+            onMove={(id, parent) => void moveBoard(id, parent)}
+            onMenu={boardRowMenu}
+            onCommit={(name) => void commitTreeEdit(name)}
+            onCancel={() => setTreeEdit(null)}
+          />
+        )}
         {boards?.some((b) => b.is_template) && (
           <div className="templates">
             <div className="section-label">Templates</div>
             {boards
               .filter((b) => b.is_template)
               .map((b) => (
-                <button key={b.id} className={`tree-item${b.id === current ? ' current' : ''}`} onClick={() => open(b.id)}>
+                <button
+                  key={b.id}
+                  className={`tree-item${b.id === current ? ' current' : ''}`}
+                  onClick={() => open(b.id)}
+                  onContextMenu={(e) => boardRowMenu(e, b)}
+                >
                   <span className="tree-glyph">▤</span>
                   <span className="tree-title">{b.title}</span>
                 </button>
@@ -642,7 +643,17 @@ function Shell() {
             <span className="dot" /> {live ? 'live' : 'reconnecting'}
           </div>
         </div>
+        <div
+          className="side-grip"
+          data-nodrag
+          role="separator"
+          aria-orientation="vertical"
+          aria-label="Resize sidebar"
+          title="Drag to resize · double-click to reset"
+          {...dock.gripProps}
+        />
       </aside>
+      {!dock.pinned && !presenting && <div className="side-edge" aria-hidden="true" {...dock.edgeProps} />}
       <main className="main">
         {current ? (
           <>
@@ -757,8 +768,14 @@ function Shell() {
       )}
       {presenting && <div className="present-hint">Click a card to look closer · click the background for all · Esc to stop</div>}
       {boardMenu && <ContextMenu state={boardMenu} onClose={() => setBoardMenu(null)} />}
+      {sideMenu && <ContextMenu state={sideMenu} onClose={() => setSideMenu(null)} />}
       {creating && boards && (
-        <NewBoardDialog templates={boards.filter((b) => b.is_template)} onCreate={(t, tpl) => void createBoard(t, tpl)} onClose={() => setCreating(false)} />
+        <NewBoardDialog
+          templates={boards.filter((b) => b.is_template)}
+          inside={creating.parent ? boards.find((b) => b.id === creating.parent)?.title ?? null : null}
+          onCreate={(t, tpl) => void createBoard(t, tpl)}
+          onClose={() => setCreating(false)}
+        />
       )}
       {clipperOpen && <ClipperPanel onClose={() => setClipperOpen(false)} />}
       {theming && state && (

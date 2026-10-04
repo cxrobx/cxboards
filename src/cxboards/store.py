@@ -60,6 +60,7 @@ CREATE TABLE IF NOT EXISTS boards (
     export_slug TEXT,
     is_template INTEGER NOT NULL DEFAULT 0,
     theme       TEXT,
+    is_folder   INTEGER NOT NULL DEFAULT 0,
     created_at  TEXT NOT NULL,
     updated_at  TEXT NOT NULL
 );
@@ -152,6 +153,7 @@ CREATE TABLE IF NOT EXISTS history (
 ADDED_COLUMNS = [
     ("boards", "is_template", "INTEGER NOT NULL DEFAULT 0"),
     ("boards", "theme", "TEXT"),
+    ("boards", "is_folder", "INTEGER NOT NULL DEFAULT 0"),
     ("cards", "locked", "INTEGER NOT NULL DEFAULT 0"),
     ("cards", "tray", "INTEGER NOT NULL DEFAULT 0"),
 ]
@@ -525,6 +527,7 @@ class Store:
     def _board_dict(row: sqlite3.Row) -> dict[str, Any]:
         out = {k: row[k] for k in row.keys() if k != "n"}
         out["is_template"] = bool(out.get("is_template"))
+        out["is_folder"] = bool(out.get("is_folder"))
         out["theme"] = json.loads(out["theme"]) if out.get("theme") else None
         return out
 
@@ -592,7 +595,10 @@ class Store:
         parent_id: str | None = None,
         actor: str = "chris",
         template_id: str | None = None,
+        folder: bool = False,
     ) -> dict[str, Any]:
+        """``folder``: a board made for keeping boards in. It's an ordinary board (its boards show as
+        cards on its canvas); the flag only gives it the folder look in the sidebar while it's empty."""
         title = (title or "").strip()
         if not title:
             raise Invalid("a board needs a title")
@@ -604,13 +610,15 @@ class Store:
                 board_id = self._copy_board(template_id, parent_id, title, actor, as_template=False)
                 if description:
                     db.execute("UPDATE boards SET description = ? WHERE id = ?", (description, board_id))
+                if folder:
+                    db.execute("UPDATE boards SET is_folder = 1 WHERE id = ?", (board_id,))
             else:
                 board_id = _new_id("b")
                 now = _now()
                 db.execute(
-                    "INSERT INTO boards (id, title, description, parent_id, export_slug, created_at, updated_at) "
-                    "VALUES (?, ?, ?, ?, ?, ?, ?)",
-                    (board_id, title, description or "", parent_id, self._unique_slug(title), now, now),
+                    "INSERT INTO boards (id, title, description, parent_id, export_slug, is_folder, created_at, "
+                    "updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                    (board_id, title, description or "", parent_id, self._unique_slug(title), int(folder), now, now),
                 )
                 self._touch(board_id, [], actor)
             if parent_id:
@@ -775,10 +783,10 @@ class Store:
         new_id = _new_id("b")
         now = _now()
         self._db.execute(
-            "INSERT INTO boards (id, title, description, parent_id, export_slug, is_template, theme, created_at, "
-            "updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO boards (id, title, description, parent_id, export_slug, is_template, theme, is_folder, "
+            "created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             (new_id, title, source["description"], parent_id, self._unique_slug(title), int(as_template),
-             source["theme"], now, now),
+             source["theme"], source["is_folder"], now, now),
         )
         self._touch(new_id, [], actor)
         cards = self._rows("cards", "board_id = ? ORDER BY column_id IS NOT NULL", [board_id])

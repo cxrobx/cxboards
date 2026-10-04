@@ -545,6 +545,40 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
             results["prompt"] = (await js("prompt('Label', 'from-selftest')")) as? String == "from-selftest"
             results["confirm"] = (await js("confirm('ok?')")) as? Bool == true
 
+            // The sidebar. A right-click there is the page's, so WebKit's own menu never shows; unpinned
+            // (⌘\) it floats clear of the traffic lights, and File ▸ New Board still reaches it while it's
+            // away. Chris's pin and width are put back afterwards.
+            _ = await js("""
+            window.__keep = { pin: localStorage.getItem('cxboards.sidebar'), w: localStorage.getItem('cxboards.side-w') };
+            window.__menu = new MouseEvent('contextmenu', { bubbles: true, cancelable: true, clientX: 60, clientY: innerHeight - 140 });
+            document.querySelector('aside.sidebar').dispatchEvent(window.__menu); true
+            """)
+            await sleep(0.3)
+            results["sidebar_right_click"] = (await js("""
+            window.__menu.defaultPrevented && [...document.querySelectorAll('.menu .menu-item')].some((b) => b.textContent === 'New folder')
+            """)) as? Bool == true
+            _ = await js("window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' })); true")
+            _ = await js("window.dispatchEvent(new KeyboardEvent('keydown', { key: '\\\\', metaKey: true })); true")
+            await sleep(0.4)
+            results["sidebar_floats_clear_of_the_lights"] = (await js("""
+            (() => { const aside = document.querySelector('aside.sidebar');
+              return document.querySelector('.app').classList.contains('side-unpinned') && aside.inert
+                && parseFloat(getComputedStyle(document.querySelector('.topbar')).paddingLeft) >= 80
+                && parseFloat(getComputedStyle(aside).paddingTop) >= 30 })()
+            """)) as? Bool == true
+            newBoard()
+            await sleep(0.4)
+            results["new_board_while_sidebar_away"] = (await js("""
+            (() => { const open = (document.querySelector('.dialog h2')?.textContent ?? '') === 'New board';
+              document.querySelector('.dialog footer .ghost')?.click(); return open })()
+            """)) as? Bool == true
+            _ = await js("window.dispatchEvent(new KeyboardEvent('keydown', { key: '\\\\', metaKey: true })); true")
+            await sleep(0.3)
+            _ = await js("""
+            for (const [key, value] of [['cxboards.sidebar', window.__keep.pin], ['cxboards.side-w', window.__keep.w]])
+              value === null ? localStorage.removeItem(key) : localStorage.setItem(key, value); true
+            """)
+
             // A native Finder drop in the middle of the window.
             let middle = CGPoint(x: webView.bounds.midX, y: webView.bounds.midY)
             handOver([URL(fileURLWithPath: dropPath)], at: middle)
@@ -580,6 +614,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
 
     private func finishSelfTest(_ results: [String: Any]) {
         let checks = ["server", "drop_bridge", "borderless_page", "borderless_window", "theme_bridge", "prompt", "confirm",
+                      "sidebar_right_click", "sidebar_floats_clear_of_the_lights", "new_board_while_sidebar_away",
                       "native_drop_points_at_the_file", "stayed_on_board"]
         var ok = checks.allSatisfy { results[$0] as? Bool == true }
         ok = ok && results["download"] is String && (results["outside_links"] as? [String])?.count == 2

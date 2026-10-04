@@ -132,3 +132,39 @@ def test_agent_files_boards_into_a_folder(client) -> None:
         assert "top-level" in m.move_board("October 3")
     finally:
         m.set_client(None)  # type: ignore[arg-type]
+
+
+def test_new_folder_is_a_board_marked_as_one_through_copy_trash_and_undo(store: Store) -> None:
+    sessions = store.create_board("Sessions", folder=True)
+    assert sessions["is_folder"] is True
+    assert {b["title"]: b["is_folder"] for b in store.list_boards()} == {"Sessions": True}
+
+    inner = store.create_board("Drafts", parent_id=sessions["id"], folder=True)
+    [card] = board_cards(store, sessions["id"])  # a folder inside a folder is still a board card
+    assert card["data"]["board_id"] == inner["id"] and store.board(inner["id"])["is_folder"]
+
+    copy = store.duplicate_board(sessions["id"], title="Sessions copy")
+    assert copy["is_folder"] is True
+
+    trash_id = store.delete_board(sessions["id"])
+    store.restore(trash_id)
+    assert store.board(sessions["id"])["is_folder"] and store.board(inner["id"])["is_folder"]
+
+    later = store.create_board("Later", parent_id=sessions["id"], folder=True)
+    store.undo(board_id=sessions["id"])  # one step, undone from the board it was made in
+    assert later["id"] not in {b["id"] for b in store.list_boards()}
+
+
+def test_folder_route_and_agent_tool(client) -> None:
+    made = client.post("/api/boards", json={"title": "Sessions", "folder": True}, headers=W).json()
+    assert made["is_folder"] is True
+    plain = client.post("/api/boards", json={"title": "Plain"}, headers=W).json()
+    assert plain["is_folder"] is False
+    m.set_client(client)
+    try:
+        assert "Created Archive" in m.create_board("Archive", parent="Sessions", folder=True)
+        listing = m.list_boards()
+        assert "Archive (" in listing and "inside Sessions · folder" in listing
+        assert "Plain (" in listing and "Plain" not in [line for line in listing.splitlines() if "folder" in line][0]
+    finally:
+        m.set_client(None)  # type: ignore[arg-type]

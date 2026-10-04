@@ -90,6 +90,7 @@ export interface Board {
   rev: number
   export_slug: string
   is_template: boolean
+  is_folder?: boolean
   theme?: Record<string, string> | null
   updated_at: string
   card_count?: number
@@ -143,8 +144,8 @@ async function req<T>(method: string, path: string, body?: unknown): Promise<T> 
 export const api = {
   boards: () => req<Board[]>('GET', '/api/boards'),
   board: (id: string) => req<BoardState>('GET', `/api/boards/${id}`),
-  createBoard: (title: string, parent?: string, template?: string) =>
-    req<Board>('POST', '/api/boards', { title, parent, template }),
+  createBoard: (title: string, parent?: string, template?: string, folder?: boolean) =>
+    req<Board>('POST', '/api/boards', { title, parent, template, folder }),
   updateBoard: (id: string, patch: { title?: string; description?: string; is_template?: boolean; theme?: unknown }) =>
     req<Board>('PATCH', `/api/boards/${id}`, patch),
   deleteBoard: (id: string) => req<{ ok: boolean }>('DELETE', `/api/boards/${id}`),

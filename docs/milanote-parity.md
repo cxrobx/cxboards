@@ -55,7 +55,7 @@ phases (commits aa2b1e6, 4cc5ad8, 435d5a7) and verified in the browser.
 | Duplicate (⌘D, ⌥-drag), copy / cut / paste across boards | ✅ | |
 | Duplicate a whole board | ✅ | |
 | Move content between boards (drop on a board card, "Move to…") | ✅ | Drag onto a board card, cut and paste, or right-click ▸ Move to board |
-| Move a whole board into another (folders) | ✅ | Drag it in the sidebar (onto a board, or onto "Top level" to bring it out), or Board ▸ Move board into. A board of boards is the folder; agents use `move_board` |
+| Move a whole board into another (folders) | ✅ | Right-click the sidebar ▸ New folder, then drag boards onto it (or onto "Top level" to bring one out), or Board ▸ Move board into. A board of boards is the folder; folders open and close in the sidebar; agents use `create_board(folder=True)` and `move_board` |
 | Lock position | ✅ | |
 | Send back / forward | ✅ | |
 | Unsorted tray per board | ✅ | Where clips and agent drops land without cluttering the canvas |
@@ -92,7 +92,8 @@ phases (commits aa2b1e6, 4cc5ad8, 435d5a7) and verified in the browser.
 ## Beyond Milanote (already here)
 
 Agents as first-class editors (MCP, live arrival with highlight, per-step Undo), an Ask chat
-panel that can change the board, per-board themes the whole app wears, layout tools instead of
+panel that can change the board, per-board themes the whole app wears, a sidebar that resizes and
+floats out from the edge (as Onyx's does), layout tools instead of
 coordinates, audio streamed in place from the ChrisX drive, Onyx snapshots with
 highlight-to-ask, vault-MCP indexing.
 

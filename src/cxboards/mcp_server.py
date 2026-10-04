@@ -94,7 +94,10 @@ def list_boards() -> str:
     for b in boards:
         parent = f" · inside {titles.get(b['parent_id'], b['parent_id'])}" if b["parent_id"] else ""
         template = " · TEMPLATE" if b.get("is_template") else ""
-        lines.append(f"- {b['title']} ({b['id']}) · {b['card_count']} cards{parent}{template} · updated {b['updated_at']}")
+        folder = " · folder" if b.get("is_folder") else ""
+        lines.append(
+            f"- {b['title']} ({b['id']}) · {b['card_count']} cards{parent}{folder}{template} · updated {b['updated_at']}"
+        )
     return "\n".join(lines)
 
 
@@ -105,12 +108,15 @@ def read_board(board: str) -> str:
 
 
 @mcp.tool()
-def create_board(title: str, description: str = "", parent: str = "", template: str = "") -> str:
+def create_board(title: str, description: str = "", parent: str = "", template: str = "", folder: bool = False) -> str:
     """Make a board. With `parent` (id or title) it is nested there and a board card appears on the parent.
-    With `template` (a template board's id or title, see list_boards), it starts as a copy of that template."""
+    With `template` (a template board's id or title, see list_boards), it starts as a copy of that template.
+    `folder=True` makes a folder: a board for keeping boards in (move_board files boards into it), shown with
+    a folder icon in Chris's sidebar."""
     board = _call(
         "POST", "/api/boards",
-        {"title": title, "description": description, "parent": parent or None, "template": template or None},
+        {"title": title, "description": description, "parent": parent or None, "template": template or None,
+         "folder": folder},
     )
     return f"Created {board['title']} ({board['id']}). Live: {_base()}/b/{board['id']}"
 

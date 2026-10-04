@@ -327,6 +327,7 @@ def test_a_first_release_database_migrates(tmp_path: Path) -> None:
     db.close()
     store = Store(Config(home=home, port=4870))
     assert store.card("c_old")["text"] == "kept" and store.card("c_old")["locked"] is False
+    assert store.board("b_old")["is_folder"] is False
     store.update_card("c_old", text="edited")
     store.undo(board_id="b_old")
     assert store.card("c_old")["text"] == "kept"

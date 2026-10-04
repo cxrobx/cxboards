@@ -48,6 +48,18 @@ user, never deployed. Built 2026-10-02 to plan creative sessions next to the art
   and are remembered for the next launch. Chris X takes chrisx.art's DESIGN.md literally:
   #000 cards on #000, cream ink and accent, Fraunces + Poppins 300, square everything.
 
+- **Sidebar** (`web/src/Sidebar.tsx`): a folder is a board for keeping boards in, so its boards
+  are cards on its canvas and agents file into it with `move_board`. `boards.is_folder` only gives
+  an empty one the folder icon; any board with boards inside shows as a folder. Right-click makes
+  them (empty space: New folder / New board; a board: New folder inside, New board inside,
+  Rename, Duplicate, Move into, Delete), names are typed in place, and a folder's chevron closes
+  it (remembered; opening a board opens the folders above it). The dock is Onyx's: pinned, or
+  unpinned (⌘\ or the pin) so it floats out from a 24 px strip on the left edge (40 ms in; away
+  400 ms after the pointer leaves, unless its menu, a name field, a resize or a drag is in
+  progress); its right edge drags the width, 200 px to half the window, double-click resets. Pin,
+  width and closed folders are per-browser localStorage (`cxboards.sidebar`, `cxboards.side-w`,
+  `cxboards.shut`), written straight onto the elements so hovering doesn't re-render the board.
+
 Data lives in `~/Library/Application Support/CXBoards/` (`cxboards.db`, `uploads/`,
 `export/`). `CXBOARDS_HOME` / `CXBOARDS_PORT` override both (the tests do).
 
@@ -75,9 +87,9 @@ Data lives in `~/Library/Application Support/CXBoards/` (`cxboards.db`, `uploads
 ## Run / verify
 
 ```bash
-.venv/bin/python -m pytest -q          # 114 tests: invariants, API, export, MCP, chat, themes, folders, phases 1-3
+.venv/bin/python -m pytest -q          # 116 tests: invariants, API, export, MCP, chat, themes, folders, phases 1-3
 app/build-app.sh                       # build + install CXBoards.app (Apple Development signed)
-scripts/selftest-app.sh                # the app's own end-to-end check (drops, dialogs, downloads, links)
+scripts/selftest-app.sh                # the app's own end-to-end check (drops, dialogs, sidebar, downloads, links)
 scripts/install.sh                     # build UI, (re)install LaunchAgent, wait for health
 launchctl kickstart -k gui/$(id -u)/com.cx.cxboards.server   # restart after Python edits
 cd web && npm run dev                  # UI on :4871, proxying the API on :4870
