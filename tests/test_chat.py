@@ -4,18 +4,24 @@ so no subscription quota is spent. One real turn is run by hand (see CLAUDE.md).
 from __future__ import annotations
 
 import asyncio
+import contextlib
 import json
 import os
+import socket
 import stat
+import threading
 import time
 from pathlib import Path
 
+import httpx
 import pytest
+import uvicorn
 from conftest import W
 from fastapi.testclient import TestClient
 
 from cxboards import chat as chatlib
 from cxboards.app import create_app
+from cxboards.config import Config
 
 FAKE = r'''#!/usr/bin/env python3
 import json, os, sys, time
@@ -34,6 +40,8 @@ out({"type": "stream_event", "event": {"type": "message_start"}})
 out({"type": "stream_event", "event": {"type": "content_block_delta", "delta": {"type": "text_delta", "text": "Adding "}}})
 if mode == "slow":
     time.sleep(30)
+if mode == "pause":
+    time.sleep(1.0)
 out({"type": "stream_event", "event": {"type": "content_block_start", "index": 0,
      "content_block": {"type": "tool_use", "name": "ToolSearch"}}})
 out({"type": "stream_event", "event": {"type": "content_block_stop", "index": 0}})
@@ -173,3 +181,91 @@ def test_chats_can_be_deleted(asking) -> None:
     chat_id = events(asking.post(f"/api/boards/{board['id']}/chat", json={"message": "hi"}, headers=W))[0][1]["chat_id"]
     assert asking.delete(f"/api/chats/{chat_id}", headers=W).status_code == 200
     assert asking.get(f"/api/boards/{board['id']}/chats").json() == []
+
+
+
+@contextlib.contextmanager
+def served(tmp_path: Path, fake: Path):
+    """The app on a real uvicorn server: TestClient buffers a whole response before returning
+    any of it, so it can't leave a turn halfway the way a closing panel does."""
+    sock = socket.socket()
+    sock.bind(("127.0.0.1", 0))
+    port = sock.getsockname()[1]
+    app = create_app(Config(home=tmp_path / "home", port=port), unfurl=lambda u: {}, claude=lambda: str(fake))
+    server = uvicorn.Server(uvicorn.Config(app, log_level="warning"))
+    thread = threading.Thread(target=server.run, kwargs={"sockets": [sock]}, daemon=True)
+    thread.start()
+    while not server.started:
+        time.sleep(0.02)
+    try:
+        with httpx.Client(base_url=f"http://127.0.0.1:{port}", timeout=30) as client:
+            yield app, client
+    finally:
+        server.should_exit = True
+        thread.join(15)
+
+
+def watch_until_first_token(client, board_id: str, message: str) -> str:
+    """Start a turn, read until its first words, then go away (Chris opening another board)."""
+    with client.stream("POST", f"/api/boards/{board_id}/chat", json={"message": message}, headers=W) as resp:
+        seen = ""
+        for chunk in resp.iter_text():
+            seen += chunk
+            if "event: token" in seen:
+                break
+    return json.loads(seen.split("event: chat\ndata: ", 1)[1].split("\n", 1)[0])["chat_id"]
+
+
+def wait_until_idle(client, chat_id: str) -> dict:
+    for _ in range(100):
+        chat = client.get(f"/api/chats/{chat_id}").json()
+        if not chat["running"]:
+            return chat
+        time.sleep(0.1)
+    raise AssertionError("the turn never finished")
+
+
+def test_a_turn_keeps_going_when_nobody_is_watching(fake, monkeypatch, tmp_path) -> None:
+    monkeypatch.setenv("FAKE_CLAUDE_MODE", "pause")
+    with served(tmp_path, fake) as (app, client):
+        board = client.post("/api/boards", json={"title": "B"}, headers=W).json()
+        chat_id = watch_until_first_token(client, board["id"], "add some animations")
+
+        assert client.get(f"/api/chats/{chat_id}").json()["running"] is True
+        assert client.get(f"/api/boards/{board['id']}/chats").json()[0]["running"] is True
+        again = client.post(f"/api/boards/{board['id']}/chat", json={"message": "and?", "chat_id": chat_id}, headers=W)
+        assert again.status_code == 400  # one turn per chat at a time
+
+        # Coming back: the watcher gets the whole turn from the start, then its end.
+        got = events(client.get(f"/api/chats/{chat_id}/live"))
+        assert [k for k, _ in got][0] == "chat" and got[-1][0] == "done"
+        assert "".join(d["text"] for k, d in got if k == "token") == "Adding \n\ntwo cards."
+
+        chat = wait_until_idle(client, chat_id)
+        assert chat["messages"][-1]["text"] == "Adding \n\ntwo cards." and "stopped" not in chat["messages"][-1]
+        assert events(client.get(f"/api/chats/{chat_id}/live")) == []  # nothing running now
+
+
+def test_stop_ends_a_running_turn_and_kills_claude(fake, monkeypatch, tmp_path) -> None:
+    monkeypatch.setenv("FAKE_CLAUDE_MODE", "slow")
+    with served(tmp_path, fake) as (app, client):
+        board = client.post("/api/boards", json={"title": "B"}, headers=W).json()
+        chat_id = watch_until_first_token(client, board["id"], "slow one")
+        assert client.delete(f"/api/chats/{chat_id}", headers=W).status_code == 400  # not mid-answer
+
+        assert client.post(f"/api/chats/{chat_id}/stop", headers=W).json() == {"ok": True}
+        chat = wait_until_idle(client, chat_id)
+        last = chat["messages"][-1]
+        assert last["stopped"] is True and last["text"] == "Adding"
+        assert client.post(f"/api/chats/{chat_id}/stop", headers=W).json() == {"ok": False}
+    time.sleep(0.2)
+    with pytest.raises(ProcessLookupError):
+        os.kill(calls(tmp_path)[0]["pid"], 0)
+
+
+def test_shutting_down_stops_running_turns(fake, monkeypatch, tmp_path) -> None:
+    monkeypatch.setenv("FAKE_CLAUDE_MODE", "slow")
+    with served(tmp_path, fake) as (app, client):
+        board = client.post("/api/boards", json={"title": "B"}, headers=W).json()
+        chat_id = watch_until_first_token(client, board["id"], "slow one")
+    assert app.state.store.chat(chat_id)["messages"][-1]["stopped"] is True

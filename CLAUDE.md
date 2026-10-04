@@ -35,8 +35,12 @@ user, never deployed. Built 2026-10-02 to plan creative sessions next to the art
   cwd outside home (no 41k-token ~/CLAUDE.md reload), a short brief + the board outline +
   any selected cards in `--append-system-prompt`, earlier turns as a transcript. Chats live
   in the `chats` table (not board content: no undo, no trash). Default model Sonnet; a turn
-  costs about $0.04 of quota. Tests use a fake `claude` (tests/test_chat.py); a real turn
-  was checked by hand on 2026-10-03.
+  costs about $0.04 of quota. A turn is a server-side job (`chat.Turn`, one per chat), not the
+  request: closing the panel or opening another board only stops watching, coming back replays
+  it and follows live (`GET /api/chats/<id>/live`), and only Stop (`POST …/stop`) or a server
+  shutdown ends it early, saved as "stopped". A server restart therefore stops running turns.
+  Tests use a fake `claude` (tests/test_chat.py; the job tests run a real uvicorn, because
+  TestClient buffers whole responses); a real turn was checked by hand on 2026-10-03.
 
 - **Themes** (Board ▸ Theme…): a board has a preset (vault, chrisx, film, studio, paper,
   midnight, sage, rose) or custom ground/ink/accent + font + corners, and the whole app wears
@@ -133,7 +137,7 @@ Data lives in `~/Library/Application Support/CXBoards/` (`cxboards.db`, `uploads
 ## Run / verify
 
 ```bash
-.venv/bin/python -m pytest -q          # 367 tests: invariants, API, export, MCP, chat, themes, folders, templates (each built), animations, phases 1-3
+.venv/bin/python -m pytest -q          # 370 tests: invariants, API, export, MCP, chat, themes, folders, templates (each built), animations, phases 1-3
 app/build-app.sh                       # build + install CXBoards.app (Apple Development signed)
 scripts/selftest-app.sh                # the app's own end-to-end check (drops, dialogs, sidebar, downloads, links)
 scripts/install.sh                     # build UI, (re)install LaunchAgent, wait for health

@@ -14,6 +14,10 @@ function, which adds --dangerously-skip-permissions). The agent gets:
 
 Turns are stateless, as in Onyx: earlier turns travel in the prompt as a
 transcript, and the board is read fresh every time.
+
+A turn is a job on the server (``Turn``), not a request: it keeps running when the
+panel closes or Chris opens another board, and any window can watch it again from
+the start (``Turn.follow``). Only Stop (or the server shutting down) ends it early.
 """
 
 from __future__ import annotations
@@ -159,6 +163,40 @@ def build_cmd(claude: str, prompt: str, system: str, model: str, mcp_path: Path)
     ]
 
 
+class Turn:
+    """One running turn: every event so far, replayed to whoever watches, then followed live."""
+
+    def __init__(self, chat_id: str, board_id: str) -> None:
+        self.chat_id = chat_id
+        self.board_id = board_id
+        self.events: list[tuple[str, dict[str, Any]]] = []
+        self.finished = False
+        self.task: asyncio.Task[None] | None = None
+        self._wake = asyncio.Event()
+
+    def push(self, kind: str, data: dict[str, Any]) -> None:
+        self.events.append((kind, data))
+        self._wake.set()
+        self._wake = asyncio.Event()
+
+    def finish(self) -> None:
+        self.finished = True
+        self._wake.set()
+
+    async def follow(self) -> AsyncIterator[tuple[str, dict[str, Any]]]:
+        """Everything from the start, then each new event until the turn ends. A watcher
+        leaving (its connection closing) ends only its own iteration, never the turn."""
+        seen = 0
+        while True:
+            wake = self._wake  # taken before reading, so a push in between still wakes us
+            while seen < len(self.events):
+                yield self.events[seen]
+                seen += 1
+            if self.finished:
+                return
+            await wake.wait()
+
+
 def _event(kind: str, data: dict[str, Any]) -> dict[str, Any]:
     return {"event": kind, **data}
 
@@ -182,7 +220,7 @@ async def run_turn(cmd: list[str], *, first_timeout: float = FIRST_ACTIVITY_TIME
 
     Stdout is read line by line with a large buffer (tool results can be long); stderr is
     drained alongside so the pipe never fills. The process is killed if the caller stops
-    listening (Stop, or the panel closing)."""
+    iterating (the turn's job is cancelled: Stop, or the server shutting down)."""
     proc = await asyncio.create_subprocess_exec(
         *cmd,
         stdin=asyncio.subprocess.DEVNULL,

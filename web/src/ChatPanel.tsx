@@ -1,6 +1,10 @@
 // Ask: chat about the open board with Claude (on the subscription, via the server's
 // headless `claude -p`). The agent can change the board through the cxboards tools;
 // its changes land live with an Undo. Selected cards travel with the question.
+//
+// A turn is a job on the server: closing the panel or opening another board only stops
+// watching it. Coming back to the chat replays the turn so far and follows it live. Only
+// Stop ends a turn early.
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { Card } from './api'
@@ -23,6 +27,7 @@ interface ChatSummary {
   title: string
   updated_at: string
   n: number
+  running: boolean
 }
 
 interface Info {
@@ -74,7 +79,8 @@ export function ChatPanel({
   const [input, setInput] = useState('')
   const [busy, setBusy] = useState(false)
   const [picked, setPicked] = useState<Card[]>([])
-  const abort = useRef<AbortController | null>(null)
+  const watcher = useRef<AbortController | null>(null) // our view of a turn, not the turn itself
+  const openId = useRef<string | null>(null)
   const list = useRef<HTMLDivElement>(null)
   const box = useRef<HTMLTextAreaElement>(null)
 
@@ -84,13 +90,100 @@ export function ChatPanel({
     return rows
   }, [boardId])
 
-  const openChat = useCallback(async (id: string | null) => {
-    abort.current?.abort()
-    setChatId(id)
-    if (!id) return setMessages([])
-    const chat = await fetch(`/api/chats/${id}`).then((r) => r.json())
-    setMessages(chat.messages ?? [])
+  const patchLast = (fn: (m: Message) => Message) =>
+    setMessages((ms) => (ms.length ? [...ms.slice(0, -1), fn(ms[ms.length - 1])] : ms))
+  const settle = (m: Message) => ({ ...m, live: m.live?.map((l) => ({ ...l, active: false })) })
+
+  // Follow a turn's event stream into the last (assistant) message until it ends or we look away.
+  const follow = useCallback(async (resp: Response, controller: AbortController) => {
+    if (!resp.ok || !resp.body) throw new Error((await resp.json().catch(() => ({}))).error ?? resp.statusText)
+    const reader = resp.body.getReader()
+    const decoder = new TextDecoder()
+    let buffer = ''
+    for (;;) {
+      const { value, done } = await reader.read()
+      if (done || controller.signal.aborted) break
+      buffer += decoder.decode(value, { stream: true })
+      let cut: number
+      while ((cut = buffer.indexOf('\n\n')) >= 0) {
+        const block = buffer.slice(0, cut)
+        buffer = buffer.slice(cut + 2)
+        const kind = block.match(/^event: (.*)$/m)?.[1]
+        const raw = block.match(/^data: (.*)$/m)?.[1]
+        if (!kind || !raw) continue
+        const data = JSON.parse(raw)
+        if (kind === 'chat') {
+          if (!openId.current) {
+            openId.current = data.chat_id
+            setChatId(data.chat_id)
+          }
+        } else if (kind === 'token') {
+          patchLast((m) => ({ ...m, text: m.text + data.text }))
+        } else if (kind === 'tool') {
+          patchLast((m) => {
+            const live = [...(m.live ?? [])]
+            if (data.state === 'start') live.push({ label: data.label, active: true })
+            else {
+              const i = live.map((l) => l.label).lastIndexOf(data.label)
+              if (i >= 0) live[i] = { ...live[i], active: false }
+            }
+            return { ...m, live }
+          })
+        } else if (kind === 'done') {
+          patchLast((m) => settle({ ...m, text: data.text || m.text, cost: data.cost }))
+        } else if (kind === 'error') {
+          patchLast((m) => settle({ ...m, error: data.message }))
+        } else if (kind === 'stopped') {
+          patchLast((m) => settle({ ...m, stopped: true }))
+        }
+      }
+    }
   }, [])
+
+  // Watch a turn: when it ends, show the chat as the server saved it.
+  const watch = useCallback(
+    async (start: (signal: AbortSignal) => Promise<Response>) => {
+      watcher.current?.abort()
+      const controller = new AbortController()
+      watcher.current = controller
+      setBusy(true)
+      try {
+        await follow(await start(controller.signal), controller)
+      } catch (e) {
+        if ((e as Error).name !== 'AbortError') patchLast((m) => settle({ ...m, error: (e as Error).message }))
+      } finally {
+        if (watcher.current === controller) {
+          watcher.current = null
+          setBusy(false)
+          void loadChats()
+          const id = openId.current
+          if (id && !controller.signal.aborted) {
+            const chat = await fetch(`/api/chats/${id}`).then((r) => r.json()).catch(() => null)
+            if (chat?.messages && openId.current === id && !chat.running) setMessages(chat.messages)
+          }
+        }
+      }
+    },
+    [follow, loadChats],
+  )
+
+  const openChat = useCallback(
+    async (id: string | null) => {
+      watcher.current?.abort()
+      watcher.current = null
+      setBusy(false)
+      openId.current = id
+      setChatId(id)
+      if (!id) return setMessages([])
+      const chat = await fetch(`/api/chats/${id}`).then((r) => r.json())
+      if (openId.current !== id) return
+      if (!chat.running) return setMessages(chat.messages ?? [])
+      // Still answering (asked before we looked away): replay the turn so far, then follow it.
+      setMessages([...(chat.messages ?? []), { role: 'assistant', text: '', live: [] }])
+      void watch((signal) => fetch(`/api/chats/${id}/live`, { signal }))
+    },
+    [watch],
+  )
 
   useEffect(() => {
     fetch('/api/chat/info')
@@ -99,8 +192,9 @@ export function ChatPanel({
         setInfo(i)
         setModel(readModel(i.default))
       })
-    void loadChats().then((rows) => openChat(rows[0]?.id ?? null))
-    return () => abort.current?.abort()
+    // Open the chat that's still answering, if there is one, else the latest.
+    void loadChats().then((rows) => openChat((rows.find((r) => r.running) ?? rows[0])?.id ?? null))
+    return () => watcher.current?.abort()
   }, [loadChats, openChat])
 
   // What's selected on the board right now goes with the next question.
@@ -132,74 +226,30 @@ export function ChatPanel({
     return () => window.removeEventListener('cxboards:ask', take)
   }, [])
 
-  const patchLast = (fn: (m: Message) => Message) =>
-    setMessages((ms) => (ms.length ? [...ms.slice(0, -1), fn(ms[ms.length - 1])] : ms))
-
   const send = async (text: string) => {
     const message = text.trim()
     if (!message || busy) return
     const chosen = picked
     setInput('')
-    setBusy(true)
     setMessages((ms) => [
       ...ms,
       { role: 'user', text: message, selection: chosen.map((c) => c.id) },
       { role: 'assistant', text: '', live: [] },
     ])
-    const controller = new AbortController()
-    abort.current = controller
-    try {
-      const resp = await fetch(`/api/boards/${boardId}/chat`, {
+    await watch((signal) =>
+      fetch(`/api/boards/${boardId}/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-CXBoards': '1' },
-        body: JSON.stringify({ message, chat_id: chatId, model, selection: chosen.map((c) => c.id) }),
-        signal: controller.signal,
-      })
-      if (!resp.ok || !resp.body) throw new Error((await resp.json().catch(() => ({}))).error ?? resp.statusText)
-      const reader = resp.body.getReader()
-      const decoder = new TextDecoder()
-      let buffer = ''
-      for (;;) {
-        const { value, done } = await reader.read()
-        if (done) break
-        buffer += decoder.decode(value, { stream: true })
-        let cut: number
-        while ((cut = buffer.indexOf('\n\n')) >= 0) {
-          const block = buffer.slice(0, cut)
-          buffer = buffer.slice(cut + 2)
-          const kind = block.match(/^event: (.*)$/m)?.[1]
-          const raw = block.match(/^data: (.*)$/m)?.[1]
-          if (!kind || !raw) continue
-          const data = JSON.parse(raw)
-          if (kind === 'chat') {
-            if (!chatId) setChatId(data.chat_id)
-          } else if (kind === 'token') {
-            patchLast((m) => ({ ...m, text: m.text + data.text }))
-          } else if (kind === 'tool') {
-            patchLast((m) => {
-              const live = [...(m.live ?? [])]
-              if (data.state === 'start') live.push({ label: data.label, active: true })
-              else {
-                const i = live.map((l) => l.label).lastIndexOf(data.label)
-                if (i >= 0) live[i] = { ...live[i], active: false }
-              }
-              return { ...m, live }
-            })
-          } else if (kind === 'done') {
-            patchLast((m) => ({ ...m, text: data.text || m.text, cost: data.cost, model, live: m.live?.map((l) => ({ ...l, active: false })) }))
-          } else if (kind === 'error') {
-            patchLast((m) => ({ ...m, error: data.message, live: m.live?.map((l) => ({ ...l, active: false })) }))
-          }
-        }
-      }
-    } catch (e) {
-      if ((e as Error).name === 'AbortError') patchLast((m) => ({ ...m, stopped: true, live: m.live?.map((l) => ({ ...l, active: false })) }))
-      else patchLast((m) => ({ ...m, error: (e as Error).message }))
-    } finally {
-      abort.current = null
-      setBusy(false)
-      void loadChats()
-    }
+        body: JSON.stringify({ message, chat_id: openId.current, model, selection: chosen.map((c) => c.id) }),
+        signal,
+      }),
+    )
+  }
+
+  // Stop is the one thing that ends a turn early; the stream then says "stopped".
+  const stop = () => {
+    const id = openId.current
+    if (id) void fetch(`/api/chats/${id}/stop`, { method: 'POST', headers: { 'X-CXBoards': '1' } })
   }
 
   const remove = async () => {
@@ -222,11 +272,12 @@ export function ChatPanel({
           <option value="">New chat</option>
           {chats.map((c) => (
             <option key={c.id} value={c.id}>
+              {c.running ? '● ' : ''}
               {c.title}
             </option>
           ))}
         </select>
-        <button className="ghost" title="New chat" onClick={() => void openChat(null)} disabled={busy}>
+        <button className="ghost" title="New chat (one still answering keeps going)" onClick={() => void openChat(null)}>
           ＋
         </button>
         {chatId && (
@@ -323,7 +374,7 @@ export function ChatPanel({
           </select>
           <span className="hint">↵ send · ⇧↵ new line</span>
           {busy ? (
-            <button className="ghost" onClick={() => abort.current?.abort()}>
+            <button className="ghost" onClick={stop}>
               ■ Stop
             </button>
           ) : (

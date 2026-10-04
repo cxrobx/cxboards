@@ -97,6 +97,12 @@ def create_app(
     async def lifespan(app: FastAPI):
         broadcaster.bind(asyncio.get_running_loop())
         yield
+        # Turns still answering are stopped, so each saves what it had as "stopped".
+        running = [t.task for t in list(turns.values()) if t.task]
+        for task in running:
+            task.cancel()
+        if running:
+            await asyncio.wait(running, timeout=10)
         exporter.flush()
 
     app = FastAPI(title="CXBoards", lifespan=lifespan)
@@ -952,26 +958,77 @@ def create_app(
     def chat_info() -> dict[str, Any]:
         return {"available": bool(claude()), "models": chatlib.MODELS, "default": chatlib.DEFAULT_MODEL}
 
+    # Turns run as jobs (chatlib.Turn), one per chat at a time, so leaving the board or closing
+    # the panel doesn't end one. These handlers are async on purpose: they read `turns` on the
+    # event loop, where a turn's last steps (save the answer, leave `turns`) can't interleave.
+    turns: dict[str, chatlib.Turn] = {}
+
     @app.get("/api/boards/{board_id}/chats")
-    def list_chats(board_id: str) -> list[dict[str, Any]]:
-        return store.chats(board_id_of(board_id))
+    async def list_chats(board_id: str) -> list[dict[str, Any]]:
+        return [{**c, "running": c["id"] in turns} for c in store.chats(board_id_of(board_id))]
 
     @app.get("/api/chats/{chat_id}")
-    def get_chat(chat_id: str) -> dict[str, Any]:
-        return store.chat(chat_id)
+    async def get_chat(chat_id: str) -> dict[str, Any]:
+        return {**store.chat(chat_id), "running": chat_id in turns}
 
     @app.delete("/api/chats/{chat_id}")
-    def delete_chat(chat_id: str) -> dict[str, Any]:
+    async def delete_chat(chat_id: str) -> dict[str, Any]:
+        if chat_id in turns:
+            raise Invalid("that chat is still answering: stop it first")
         store.delete_chat(chat_id)
         return {"ok": True}
 
+    def sse(turn: chatlib.Turn) -> StreamingResponse:
+        async def stream():
+            async for kind, data in turn.follow():
+                yield f"event: {kind}\ndata: {json.dumps(data)}\n\n"
+
+        return StreamingResponse(stream(), media_type="text/event-stream",
+                                 headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
+
+    async def run_turn(turn: chatlib.Turn, binary: str | None, cmd: list[str], model: str) -> None:
+        text: list[str] = []
+        tools: list[str] = []
+        outcome: dict[str, Any] = {"stopped": True}
+        try:
+            if not binary:
+                note = "Claude Code isn't installed (no `claude` on this Mac), so Ask can't answer."
+                outcome = {"error": note}
+                turn.push("error", {"message": note})
+                return
+            async with contextlib.aclosing(chatlib.run_turn(cmd)) as events:
+                async for event in events:
+                    kind = event.pop("event")
+                    if kind == "token":
+                        text.append(event["text"])
+                    elif kind == "tool" and event.get("state") == "start":
+                        tools.append(event["label"])
+                    elif kind == "done":
+                        outcome = {"cost": event.get("cost")}
+                        text = [event.get("text") or "".join(text)]
+                    elif kind == "error":
+                        outcome = {"error": event["message"]}
+                    turn.push(kind, event)
+        except asyncio.CancelledError:
+            turn.push("stopped", {})  # Stop, or the server shutting down; the process is gone
+        finally:
+            answer = {"role": "assistant", "text": "".join(text).strip(), "model": model, **outcome}
+            if binary:
+                answer["tools"] = tools
+            store.add_message(turn.chat_id, answer)
+            turns.pop(turn.chat_id, None)
+            turn.finish()
+
     @app.post("/api/boards/{board_id}/chat")
-    def ask(board_id: str, body: dict[str, Any] = Body(...)) -> StreamingResponse:
-        """One turn of the chat, streamed: chat, token, tool, done | error (server-sent events)."""
+    async def ask(board_id: str, body: dict[str, Any] = Body(...)) -> StreamingResponse:
+        """Start a turn and watch it: chat, token, tool, then done | error | stopped (server-sent
+        events). Closing this stream only stops watching; the turn goes on."""
         board = store.resolve_board(board_id)
         message = str(body.get("message") or "").strip()
         if not message:
             raise Invalid("ask something")
+        if body.get("chat_id") in turns:
+            raise Invalid("still answering the last question: wait, or stop it")
         model = body.get("model") if body.get("model") in chatlib.MODELS else chatlib.DEFAULT_MODEL
         chat_id = body.get("chat_id") or store.start_chat(board["id"], message)
         history = store.chat(chat_id)["messages"]
@@ -980,14 +1037,8 @@ def create_app(
         picked = [by_id[i] for i in body.get("selection") or [] if i in by_id]
         store.add_message(chat_id, {"role": "user", "text": message, "selection": [c["id"] for c in picked]})
         binary = claude()
-
-        async def stream():
-            yield f"event: chat\ndata: {json.dumps({'chat_id': chat_id})}\n\n"
-            if not binary:
-                note = "Claude Code isn't installed (no `claude` on this Mac), so Ask can't answer."
-                store.add_message(chat_id, {"role": "assistant", "text": "", "error": note})
-                yield f"event: error\ndata: {json.dumps({'message': note})}\n\n"
-                return
+        cmd: list[str] = []
+        if binary:
             system = chatlib.system_prompt(
                 outline.board_outline(store, board["id"], config.base_url),
                 [outline.card_line(c) for c in picked],
@@ -996,30 +1047,29 @@ def create_app(
                 binary, chatlib.user_prompt(message, history), system, model,
                 chatlib.mcp_config(config.home, config.base_url),
             )
-            text: list[str] = []
-            tools: list[str] = []
-            outcome: dict[str, Any] = {"stopped": True}
-            try:
-                async with contextlib.aclosing(chatlib.run_turn(cmd)) as events:
-                    async for event in events:
-                        kind = event.pop("event")
-                        if kind == "token":
-                            text.append(event["text"])
-                        elif kind == "tool" and event.get("state") == "start":
-                            tools.append(event["label"])
-                        elif kind == "done":
-                            outcome = {"cost": event.get("cost")}
-                            text = [event.get("text") or "".join(text)]
-                        elif kind == "error":
-                            outcome = {"error": event["message"]}
-                        yield f"event: {kind}\ndata: {json.dumps(event)}\n\n"
-            finally:
-                store.add_message(chat_id, {
-                    "role": "assistant", "text": "".join(text).strip(), "tools": tools, "model": model, **outcome,
-                })
+        turn = chatlib.Turn(chat_id, board["id"])
+        turn.push("chat", {"chat_id": chat_id})
+        turns[chat_id] = turn
+        turn.task = asyncio.create_task(run_turn(turn, binary, cmd, model))
+        return sse(turn)
 
-        return StreamingResponse(stream(), media_type="text/event-stream",
-                                 headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
+    @app.get("/api/chats/{chat_id}/live")
+    async def watch_chat(chat_id: str) -> StreamingResponse:
+        """A running turn from its start, then live; an empty stream if the chat isn't answering."""
+        turn = turns.get(chat_id)
+        if turn is None:
+            store.chat(chat_id)  # 404 for a chat that doesn't exist
+            turn = chatlib.Turn(chat_id, "")
+            turn.finish()
+        return sse(turn)
+
+    @app.post("/api/chats/{chat_id}/stop")
+    async def stop_chat(chat_id: str) -> dict[str, Any]:
+        turn = turns.get(chat_id)
+        if turn is None or turn.task is None:
+            return {"ok": False}
+        turn.task.cancel()
+        return {"ok": True}
 
     # ------------------------------------------------------------------ live events
 
