@@ -102,6 +102,28 @@ def list_boards() -> str:
 
 
 @mcp.tool()
+def list_templates(query: str = "", category: str = "") -> str:
+    """The template library: ready-made boards by use case (moodboards, briefs, storyboards, podcast and
+    content plans, product and strategy work, music sessions and releases, ...). With no arguments, the
+    categories; with `category` (a slug), its templates; with `query` (words like "episode outline" or
+    "brand workshop"), the best matches. Use a slug with create_board(template=...)."""
+    params = "&".join(f"{k}={quote(v)}" for k, v in (("q", query), ("category", category)) if v)
+    lib = _call("GET", "/api/templates" + (f"?{params}" if params else ""))
+    if not query and not category:
+        lines = [f"- {c['slug']} · {c['name']} ({c['count']}): {c['blurb']}" for c in lib["categories"]]
+        total = len(lib["templates"])
+        return f"{total} templates in {len(lib['categories'])} categories. Pass category= or query=.\n" + "\n".join(lines)
+    found = lib["templates"][:25] if query else lib["templates"]
+    if not found:
+        return "No templates match. list_templates() shows the categories."
+    names = {c["slug"]: c["name"] for c in lib["categories"]}
+    return "\n".join(
+        f"- {t['slug']} · {t['name']} ({names.get(t['category'], t['category'])}, {t['card_count']} cards): {t['use_when']}"
+        for t in found
+    )
+
+
+@mcp.tool()
 def read_board(board: str) -> str:
     """A board in reading order with every card id. `board` is an id or a title (a unique fragment works)."""
     return _call("GET", f"/api/boards/{board}/outline")
@@ -110,9 +132,10 @@ def read_board(board: str) -> str:
 @mcp.tool()
 def create_board(title: str, description: str = "", parent: str = "", template: str = "", folder: bool = False) -> str:
     """Make a board. With `parent` (id or title) it is nested there and a board card appears on the parent.
-    With `template` (a template board's id or title, see list_boards), it starts as a copy of that template.
-    `folder=True` makes a folder: a board for keeping boards in (move_board files boards into it), shown with
-    a folder icon in Chris's sidebar."""
+    With `template`, it starts filled in: a library template's slug (list_templates, e.g.
+    "podcast-episode-plan"; the title defaults to the template's name if you pass ""), or one of Chris's
+    own template boards by id or title (list_boards). `folder=True` makes a folder: a board for keeping
+    boards in (move_board files boards into it), shown with a folder icon in Chris's sidebar."""
     board = _call(
         "POST", "/api/boards",
         {"title": title, "description": description, "parent": parent or None, "template": template or None,

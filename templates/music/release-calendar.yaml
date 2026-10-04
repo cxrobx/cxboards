@@ -1,0 +1,31 @@
+name: Release calendar
+use_when: Laying out a quarter or a year of releases so each one has room — what's coming out when, what it needs, and what's in production behind it.
+cards:
+  - note: |
+      # Release calendar — *year*
+      **Pace:** one release every *n* weeks.
+      **This year's arc:** where the catalog should be by December.
+    color: amber
+    width: 340
+  - break
+  - column: Q1
+    cards:
+      - note: "*Release* · *date* · single / EP / video"
+  - column: Q2
+    cards:
+      - note: "*Release* · *date*"
+  - column: Q3
+    cards:
+      - note: "*Release* · *date*"
+  - column: Q4
+    cards:
+      - note: "*Release* · *date*"
+  - break
+  - column: In production
+    cards:
+      - note: What's being written, produced or mixed now, and which slot it's aiming for.
+  - column: Ideas parked
+    cards:
+      - note: Songs and projects that don't have a slot yet.
+  - todo: Every release needs
+    items: [Master, Artwork, Distribution four weeks ahead, Pitch, Content plan, Rollout board]

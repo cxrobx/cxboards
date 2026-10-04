@@ -1,0 +1,28 @@
+name: Mix revision notes
+use_when: Going back and forth on a mix or master — the notes on each version, by section and by time stamp, until it's signed off.
+cards:
+  - note: |
+      # *Song* — mix notes
+      **Mixer / engineer:**
+      **Reference to match:**
+      **Signed off when:** you'd play it next to the reference without flinching.
+    color: amber
+    width: 340
+  - todo: Listen on
+    items: [Studio monitors, Headphones, Phone speaker, Car, Earbuds at low volume]
+  - break
+  - column: v1
+    cards:
+      - note: Drop the bounce here.
+      - note: "0:00 — note"
+  - column: v2
+    cards:
+      - note: Drop the bounce here.
+      - note: "What changed since v1:"
+  - column: v3
+    cards:
+      - note: Drop the bounce here.
+  - column: Signed off
+    cards:
+      - todo: Final
+        items: [Mix approved, Master approved, Instrumental and clean versions, Stems archived]

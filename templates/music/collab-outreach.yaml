@@ -1,0 +1,33 @@
+name: Collaboration outreach
+use_when: Finding and reaching artists or producers to work with — who, why them, the first message, and keeping track of follow-ups.
+cards:
+  - note: |
+      # Collab outreach
+      **This round I'm looking for:** a feature, a co-production, a vocalist, a mix engineer…
+      **What I can offer:** the honest reason it's good for them.
+    color: amber
+    width: 340
+  - note: |
+      **The message, in short**
+      One line that shows you listened · what you're asking · one link · an easy yes.
+  - break
+  - column: Long list
+    cards:
+      - note: Everyone who fits, before you judge. Name · link · one line on why.
+  - column: Shortlist
+    cards:
+      - note: The five you'll actually write to this week.
+  - column: Reached out
+    cards:
+      - note: Name · date · where (DM, email) · what you sent.
+  - column: Talking
+    cards:
+      - note: Replies and next steps.
+  - column: Working together
+    cards:
+      - note: Agreed terms, splits and dates. Move them to a session board when it's on.
+  - todo: Follow-up rhythm
+    items:
+      - No reply after a week → one short follow-up
+      - Still nothing → let it go, no third message
+      - A yes → split sheet before files change hands

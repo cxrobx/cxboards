@@ -31,6 +31,7 @@ from fastapi.staticfiles import StaticFiles
 
 from . import chat as chatlib
 from . import formats, outline, themes
+from . import templates as library
 from .config import AUDIO_EXTENSIONS, MAX_FILE_BYTES, MAX_IMAGE_BYTES, VIDEO_EXTENSIONS, Config, load_config
 from .events import Broadcaster
 from .export import Exporter
@@ -60,6 +61,7 @@ def create_app(
     opener: Callable[[list[str]], None] | None = None,
     rotator: Callable[[Path, Path, int], None] | None = None,
     claude: Callable[[], str | None] = chatlib.find_claude,
+    templates_root: Path | None = None,
 ) -> FastAPI:
     config = config or load_config()
     store = Store(config)
@@ -116,6 +118,13 @@ def create_app(
     @app.exception_handler(Invalid)
     async def invalid(request: Request, exc: Invalid) -> JSONResponse:
         return JSONResponse({"error": str(exc)}, status_code=400)
+
+    @app.exception_handler(library.TemplateError)
+    async def broken_library(request: Request, exc: library.TemplateError) -> JSONResponse:
+        return JSONResponse({"error": f"the template library has a problem: {exc}"}, status_code=500)
+
+    def templates_now() -> library.Catalog:
+        return library.catalog(templates_root or library.ROOT)
 
     def actor_of(request: Request) -> str:
         actor = request.headers.get("x-cxboards-actor", "chris")
@@ -219,11 +228,34 @@ def create_app(
         parent = body.get("parent") or body.get("parent_id")
         parent_id = board_id_of(parent) if parent else None
         template = body.get("template")
+        # A template from the library (templates/<category>/<slug>.yaml), or a board made a template.
+        found = templates_now().get(template) if template and not str(template).startswith("b_") else None
+        if found:
+            return store.build_board(
+                body.get("title") or found.name, library.plan(found.cards), parent_id, actor_of(request),
+                folder=bool(body.get("folder")), theme=found.theme, description=body.get("description", ""),
+            )
         template_id = board_id_of(template) if template else None
         return store.create_board(
             body.get("title", ""), body.get("description", ""), parent_id, actor_of(request), template_id=template_id,
             folder=bool(body.get("folder")),
         )
+
+    @app.get("/api/templates")
+    def list_templates(q: str = "", category: str = "") -> dict[str, Any]:
+        """The library: categories (with counts) and the templates matching ``q`` / ``category``."""
+        cat = templates_now()
+        return {
+            "categories": [{**c, "count": len(cat.in_category(c["slug"]))} for c in cat.categories],
+            "templates": [t.summary() for t in library.search(cat, q, category)],
+        }
+
+    @app.get("/api/templates/{slug}")
+    def get_template(slug: str) -> dict[str, Any]:
+        found = templates_now().get(slug)
+        if not found:
+            raise NotFound(f"no template called {slug}")
+        return {**found.summary(), "cards": found.cards}
 
     @app.get("/api/boards/{ref}")
     def get_board(ref: str) -> dict[str, Any]:

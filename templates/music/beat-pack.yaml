@@ -1,0 +1,34 @@
+name: Beat pack
+use_when: Building a beat pack or a set of beats for an artist — the brief, the reference lane, every beat with its key and tempo, and what goes out the door.
+cards:
+  - note: |
+      # *Pack name*
+      **For:** an artist, a placement, or the store.
+      **Lane:** the sound in a few words, and the artists it should fit next to.
+    color: amber
+    width: 340
+  - column: References
+    cards:
+      - note: Three songs from the lane, one line each on what makes them work.
+      - note: Drop the ones that are close but *not* it, and why.
+  - break
+  - column: Beats
+    width: 360
+    cards:
+      - todo: Tracklist
+        items:
+          - "01 · *name* · *key* · *bpm*"
+          - "02 · *name* · *key* · *bpm*"
+          - "03 · *name* · *key* · *bpm*"
+          - "04 · *name* · *key* · *bpm*"
+          - "05 · *name* · *key* · *bpm*"
+      - note: Drop each bounce here as you finish it.
+  - column: Polish
+    cards:
+      - todo: Each beat
+        items: [Arrangement leaves room for a vocal, Tagged, Mixed against the references, Stems exported]
+  - column: Delivery
+    cards:
+      - todo: ""
+        items: [Folder named and ordered, Stems and MP3s, Split sheet / licence terms, Send and follow up]
+      - note: Who it went to, and when to follow up.

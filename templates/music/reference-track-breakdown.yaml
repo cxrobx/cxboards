@@ -1,0 +1,31 @@
+name: Reference track breakdown
+use_when: Studying a song you want to learn from — its arrangement section by section, the sounds, the mix choices — so you can take one thing into your own work.
+cards:
+  - note: |
+      # *Artist — Song*
+      **Key / BPM:**  **Length:**
+      **Why this one:** what you want to steal, in one line.
+    color: amber
+    width: 340
+  - note: Drop the track here (audio or link card) so you can play it from the board.
+  - break
+  - column: Arrangement
+    cards:
+      - note: "Intro · *bars* — what's in it"
+      - note: "Verse · *bars*"
+      - note: "Hook · *bars*"
+      - note: "Bridge / switch-up · *bars*"
+      - note: Where the energy rises and drops, and what does it.
+  - column: Sounds
+    cards:
+      - note: Drums — kit, swing, what's sampled.
+      - note: Bass and low end.
+      - note: The texture you can't name yet.
+  - column: Mix
+    cards:
+      - note: Where the vocal sits. How wide, how wet.
+      - note: What's loud, what's hidden.
+  - column: Take-aways
+    cards:
+      - note: One thing to try in your next session.
+      - note: One thing this song does that you don't want to.

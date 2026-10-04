@@ -596,9 +596,11 @@ class Store:
         actor: str = "chris",
         template_id: str | None = None,
         folder: bool = False,
+        card_at: tuple[float, float] | None = None,
     ) -> dict[str, Any]:
         """``folder``: a board made for keeping boards in. It's an ordinary board (its boards show as
-        cards on its canvas); the flag only gives it the folder look in the sidebar while it's empty."""
+        cards on its canvas); the flag only gives it the folder look in the sidebar while it's empty.
+        ``card_at``: where its card goes on the parent (a template's layout); otherwise the first free spot."""
         title = (title or "").strip()
         if not title:
             raise Invalid("a board needs a title")
@@ -622,8 +624,47 @@ class Store:
                 )
                 self._touch(board_id, [], actor)
             if parent_id:
-                self._insert_card(parent_id, "board", text="", data={"board_id": board_id}, actor=actor)
+                at = {"x": card_at[0], "y": card_at[1]} if card_at else {}
+                self._insert_card(parent_id, "board", text="", data={"board_id": board_id}, actor=actor, **at)
             return self._board_dict(self._board_row(board_id))
+
+    def build_board(
+        self,
+        title: str,
+        cards: list[dict[str, Any]],
+        parent_id: str | None = None,
+        actor: str = "chris",
+        folder: bool = False,
+        theme: Any = None,
+        description: str = "",
+    ) -> dict[str, Any]:
+        """A board made from placed card specs (``templates.plan``): the board, its cards, the cards in
+        its columns and the boards inside it, as one transaction (one undo step)."""
+        try:
+            stored = json.dumps(themes.normalize(theme)) if theme else None
+        except themes.ThemeError as exc:
+            raise Invalid(str(exc)) from exc
+        with self._tx() as db:
+            board = self.create_board(title, description, parent_id, actor, folder=folder)
+            if stored:
+                db.execute("UPDATE boards SET theme = ? WHERE id = ?", (stored, board["id"]))
+            self._build_cards(board["id"], cards, actor)
+            return self._board_dict(self._board_row(board["id"]))
+
+    def _build_cards(self, board_id: str, cards: list[dict[str, Any]], actor: str) -> None:
+        for c in cards:
+            if c["kind"] == "board":
+                sub = c["board"]
+                child = self.create_board(sub["title"], "", board_id, actor, folder=sub["folder"], card_at=(c["x"], c["y"]))
+                self._build_cards(child["id"], sub["cards"], actor)
+                continue
+            card_id = self._insert_card(
+                board_id, c["kind"], text=c["text"], data=c["data"], color=c["color"], x=c["x"], y=c["y"], w=c["w"], actor=actor
+            )
+            for child in c.get("children") or []:
+                self._insert_card(
+                    board_id, child["kind"], text=child["text"], data=child["data"], color=child["color"], column_id=card_id, actor=actor
+                )
 
     def _unique_slug(self, title: str, exclude: str | None = None) -> str:
         base = slugify(title)

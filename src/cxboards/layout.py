@@ -175,3 +175,23 @@ def arrange(rects: list[tuple[str, Rect]], mode: str, origin: tuple[float, float
             out[cid] = (ox + i * col_width, y)
         y += max(r.h for _, r in row) + GAP
     return out
+
+
+def flow(sizes: list[tuple[float, float] | None], origin: tuple[float, float] = ORIGIN) -> list[tuple[float, float]]:
+    """Spots for cards laid out as written (a template): left to right, a new row when the next
+    would pass MAX_ROW_WIDTH, and a None in ``sizes`` starts a new row. One spot per size."""
+    ox, oy = origin
+    x, y, row_bottom = ox, oy, oy
+    out: list[tuple[float, float]] = []
+    for size in sizes:
+        if size is None:
+            if x > ox:
+                x, y = ox, row_bottom + GAP
+            continue
+        w, h = size
+        if x > ox and x + w > ox + MAX_ROW_WIDTH:
+            x, y = ox, row_bottom + GAP
+        out.append((x, y))
+        x += w + GAP
+        row_bottom = max(row_bottom, y + h)
+    return out

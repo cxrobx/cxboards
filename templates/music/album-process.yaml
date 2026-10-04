@@ -1,0 +1,62 @@
+name: Album or EP process
+use_when: Running a whole project from the first ideas to release — the thesis, the sound world, every song's board, the sequence and the rollout — in one place.
+cards:
+  - note: |
+      # *Project title*
+      **The thesis:** what this body of work is *about*, in one sentence you'd say out loud.
+      **Done means:** *n* songs, mixed and mastered, sequenced, released on *date*.
+    color: amber
+    width: 360
+  - note: |
+      **Where it sits in the catalog**
+      What came before it, and what this one does that the last one didn't.
+  - break
+  - column: Themes & thesis
+    cards:
+      - note: The two or three ideas every song circles back to.
+      - note: Lines, phrases or images that keep coming up in your notes.
+      - note: What you're afraid to say on this one (that's usually the record).
+  - column: Sound world
+    cards:
+      - note: Palette — instruments, textures, the room it lives in.
+      - note: Reference records, one line each on what you're taking.
+      - note: "Rules: what this project never does."
+  - column: Collaborators
+    cards:
+      - note: Who's on it and what each one brings.
+      - todo: Asks
+        items:
+          - Features
+          - Engineer / mix
+          - Artwork
+  - break
+  - board: The songs
+    folder: true
+    cards:
+      - note: One board per song. Duplicate *Song template* for each new one and move it in here.
+      - board: Song template
+        cards:
+          - note: |
+              # *Song title*
+              **Key / BPM:**  **Status:** idea · writing · tracking · mixing · done
+          - column: Lyrics
+            cards:
+              - note: Verse / hook drafts.
+          - column: Production notes
+            cards:
+              - note: What the beat is doing and where it's going.
+          - todo: To finish
+            items: [Vocals tracked, Arrangement locked, Mix approved, Master approved]
+  - column: Sequencing & arc
+    cards:
+      - note: The order, and the feeling you want between each pair of songs.
+      - note: Opener — what it promises. Closer — what it leaves behind.
+  - column: Rollout
+    cards:
+      - note: The single(s), and why those.
+      - todo: Release checklist
+        items:
+          - Distribution and splits set up
+          - Artwork and credits final
+          - Pre-save live
+          - Content plan for the four weeks around release

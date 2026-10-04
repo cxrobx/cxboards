@@ -1,0 +1,153 @@
+# The template library's categories, in the order the New board dialog shows them. Each template is
+# templates/<slug>/<template>.yaml. Most mirror Milanote's use cases (source); Music is ours.
+- slug: music
+  name: Music
+  blurb: Studio sessions, projects and releases — planning the work and getting it out.
+- slug: moodboards
+  name: Moodboards
+  blurb: Collect images, colour and references to set a visual direction.
+  source: https://milanote.com/templates/moodboards
+- slug: brainstorming
+  name: Brainstorming
+  blurb: Get ideas out, cluster them and pick the ones worth pursuing.
+  source: https://milanote.com/templates/brainstorming
+- slug: creative-briefs
+  name: Creative briefs
+  blurb: Agree on the problem, the audience and what good looks like before the work starts.
+  source: https://milanote.com/templates/creative-briefs
+- slug: project-plans
+  name: Project plans
+  blurb: Scope, schedule and track a piece of work from kickoff to done.
+  source: https://milanote.com/templates/project-plans
+- slug: productivity
+  name: Productivity
+  blurb: Plan your days, weeks and goals, and keep the list honest.
+  source: https://milanote.com/templates/productivity
+- slug: content-creation
+  name: Content creation
+  blurb: Plan videos, posts and channels, and keep a calendar of what goes out.
+  source: https://milanote.com/templates/content-creation
+- slug: podcasting
+  name: Podcasting
+  blurb: Shape a show, research and outline episodes, and run the production schedule.
+  source: https://milanote.com/templates/podcasting
+- slug: storyboards
+  name: Storyboards
+  blurb: Plan a sequence shot by shot before anything is filmed or animated.
+  source: https://milanote.com/templates/storyboards
+- slug: filmmaking
+  name: Filmmaking
+  blurb: From treatment and script to shot lists and the shoot itself.
+  source: https://milanote.com/templates/filmmaking
+- slug: creative-writing
+  name: Creative writing
+  blurb: Worlds, characters and scenes for stories of any length.
+  source: https://milanote.com/templates/creative-writing
+- slug: novel-outline
+  name: Novel outlines
+  blurb: Structure a book — plot, chapters and the people in it.
+  source: https://milanote.com/templates/novel-outline
+- slug: photography
+  name: Photography
+  blurb: Plan shoots, shot lists and the look you're after.
+  source: https://milanote.com/templates/photography
+- slug: marketing-strategy
+  name: Marketing strategy
+  blurb: Audience, positioning, channels and the plan that ties them together.
+  source: https://milanote.com/templates/marketing-strategy
+- slug: marketing-campaign
+  name: Marketing campaigns
+  blurb: Plan one campaign — the idea, the assets, the schedule and the results.
+  source: https://milanote.com/templates/marketing-campaign
+- slug: branding
+  name: Brand strategy
+  blurb: Define what a brand stands for and how it looks, sounds and behaves.
+  source: https://milanote.com/templates/branding
+- slug: brand-strategy-workshops
+  name: Brand workshops
+  blurb: Run a brand workshop with a team or a client, exercise by exercise.
+  source: https://milanote.com/templates/brand-strategy-workshops
+- slug: market-research
+  name: Market research
+  blurb: Size a market, map competitors and gather what customers say.
+  source: https://milanote.com/templates/market-research
+- slug: strategy
+  name: Strategy & management
+  blurb: Plan direction, run planning sessions and make decisions in the open.
+  source: https://milanote.com/templates/strategy
+- slug: product-management
+  name: Product management
+  blurb: Roadmaps, specs, prioritisation and launches.
+  source: https://milanote.com/templates/product-management
+- slug: ux-research
+  name: UX research
+  blurb: Plan research, run interviews and turn findings into insight.
+  source: https://milanote.com/templates/ux-research
+- slug: ux-design
+  name: UX design
+  blurb: Flows, wireframes and the thinking behind an interface.
+  source: https://milanote.com/templates/ux-design
+- slug: website-design
+  name: Website design
+  blurb: Plan a site's structure, content and look.
+  source: https://milanote.com/templates/website-design
+- slug: software-development
+  name: Software development
+  blurb: Plan features, sprints, architecture and releases.
+  source: https://milanote.com/templates/software-development
+- slug: graphic-design
+  name: Graphic design
+  blurb: Briefs, concepts and presentation for design projects.
+  source: https://milanote.com/templates/graphic-design
+- slug: logo-design
+  name: Logo design
+  blurb: From research and sketches to the final mark.
+  source: https://milanote.com/templates/logo-design
+- slug: motion-design
+  name: Motion design
+  blurb: Plan animation — style, boards and the sequence of moves.
+  source: https://milanote.com/templates/motion-design
+- slug: game-design
+  name: Game design
+  blurb: Concept, mechanics, worlds and characters for a game.
+  source: https://milanote.com/templates/game-design
+- slug: visual-art
+  name: Visual art
+  blurb: Develop a series, plan a piece and keep a studio practice going.
+  source: https://milanote.com/templates/visual-art
+- slug: craft-and-making
+  name: Craft & making
+  blurb: Plan handmade projects, materials and the steps to make them.
+  source: https://milanote.com/templates/craft-and-making
+- slug: fashion
+  name: Fashion
+  blurb: Collections, lookbooks and the research behind them.
+  source: https://milanote.com/templates/fashion
+- slug: interior-design
+  name: Interior design
+  blurb: Rooms, materials, furniture and client presentations.
+  source: https://milanote.com/templates/interior-design
+- slug: architecture
+  name: Architecture
+  blurb: Site research, concepts and project presentation.
+  source: https://milanote.com/templates/architecture
+- slug: diy-home-renovations
+  name: Home renovation & DIY
+  blurb: Plan a renovation room by room — ideas, budget and the order of work.
+  source: https://milanote.com/templates/diy-home-renovations
+- slug: events
+  name: Events
+  blurb: Plan an event's theme, logistics, schedule and guests.
+  source: https://milanote.com/templates/events
+- slug: education
+  name: Education
+  blurb: Lesson plans, study notes and coursework.
+  source: https://milanote.com/templates/education
+- slug: agencies
+  name: Agencies
+  blurb: Client work end to end — pitches, briefs, presentations and handover.
+  source: https://milanote.com/templates/agencies
+- slug: startups
+  name: Startups
+  blurb: Ideas, pitches, planning and the first customers.
+  source: https://milanote.com/templates/startups

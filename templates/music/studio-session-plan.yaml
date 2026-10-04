@@ -1,0 +1,40 @@
+name: Studio session plan
+use_when: Planning one studio session so the hours go to making, not deciding — the goal, the references, the setup and what has to be bounced by the end.
+theme: studio
+cards:
+  - note: |
+      # Session — *date*
+      **Goal:** one sentence. What exists at the end of tonight that doesn't now?
+      **Stop when:** the bounce is out, or *time*.
+    color: amber
+    width: 320
+  - todo: Before you sit down
+    items:
+      - Project file opened and saved as a new version
+      - Templates, kits and plugins loaded
+      - Reference tracks in the session, level-matched
+      - Phone away, notifications off
+  - break
+  - column: References
+    cards:
+      - note: Drop the two or three tracks this should sit next to. One line each on *what* you're taking from it — the drums, the space, the vocal.
+      - note: "▣ Drop screenshots, artwork or a mood image here"
+  - column: The idea
+    cards:
+      - note: "**Key / BPM:** \n**Feel in three words:** "
+      - note: The hook, the loop or the line you're starting from.
+      - note: What it is *not* — the version you're steering away from.
+  - column: Build order
+    cards:
+      - todo: ""
+        items:
+          - Core loop (8 bars that already feel finished)
+          - Drums
+          - Bass
+          - Arrangement pass
+          - Rough mix and bounce
+  - column: Bounce & notes
+    cards:
+      - note: Drop the bounce here when it's out (audio card).
+      - note: "**Next session starts with:** one thing, so tomorrow has a door in."
+      - note: What surprised you tonight?

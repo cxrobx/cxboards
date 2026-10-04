@@ -1,0 +1,30 @@
+name: Live set plan
+use_when: Preparing a show or a DJ / live set — the setlist and its energy, the transitions, the gear and stems, and the run of the day.
+cards:
+  - note: |
+      # *Venue* — *date*
+      **Set length:**  **Slot:** opener · support · headline
+      **The feeling people leave with:**
+    color: amber
+    width: 340
+  - todo: Pack list
+    items: [Laptop and charger, Interface / controller, Cables and adapters, Backup drive with the set, In-ears]
+  - break
+  - column: Setlist
+    width: 340
+    cards:
+      - note: "1. *Song* — *key / bpm* — energy 1–5"
+      - note: "2. *Song* — "
+      - note: "3. *Song* — "
+      - note: The moment the set turns, and how you get there.
+  - column: Transitions
+    cards:
+      - note: How each song hands to the next — a blend, a hard cut, a word to the crowd.
+  - column: Stems & tech
+    cards:
+      - todo: ""
+        items: [Stems exported per song, Click / cues checked, Levels matched, Run-through on the actual gear]
+  - column: Day of
+    cards:
+      - note: "Load-in · soundcheck · doors · set · out"
+      - note: Contacts — promoter, sound, the person with the wristbands.
