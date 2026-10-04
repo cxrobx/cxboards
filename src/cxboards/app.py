@@ -999,6 +999,14 @@ def create_app(
     def root() -> HTMLResponse:
         return index()
 
+    @app.get("/api/version")
+    def version() -> dict[str, Any]:
+        """Which build of the UI the server is serving. It changes with every `npm run build` (the
+        page names its hashed bundle), so an open window can tell it's running an older one."""
+        page = WEB_DIST / "index.html"
+        build = hashlib.sha1(page.read_bytes()).hexdigest()[:12] if page.is_file() else None
+        return {"build": build}
+
     @app.get("/b/{board_id}", response_class=HTMLResponse)
     def board_page(board_id: str) -> HTMLResponse:
         return index()

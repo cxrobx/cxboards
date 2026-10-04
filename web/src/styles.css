@@ -979,6 +979,15 @@ textarea.field {
   font-size: 11px;
 }
 
+.update-ready {
+  border: 1px solid var(--amber);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--amber) 14%, transparent);
+  color: var(--ink);
+  padding: 6px 10px;
+  text-align: left;
+}
+
 .sidebar-foot {
   display: flex;
   justify-content: space-between;

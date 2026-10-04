@@ -222,12 +222,46 @@ function Shell() {
     return () => window.removeEventListener('keydown', onKey)
   }, [open, state])
 
+  // A window left open across an update keeps running the old page (a new kind of card shows
+  // as its bare name). The server says which build it serves; when that changes, offer a reload.
+  // Checked at load, when the live connection comes back (a restart), on focus, and every 5 min.
+  const [updateReady, setUpdateReady] = useState(false)
+  const buildRef = useRef<string | null>(null)
+  const offeredRef = useRef(false)
+  const checkBuild = useCallback(async () => {
+    try {
+      const { build } = (await (await fetch('/api/version')).json()) as { build: string | null }
+      if (!build) return
+      if (buildRef.current === null) buildRef.current = build
+      else if (build !== buildRef.current && !offeredRef.current) {
+        offeredRef.current = true
+        setUpdateReady(true)
+        showToast('CXBoards has been updated.', { label: 'Reload', run: () => window.location.reload() })
+      }
+    } catch {
+      /* offline: the live dot already says so */
+    }
+  }, [showToast])
+  useEffect(() => {
+    void checkBuild()
+    const every = window.setInterval(() => void checkBuild(), 5 * 60_000)
+    const onFocus = () => void checkBuild()
+    window.addEventListener('focus', onFocus)
+    return () => {
+      window.clearInterval(every)
+      window.removeEventListener('focus', onFocus)
+    }
+  }, [checkBuild])
+
   // Live: one EventSource for the app. Reload the open board on its events,
   // the sidebar on any, light up what an agent touched, and offer to undo it.
   useEffect(() => {
     let listTimer = 0
     const source = new EventSource('/api/events')
-    source.onopen = () => setLive(true)
+    source.onopen = () => {
+      setLive(true)
+      void checkBuild()
+    }
     source.onerror = () => setLive(false)
     source.addEventListener('change', (msg) => {
       const event = JSON.parse((msg as MessageEvent).data) as ChangeEvent
@@ -263,7 +297,7 @@ function Shell() {
       }
     })
     return () => source.close()
-  }, [loadBoards, showToast])
+  }, [loadBoards, showToast, checkBuild])
 
   useEffect(() => {
     document.title = state ? `${state.board.title} · CXBoards` : 'CXBoards'
@@ -569,6 +603,11 @@ function Shell() {
                 </button>
               ))}
           </div>
+        )}
+        {updateReady && (
+          <button className="update-ready" onClick={() => window.location.reload()} title="This window is running an older version">
+            ↻ Update ready — reload
+          </button>
         )}
         <div className="sidebar-foot">
           <button className="ghost" onClick={() => setTrashOpen(true)}>

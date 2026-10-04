@@ -124,7 +124,8 @@ tail -f ~/Library/Logs/cxboards.log
 ```
 
 A Python change needs a restart; a UI change needs `npm run build` (the server serves
-`web/dist`). Before a schema change on the live data, back up the database
+`web/dist`). Windows already open keep the old page until reloaded; `/api/version` (a hash of
+`web/dist/index.html`) lets them notice and show "Update ready — reload". Before a schema change on the live data, back up the database
 (`sqlite3 cxboards.db ".backup cxboards.db.bak-<date>"`); old databases migrate in place
 (`ADDED_COLUMNS` in `store.py`).
 

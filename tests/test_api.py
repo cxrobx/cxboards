@@ -138,3 +138,9 @@ def test_changing_a_link_replaces_its_preview(client) -> None:
             break
         time.sleep(0.02)
     assert data["title"] == "Preview of https://b.example/" and data["url"] == "https://b.example/"
+
+
+def test_version_names_the_ui_build(client) -> None:
+    # The page compares this with the build it loaded, and offers a reload when they differ.
+    build = client.get("/api/version").json()["build"]
+    assert build is None or (isinstance(build, str) and len(build) == 12)
