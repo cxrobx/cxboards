@@ -537,7 +537,7 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
       }
       if (one?.kind === 'board' && one.board) {
         const target = one.board.id
-        items.push({ label: 'Copy link to board', run: () => void navigator.clipboard?.writeText(`${window.location.origin}/b/${target}`) })
+        items.push({ label: 'Copy link to board', run: () => void navigator.clipboard?.writeText(`cxboards://b/${target}`) })
       }
       if (items.length) items.push({ kind: 'sep' })
       items.push(

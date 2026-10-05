@@ -376,6 +376,14 @@ function Shell() {
       )
       .catch((e) => showToast((e as Error).message))
 
+  // cxboards:// opens the board from anywhere (Margin turns it into a chip, Finder and
+  // Spotlight hand it to CXBoards.app), unlike the http address, which needs a browser.
+  const copyBoardLink = (board: Board) =>
+    void navigator.clipboard
+      ?.writeText(`cxboards://b/${board.id}`)
+      .then(() => showToast(`Copied a link to ${board.title}`))
+      .catch(() => showToast('Couldn’t copy the link'))
+
   const openBoardMenu = (e: React.MouseEvent) => {
     if (!state) return
     const board = state.board
@@ -407,6 +415,7 @@ function Shell() {
             },
           ],
         },
+        { label: 'Copy link to board', run: () => copyBoardLink(board) },
         { label: 'Duplicate board', run: () => duplicateBoard(board) },
         ...(board.is_template ? [] : [{ kind: 'sub' as const, label: 'Move board into', items: moveTargets(board) }]),
         board.is_template
@@ -496,12 +505,14 @@ function Shell() {
     e.stopPropagation()
     const rename: MenuItem = { label: 'Rename', run: () => setTreeEdit({ kind: 'rename', id: board.id }) }
     const remove: MenuItem = { label: 'Delete', danger: true, run: () => void deleteBoard(board) }
+    const link: MenuItem = { label: 'Copy link', run: () => copyBoardLink(board) }
     setSideMenu({
       x: e.clientX,
       y: e.clientY,
       items: board.is_template
         ? [
             rename,
+            link,
             { label: 'Stop being a template', run: () => void api.updateBoard(board.id, { is_template: false }).then(loadBoards) },
             { kind: 'sep' },
             remove,
@@ -513,6 +524,7 @@ function Shell() {
             { label: 'Add section above', run: () => addSection(board.parent_id, board.title) },
             { kind: 'sep' },
             rename,
+            link,
             { label: 'Duplicate', run: () => duplicateBoard(board) },
             { kind: 'sub', label: 'Move into', items: moveTargets(board) },
             { kind: 'sep' },
