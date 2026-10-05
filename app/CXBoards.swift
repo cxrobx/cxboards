@@ -86,6 +86,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
     private var openedOutside: [String] = []
     private var finishedDownloads: [URL] = []
     private var selfTestStarted = false
+    private var watching = false
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         buildMenu()
@@ -101,7 +102,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
                 self.pendingURL = nil
             } else {
                 self.showServerProblem()
-                if selfTestArgs != nil { self.finishSelfTest(["server": false]) }
+                if selfTestArgs != nil { self.finishSelfTest(["server": false]) } else { self.watchForServer() }
             }
         }
     }
@@ -203,7 +204,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
 
     // MARK: Server
 
-    /// Health-check the server; if it's down, ask launchd to start it and wait up to 15 s.
+    /// Health-check the server; if it's down, ask launchd to start it and wait up to 45 s. After a
+    /// reboot the LaunchAgent can come up well after the app does (2026-10-05: the server started
+    /// 37 s after boot, the old 15 s wait gave up first), and `watchForServer` covers anything later.
     private func ensureServer(_ done: @escaping (Bool) -> Void) {
         checkHealth { [weak self] ok in
             if ok { return done(true) }
@@ -213,7 +216,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
                 let plist = NSString(string: "~/Library/LaunchAgents/\(serviceLabel).plist").expandingTildeInPath
                 _ = launchctl(["bootstrap", "gui/\(getuid())", plist])
             }
-            self?.waitForServer(deadline: Date().addingTimeInterval(15), done: done)
+            self?.waitForServer(deadline: Date().addingTimeInterval(45), done: done)
         }
     }
 
@@ -245,6 +248,28 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
         """
     }
 
+    /// Once the problem page is up, keep checking every 2 s and load the board the moment the
+    /// server answers, so the page clears itself instead of waiting for ⌘R.
+    private func watchForServer() {
+        guard !ready, !watching else { return }
+        watching = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
+            guard let self else { return }
+            self.watching = false
+            guard !self.ready else { return }
+            self.checkHealth { ok in
+                guard !self.ready else { return }
+                if ok {
+                    self.ready = true
+                    self.webView.load(URLRequest(url: self.pendingURL ?? baseURL))
+                    self.pendingURL = nil
+                } else {
+                    self.watchForServer()
+                }
+            }
+        }
+    }
+
     @objc private func retry() {
         status.stringValue = "Starting CXBoards…"
         ensureServer { [weak self] ok in
@@ -254,6 +279,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKNavigationDelegate, 
                 self.webView.load(URLRequest(url: baseURL))
             } else {
                 self.showServerProblem()
+                self.watchForServer()
             }
         }
     }

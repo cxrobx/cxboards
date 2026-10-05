@@ -25,7 +25,8 @@ user, never deployed. Built 2026-10-02 to plan creative sessions next to the art
 - **The app**: `/Applications/CXBoards.app` (`com.cx.cxboards`, source `app/CXBoards.swift`,
   built by `app/build-app.sh`, no Xcode project) is a borderless native window around the
   same server, like Onyx: it starts the LaunchAgent if it's down (kickstart, else
-  bootstrap), hands Finder drops to the page as **real paths** (`window.cxboardsNativeDrop`),
+  bootstrap) and waits up to 45 s for it (after a reboot the server can come up well after the
+  app), then keeps checking every 2 s so the "isn't answering" page clears itself; hands Finder drops to the page as **real paths** (`window.cxboardsNativeDrop`),
   shows alert/confirm/prompt as sheets, saves downloads to ~/Downloads, opens outside links
   in the browser, and answers `cxboards://b/<board id>`. The window drags by the page's top
   28 px band, the board header and the sidebar's empty space (`web/src/native.ts` posts the
