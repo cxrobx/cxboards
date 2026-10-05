@@ -28,7 +28,7 @@ user, never deployed. Built 2026-10-02 to plan creative sessions next to the art
   bootstrap) and waits up to 45 s for it (after a reboot the server can come up well after the
   app), then keeps checking every 2 s so the "isn't answering" page clears itself; hands Finder drops to the page as **real paths** (`window.cxboardsNativeDrop`),
   shows alert/confirm/prompt as sheets, saves downloads to ~/Downloads, opens outside links
-  in the browser, and answers `cxboards://b/<board id>`. The window drags by the page's top
+  in the browser, and answers `cxboards://b/<board id>` (what every Copy link copies; Margin draws it as a chip). The window drags by the page's top
   28 px band, the board header and the sidebar's empty space (`web/src/native.ts` posts the
   mouse-down to the app's `cxDrag` handler); controls, the board list and the canvas keep
   their clicks. Verify with `scripts/selftest-app.sh` (the real app against the live server
@@ -73,7 +73,7 @@ user, never deployed. Built 2026-10-02 to plan creative sessions next to the art
   are cards on its canvas and agents file into it with `move_board`. `boards.is_folder` only gives
   an empty one the folder icon; any board with boards inside shows as a folder. Right-click makes
   them (empty space: New folder / New board; a board: New folder inside, New board inside,
-  Rename, Duplicate, Move into, Delete), names are typed in place, and a folder's chevron closes
+  Rename, Copy link, Duplicate, Move into, Delete), names are typed in place, and a folder's chevron closes
   it (remembered; opening a board opens the folders above it). The dock is Onyx's: pinned, or
   unpinned (⌘\ or the pin) so it floats out from a 24 px strip on the left edge (40 ms in; away
   400 ms after the pointer leaves, unless its menu, a name field, a resize or a drag is in
