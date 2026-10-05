@@ -5,6 +5,9 @@
 // A turn is a job on the server: closing the panel or opening another board only stops
 // watching it. Coming back to the chat replays the turn so far and follows it live. Only
 // Stop ends a turn early.
+//
+// Pictures: paste, drop (a Finder drop in CXBoards.app arrives as paths, via Board's native
+// drop handler) or 📎. Each is copied into uploads; the turn gets its path and Reads it.
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { Card } from './api'
@@ -19,6 +22,7 @@ interface Message {
   error?: string
   stopped?: boolean
   selection?: string[]
+  images?: string[]
   live?: { label: string; active: boolean }[]
 }
 
@@ -37,6 +41,14 @@ interface Info {
 }
 
 const MODEL_KEY = 'cxboards.chat-model'
+// What Claude can look at (the server checks too).
+const PICTURE = /^image\/(png|jpeg|gif|webp)$/
+const PICTURE_PATH = /\.(png|jpe?g|gif|webp)$/i
+
+interface Picture {
+  file: string
+  url: string
+}
 const STARTERS = [
   'Lay out a session plan for this board',
   'Group the loose ideas into columns',
@@ -79,6 +91,11 @@ export function ChatPanel({
   const [input, setInput] = useState('')
   const [busy, setBusy] = useState(false)
   const [picked, setPicked] = useState<Card[]>([])
+  const [pics, setPics] = useState<Picture[]>([])
+  const [attaching, setAttaching] = useState(0)
+  const [attachError, setAttachError] = useState('')
+  const [dragging, setDragging] = useState(false)
+  const chooser = useRef<HTMLInputElement>(null)
   const watcher = useRef<AbortController | null>(null) // our view of a turn, not the turn itself
   const openId = useRef<string | null>(null)
   const list = useRef<HTMLDivElement>(null)
@@ -226,21 +243,74 @@ export function ChatPanel({
     return () => window.removeEventListener('cxboards:ask', take)
   }, [])
 
+  // Copy pictures into uploads and line them up for the next question.
+  const attach = async (jobs: (() => Promise<Response>)[], refused: number) => {
+    setAttachError(refused ? 'Ask can look at PNG, JPEG, GIF and WebP pictures.' : '')
+    setAttaching((n) => n + jobs.length)
+    for (const job of jobs) {
+      try {
+        const resp = await job()
+        const body = await resp.json()
+        if (!resp.ok) throw new Error(body.error ?? resp.statusText)
+        setPics((ps) => (ps.some((p) => p.file === body.file) ? ps : [...ps, { file: body.file, url: body.url }]))
+      } catch (e) {
+        setAttachError(`Couldn't attach that picture: ${(e as Error).message}`)
+      } finally {
+        setAttaching((n) => n - 1)
+      }
+    }
+    box.current?.focus()
+  }
+  const attachFiles = (files: File[]) => {
+    const ok = files.filter((f) => PICTURE.test(f.type))
+    void attach(
+      ok.map((f) => () => {
+        const form = new FormData()
+        form.append('file', f, f.name || 'pasted.png')
+        return fetch('/api/uploads', { method: 'POST', headers: { 'X-CXBoards': '1' }, body: form })
+      }),
+      files.length - ok.length,
+    )
+  }
+  const attachPaths = (paths: string[]) => {
+    const ok = paths.filter((p) => PICTURE_PATH.test(p))
+    void attach(
+      ok.map((path) => () =>
+        fetch('/api/uploads/from-path', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-CXBoards': '1' },
+          body: JSON.stringify({ path }),
+        }),
+      ),
+      paths.length - ok.length,
+    )
+  }
+
+  // CXBoards.app hands Finder drops over as paths; Board passes on the ones dropped here.
+  useEffect(() => {
+    const onDrop = (e: Event) => attachPaths((e as CustomEvent<string[]>).detail)
+    window.addEventListener('cxboards:chat-drop', onDrop)
+    return () => window.removeEventListener('cxboards:chat-drop', onDrop)
+  })
+
   const send = async (text: string) => {
     const message = text.trim()
-    if (!message || busy) return
+    const images = pics.map((p) => p.file)
+    if ((!message && !images.length) || busy || attaching) return
     const chosen = picked
     setInput('')
+    setPics([])
+    setAttachError('')
     setMessages((ms) => [
       ...ms,
-      { role: 'user', text: message, selection: chosen.map((c) => c.id) },
+      { role: 'user', text: message, selection: chosen.map((c) => c.id), images },
       { role: 'assistant', text: '', live: [] },
     ])
     await watch((signal) =>
       fetch(`/api/boards/${boardId}/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-CXBoards': '1' },
-        body: JSON.stringify({ message, chat_id: openId.current, model, selection: chosen.map((c) => c.id) }),
+        body: JSON.stringify({ message, images, chat_id: openId.current, model, selection: chosen.map((c) => c.id) }),
         signal,
       }),
     )
@@ -260,7 +330,27 @@ export function ChatPanel({
   }
 
   return (
-    <aside className="chat" onKeyDown={(e) => e.stopPropagation()}>
+    <aside
+      className={`chat${dragging ? ' dropping' : ''}`}
+      onKeyDown={(e) => e.stopPropagation()}
+      onDragOver={(e) => {
+        // Pictures dropped here are for Ask, not the board underneath.
+        if (!e.dataTransfer.types.includes('Files')) return
+        e.preventDefault()
+        e.stopPropagation()
+        setDragging(true)
+      }}
+      onDragLeave={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setDragging(false)
+      }}
+      onDrop={(e) => {
+        if (!e.dataTransfer.types.includes('Files')) return
+        e.preventDefault()
+        e.stopPropagation()
+        setDragging(false)
+        attachFiles(Array.from(e.dataTransfer.files))
+      }}
+    >
       <header>
         <strong>Ask</strong>
         <select
@@ -310,6 +400,15 @@ export function ChatPanel({
         {messages.map((m, i) =>
           m.role === 'user' ? (
             <div key={i} className="msg user">
+              {!!m.images?.length && (
+                <div className="msg-pics">
+                  {m.images.map((f) => (
+                    <a key={f} href={`/media/${f}`} target="_blank" rel="noreferrer">
+                      <img src={`/media/${f}`} alt="" />
+                    </a>
+                  ))}
+                </div>
+              )}
               {m.text}
               {!!m.selection?.length && <div className="msg-meta">with {m.selection.length} selected card{m.selection.length === 1 ? '' : 's'}</div>}
             </div>
@@ -339,13 +438,33 @@ export function ChatPanel({
             {picked.length} selected card{picked.length === 1 ? '' : 's'} will go with your question
           </div>
         )}
+        {(pics.length > 0 || attaching > 0) && (
+          <div className="chat-pics">
+            {pics.map((p) => (
+              <div key={p.file} className="chat-pic">
+                <img src={p.url} alt="" />
+                <button title="Remove" onClick={() => setPics((ps) => ps.filter((x) => x.file !== p.file))}>
+                  ✕
+                </button>
+              </div>
+            ))}
+            {attaching > 0 && <div className="chat-pic loading">…</div>}
+          </div>
+        )}
+        {attachError && <div className="chat-error">{attachError}</div>}
         <textarea
           ref={box}
           className="field"
           rows={3}
           value={input}
-          placeholder={busy ? 'Working on it…' : 'Ask, or tell it what to do with the board…'}
+          placeholder={busy ? 'Working on it…' : 'Ask, or tell it what to do with the board… (paste or drop pictures)'}
           onChange={(e) => setInput(e.target.value)}
+          onPaste={(e) => {
+            const files = Array.from(e.clipboardData.files)
+            if (!files.length) return
+            e.preventDefault()
+            attachFiles(files)
+          }}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault()
@@ -372,13 +491,27 @@ export function ChatPanel({
               </option>
             ))}
           </select>
+          <button className="ghost attach" title="Attach pictures (or paste, or drop them here)" onClick={() => chooser.current?.click()}>
+            📎
+          </button>
+          <input
+            ref={chooser}
+            type="file"
+            accept="image/png,image/jpeg,image/gif,image/webp"
+            multiple
+            hidden
+            onChange={(e) => {
+              attachFiles(Array.from(e.target.files ?? []))
+              e.target.value = ''
+            }}
+          />
           <span className="hint">↵ send · ⇧↵ new line</span>
           {busy ? (
             <button className="ghost" onClick={stop}>
               ■ Stop
             </button>
           ) : (
-            <button className="primary" onClick={() => void send(input)} disabled={!input.trim()}>
+            <button className="primary" onClick={() => void send(input)} disabled={(!input.trim() && !pics.length) || attaching > 0}>
               Send
             </button>
           )}

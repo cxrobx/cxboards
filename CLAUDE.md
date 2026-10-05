@@ -39,6 +39,10 @@ user, never deployed. Built 2026-10-02 to plan creative sessions next to the art
   request: closing the panel or opening another board only stops watching, coming back replays
   it and follows live (`GET /api/chats/<id>/live`), and only Stop (`POST …/stop`) or a server
   shutdown ends it early, saved as "stopped". A server restart therefore stops running turns.
+  Pictures go with a question (paste, drop, 📎; in CXBoards.app a Finder drop on the panel is routed
+  there by Board's native-drop handler): each is copied into `uploads/`, the prompt carries its path,
+  and the turn gets `--add-dir uploads` so Read shows it (PNG/JPEG/GIF/WebP only: Read can't show SVG
+  or HEIC). Checked by hand with a real turn on 2026-10-04. Unsent attachments stay in uploads.
   Tests use a fake `claude` (tests/test_chat.py; the job tests run a real uvicorn, because
   TestClient buffers whole responses); a real turn was checked by hand on 2026-10-03.
 
@@ -137,7 +141,7 @@ Data lives in `~/Library/Application Support/CXBoards/` (`cxboards.db`, `uploads
 ## Run / verify
 
 ```bash
-.venv/bin/python -m pytest -q          # 370 tests: invariants, API, export, MCP, chat, themes, folders, templates (each built), animations, phases 1-3
+.venv/bin/python -m pytest -q          # 373 tests: invariants, API, export, MCP, chat, themes, folders, templates (each built), animations, phases 1-3
 app/build-app.sh                       # build + install CXBoards.app (Apple Development signed)
 scripts/selftest-app.sh                # the app's own end-to-end check (drops, dialogs, sidebar, downloads, links)
 scripts/install.sh                     # build UI, (re)install LaunchAgent, wait for health

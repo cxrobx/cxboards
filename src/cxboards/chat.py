@@ -37,6 +37,8 @@ DEFAULT_MODEL = "sonnet"
 FIRST_ACTIVITY_TIMEOUT = 90.0
 TURN_TIMEOUT = 600.0
 HISTORY_TURNS = 12
+# What Claude's Read tool shows as a picture (SVG and HEIC come back as text or not at all).
+IMAGE_TYPES = {".png", ".jpg", ".jpeg", ".gif", ".webp"}
 # Claude Code's own plumbing (loading deferred tools): not something Chris needs to watch.
 QUIET_TOOLS = {"ToolSearch"}
 
@@ -82,6 +84,8 @@ highlighted, and he can undo any of your steps with one click. Work like this:
   ask your clarifying questions in one short message, with your best guess for each, and stop
   there: he answers in his next message. Then make it, look at it with preview_animation, fix
   what's off, and tell him in a line what you made.
+- Pictures Chris attaches are listed with their paths: look at each with Read before answering.
+  To put one on a board, add_cards kind image with that path.
 - Keep replies short and plain. When you changed the board, say in a sentence what you did.
 - Don't paste the outline back; refer to cards by what they say."""
 
@@ -136,21 +140,35 @@ def system_prompt(outline: str, selection: list[str]) -> str:
     return "\n\n".join(parts)
 
 
-def user_prompt(message: str, history: list[dict[str, Any]]) -> str:
-    turns = [t for t in history if t.get("text")][-HISTORY_TURNS:]
+def _attached(images: list[str], uploads: Path) -> str:
+    return "\n".join(f"[attached picture: {uploads / name}]" for name in images)
+
+
+def user_prompt(message: str, history: list[dict[str, Any]], images: list[str] | None = None,
+                uploads: Path | None = None) -> str:
+    """The question, after the conversation so far. Pictures (upload names) travel as paths
+    in the uploads folder, which the turn may Read (``--add-dir``)."""
+    def say(text: str, pictures: list[str]) -> str:
+        if not pictures or uploads is None:
+            return text
+        return "\n".join(part for part in (text, _attached(pictures, uploads)) if part)
+
+    now = say(message, images or [])
+    turns = [t for t in history if t.get("text") or t.get("images")][-HISTORY_TURNS:]
     if not turns:
-        return message
+        return now
     lines = ["Our conversation so far:"]
     for turn in turns:
         who = "Chris" if turn["role"] == "user" else "You"
-        lines.append(f"{who}: {turn['text']}")
+        lines.append(f"{who}: {say(turn.get('text', ''), turn.get('images') or [])}")
     lines.append("")
-    lines.append(f"Chris now asks: {message}")
+    lines.append(f"Chris now asks: {now}")
     return "\n".join(lines)
 
 
-def build_cmd(claude: str, prompt: str, system: str, model: str, mcp_path: Path) -> list[str]:
-    return [
+def build_cmd(claude: str, prompt: str, system: str, model: str, mcp_path: Path,
+              uploads: Path | None = None) -> list[str]:
+    cmd = [
         claude, "-p", prompt,
         "--output-format", "stream-json", "--verbose", "--include-partial-messages",
         "--model", model,
@@ -161,6 +179,9 @@ def build_cmd(claude: str, prompt: str, system: str, model: str, mcp_path: Path)
         "--disallowedTools", *DISALLOWED_TOOLS,
         "--append-system-prompt", system,
     ]
+    if uploads is not None:
+        cmd += ["--add-dir", str(uploads)]  # attached pictures live there (Read only)
+    return cmd
 
 
 class Turn:

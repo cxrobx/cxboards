@@ -16,7 +16,7 @@ from pathlib import Path
 import httpx
 import pytest
 import uvicorn
-from conftest import W
+from conftest import PNG_1PX, W
 from fastapi.testclient import TestClient
 
 from cxboards import chat as chatlib
@@ -138,6 +138,44 @@ def test_history_and_selection_travel_with_the_question(asking, tmp_path) -> Non
     assert "Chris: first question" in prompt and "You: Adding" in prompt and prompt.endswith("Chris now asks: and this one?")
     system = second[second.index("--append-system-prompt") + 1]
     assert "Cards Chris has selected" in system and card["id"] in system.split("selected")[1]
+
+
+def test_pictures_travel_as_paths_it_may_read(asking, tmp_path, config) -> None:
+    board = asking.post("/api/boards", json={"title": "B"}, headers=W).json()
+    up = asking.post("/api/uploads", files={"file": ("ref.png", PNG_1PX, "image/png")}, headers=W).json()
+    got = events(asking.post(f"/api/boards/{board['id']}/chat", json={"images": [up["file"]]}, headers=W))
+    assert got[-1][0] == "done"  # a picture with no words is a question too
+    argv = calls(tmp_path)[0]["argv"]
+    path = config.uploads_dir / up["file"]
+    assert f"[attached picture: {path}]" in argv[1]
+    assert argv[argv.index("--add-dir") + 1] == str(config.uploads_dir)
+    assert "Read" in argv[argv.index("--allowedTools") + 1: argv.index("--disallowedTools")]
+    chat_id = got[0][1]["chat_id"]
+    saved = asking.get(f"/api/chats/{chat_id}").json()
+    assert saved["title"] == "A picture" and saved["messages"][0]["images"] == [up["file"]]
+    # A follow-up still knows which picture "it" is.
+    asking.post(f"/api/boards/{board['id']}/chat", json={"message": "make it bigger", "chat_id": chat_id}, headers=W)
+    follow = calls(tmp_path)[1]["argv"][1]
+    assert f"Chris: [attached picture: {path}]" in follow and follow.endswith("Chris now asks: make it bigger")
+
+
+def test_only_uploaded_pictures_it_can_see(asking, tmp_path, config) -> None:
+    board = asking.post("/api/boards", json={"title": "B"}, headers=W).json()
+    for name in ("../cxboards.db", "nope.png"):
+        resp = asking.post(f"/api/boards/{board['id']}/chat", json={"message": "hi", "images": [name]}, headers=W)
+        assert resp.status_code == 404
+    svg = asking.post("/api/uploads", files={"file": ("a.svg", b"<svg xmlns='http://www.w3.org/2000/svg'/>", "image/svg+xml")},
+                      headers=W).json()
+    resp = asking.post(f"/api/boards/{board['id']}/chat", json={"images": [svg["file"]]}, headers=W)
+    assert resp.status_code == 400 and "PNG, JPEG" in resp.text
+    assert not (tmp_path / "calls.jsonl").exists()  # nothing reached claude
+
+
+def test_a_finder_drop_on_ask_is_copied_in(asking, tmp_path, config) -> None:
+    source = tmp_path / "moodboard.png"
+    source.write_bytes(PNG_1PX)
+    up = asking.post("/api/uploads/from-path", json={"path": str(source)}, headers=W).json()
+    assert (config.uploads_dir / up["file"]).read_bytes() == PNG_1PX and source.exists()
 
 
 def test_a_failed_turn_says_why(config, fake, monkeypatch, tmp_path) -> None:

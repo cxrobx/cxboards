@@ -860,6 +860,11 @@ export function BoardCanvas({ boardId, boards, reloadKey, touched, focusId, pres
     const handler = (drop: { paths: string[]; x: number; y: number }) => {
       if (presenting) return false
       const el = document.elementFromPoint(drop.x, drop.y) as HTMLElement | null
+      if (el?.closest('.chat')) {
+        // Dropped on Ask: the pictures go with the next question, not onto the board.
+        window.dispatchEvent(new CustomEvent('cxboards:chat-drop', { detail: drop.paths }))
+        return true
+      }
       const column = el?.closest('[data-column]')?.getAttribute('data-column') ?? undefined
       const nodeId = el?.closest('.react-flow__node')?.getAttribute('data-id')
       const target = nodeId ? cardsRef.current.get(nodeId) : undefined

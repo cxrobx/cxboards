@@ -742,6 +742,12 @@ def create_app(
         name = store.save_image_bytes(file.file.read(), file.filename or "image.png")
         return {"file": name, "url": f"/media/{name}"}
 
+    @app.post("/api/uploads/from-path")
+    def upload_from_path(body: dict[str, Any] = Body(...)) -> dict[str, Any]:
+        """An image on disk copied in without making a card (a Finder drop on Ask)."""
+        name = store.import_image_path(str(body.get("path", "")))
+        return {"file": name, "url": f"/media/{name}"}
+
     # ------------------------------------------------------------------ media and files
 
     def placement(board_id: str, x: float | None, y: float | None, column: str | None, unsorted: bool) -> dict[str, Any]:
@@ -1025,17 +1031,24 @@ def create_app(
         events). Closing this stream only stops watching; the turn goes on."""
         board = store.resolve_board(board_id)
         message = str(body.get("message") or "").strip()
-        if not message:
+        images = [str(n) for n in body.get("images") or []]
+        for name in images:
+            store.upload_path(name)  # 404 for anything that isn't an upload
+            if Path(name).suffix.lower() not in chatlib.IMAGE_TYPES:
+                raise Invalid("Ask can look at PNG, JPEG, GIF and WebP pictures")
+        if not message and not images:
             raise Invalid("ask something")
         if body.get("chat_id") in turns:
             raise Invalid("still answering the last question: wait, or stop it")
         model = body.get("model") if body.get("model") in chatlib.MODELS else chatlib.DEFAULT_MODEL
-        chat_id = body.get("chat_id") or store.start_chat(board["id"], message)
+        title = message or ("A picture" if len(images) == 1 else f"{len(images)} pictures")
+        chat_id = body.get("chat_id") or store.start_chat(board["id"], title)
         history = store.chat(chat_id)["messages"]
         state = store.board_state(board["id"])
         by_id = {c["id"]: c for c in state["cards"]}
         picked = [by_id[i] for i in body.get("selection") or [] if i in by_id]
-        store.add_message(chat_id, {"role": "user", "text": message, "selection": [c["id"] for c in picked]})
+        store.add_message(chat_id, {"role": "user", "text": message, "selection": [c["id"] for c in picked],
+                                    **({"images": images} if images else {})})
         binary = claude()
         cmd: list[str] = []
         if binary:
@@ -1044,8 +1057,8 @@ def create_app(
                 [outline.card_line(c) for c in picked],
             )
             cmd = chatlib.build_cmd(
-                binary, chatlib.user_prompt(message, history), system, model,
-                chatlib.mcp_config(config.home, config.base_url),
+                binary, chatlib.user_prompt(message, history, images, config.uploads_dir), system, model,
+                chatlib.mcp_config(config.home, config.base_url), config.uploads_dir,
             )
         turn = chatlib.Turn(chat_id, board["id"])
         turn.push("chat", {"chat_id": chat_id})
