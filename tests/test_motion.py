@@ -131,6 +131,7 @@ def test_the_sandbox_page_can_only_draw(client) -> None:
 def test_a_snapshot_shows_a_still_never_a_script(store: Store) -> None:
     board = store.create_board("Moves")
     store.add_card(board["id"], "animation", text="breathing", data={"motion": {"code": INK + "\n// </script><script>alert(1)</script>"}})
+    store.update_board(board["id"], in_onyx=True)
     page = Exporter(store).export_board(board["id"]).read_text()
     assert "<script" not in page and "moves in CXBoards" in page
 

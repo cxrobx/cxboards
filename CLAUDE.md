@@ -12,10 +12,15 @@ user, never deployed. Built 2026-10-02 to plan creative sessions next to the art
   `X-CXBoards-Actor: agent`, so agent edits land live and glow in the open board.
   Registered **local scope only**, in `~/Projects/artist-mcp` and here. Don't promote it
   to user scope; the context-budget tripwire (T203) trips on new user-scope servers.
-- **Onyx**: every board writes a static snapshot to
+- **Onyx** is **opt-in per board** (`boards.in_onyx`, off for every new board; all boards were
+  reset to off on 2026-10-05). The header pill ("In Onyx ✓" / "Not in Onyx") and
+  Board ▸ Show in Onyx flip it. A board that's in writes a static snapshot to
   `~/Library/Application Support/CXBoards/export/<slug>/index.html` a moment after it
   changes. That `export/` folder is linked into Onyx Artifacts as **`Muzik/Boards`**, so
-  boards appear in Onyx, get highlight-to-ask, and are indexed by the vault MCP.
+  those boards appear in Onyx, get highlight-to-ask, and are indexed by the vault MCP. A board
+  that's out has no folder (the sweep, which also runs at server start, removes it), snapshot
+  links to it are plain text, and `export_board` (API and MCP) refuses it, so agents can't
+  publish a board. The print view renders into `<home>/print/`, never into Onyx's folder.
 
 - **The app**: `/Applications/CXBoards.app` (`com.cx.cxboards`, source `app/CXBoards.swift`,
   built by `app/build-app.sh`, no Xcode project) is a borderless native window around the
@@ -141,7 +146,7 @@ Data lives in `~/Library/Application Support/CXBoards/` (`cxboards.db`, `uploads
 ## Run / verify
 
 ```bash
-.venv/bin/python -m pytest -q          # 373 tests: invariants, API, export, MCP, chat, themes, folders, templates (each built), animations, phases 1-3
+.venv/bin/python -m pytest -q          # 377 tests: invariants, API, export, MCP, chat, themes, folders, templates (each built), animations, phases 1-3
 app/build-app.sh                       # build + install CXBoards.app (Apple Development signed)
 scripts/selftest-app.sh                # the app's own end-to-end check (drops, dialogs, sidebar, downloads, links)
 scripts/install.sh                     # build UI, (re)install LaunchAgent, wait for health

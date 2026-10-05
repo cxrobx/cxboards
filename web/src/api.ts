@@ -91,6 +91,7 @@ export interface Board {
   rev: number
   export_slug: string
   is_template: boolean
+  in_onyx: boolean
   is_folder?: boolean
   theme?: Record<string, string> | null
   updated_at: string
@@ -189,7 +190,7 @@ export const api = {
   board: (id: string) => req<BoardState>('GET', `/api/boards/${id}`),
   createBoard: (title: string, parent?: string, template?: string, folder?: boolean) =>
     req<Board>('POST', '/api/boards', { title, parent, template, folder }),
-  updateBoard: (id: string, patch: { title?: string; description?: string; is_template?: boolean; theme?: unknown }) =>
+  updateBoard: (id: string, patch: { title?: string; description?: string; is_template?: boolean; in_onyx?: boolean; theme?: unknown }) =>
     req<Board>('PATCH', `/api/boards/${id}`, patch),
   deleteBoard: (id: string) => req<{ ok: boolean }>('DELETE', `/api/boards/${id}`),
   moveBoard: (id: string, parent: string | null) => req<Board>('POST', `/api/boards/${id}/move`, { parent }),

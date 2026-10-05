@@ -367,6 +367,15 @@ function Shell() {
     a.click()
   }
 
+  const toggleOnyx = (board: Board) =>
+    void api
+      .updateBoard(board.id, { in_onyx: !board.in_onyx })
+      .then(() => loadBoards())
+      .then(() =>
+        showToast(board.in_onyx ? 'Taken out of Onyx.' : `In Onyx shortly: Muzik/Boards/${board.export_slug}`),
+      )
+      .catch((e) => showToast((e as Error).message))
+
   const openBoardMenu = (e: React.MouseEvent) => {
     if (!state) return
     const board = state.board
@@ -377,6 +386,7 @@ function Shell() {
       items: [
         { label: 'Present', hint: 'P', run: present },
         { label: 'Theme…', run: () => setTheming(true) },
+        { label: board.in_onyx ? 'Take out of Onyx' : 'Show in Onyx', run: () => toggleOnyx(board) },
         {
           kind: 'sub',
           label: 'Export',
@@ -744,9 +754,17 @@ function Shell() {
               </div>
               <div className="topbar-right">
                 {state && (
-                  <span className="snapshot" title="A static copy of this board is kept in Onyx">
-                    Onyx: Muzik/Boards/{state.board.export_slug}
-                  </span>
+                  <button
+                    className={`ghost snapshot${state.board.in_onyx ? ' on' : ''}`}
+                    onClick={() => toggleOnyx(state.board)}
+                    title={
+                      state.board.in_onyx
+                        ? `A static copy is kept in Onyx at Muzik/Boards/${state.board.export_slug}. Click to take it out.`
+                        : 'Not in Onyx. Click to keep a static copy there (Muzik/Boards).'
+                    }
+                  >
+                    {state.board.in_onyx ? 'In Onyx ✓' : 'Not in Onyx'}
+                  </button>
                 )}
                 {state?.board.is_template && <span className="badge">template</span>}
                 <button className={`ghost${chatOpen ? ' on' : ''}`} onClick={() => setChatOpen((o) => !o)} title="Ask about this board (⌘/)">

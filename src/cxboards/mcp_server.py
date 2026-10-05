@@ -459,6 +459,7 @@ def move_board(board: str, parent: str = "") -> str:
 @mcp.tool()
 def export_board(board: str, format: str = "snapshot") -> str:
     """Export a board. `snapshot`: write its Onyx page now (it also happens by itself after each change).
+    Only for a board Chris has put in Onyx (Board ▸ Show in Onyx); any other is refused, never published.
     `markdown`: return the board as Markdown. `vault`: save it as a note in the Obsidian vault's
     Inbox/Quick Notes (images to Other/Attachments; a note Chris has edited is never overwritten)."""
     if format == "markdown":

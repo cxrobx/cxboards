@@ -546,6 +546,19 @@ html.side-resizing * {
   color: var(--clay);
 }
 
+/* The board's Onyx switch (opt-in): dim when off, outlined like Ask when on. */
+.ghost.snapshot {
+  font-size: 11px;
+}
+
+.ghost.snapshot:not(.on) {
+  opacity: 0.6;
+}
+
+.ghost.snapshot:not(.on):hover {
+  opacity: 1;
+}
+
 .welcome {
   margin: auto;
   text-align: center;

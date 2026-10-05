@@ -62,6 +62,7 @@ CREATE TABLE IF NOT EXISTS boards (
     is_template INTEGER NOT NULL DEFAULT 0,
     theme       TEXT,
     is_folder   INTEGER NOT NULL DEFAULT 0,
+    in_onyx     INTEGER NOT NULL DEFAULT 0,
     created_at  TEXT NOT NULL,
     updated_at  TEXT NOT NULL
 );
@@ -162,6 +163,7 @@ ADDED_COLUMNS = [
     ("boards", "is_template", "INTEGER NOT NULL DEFAULT 0"),
     ("boards", "theme", "TEXT"),
     ("boards", "is_folder", "INTEGER NOT NULL DEFAULT 0"),
+    ("boards", "in_onyx", "INTEGER NOT NULL DEFAULT 0"),
     ("cards", "locked", "INTEGER NOT NULL DEFAULT 0"),
     ("cards", "tray", "INTEGER NOT NULL DEFAULT 0"),
 ]
@@ -536,6 +538,7 @@ class Store:
         out = {k: row[k] for k in row.keys() if k != "n"}
         out["is_template"] = bool(out.get("is_template"))
         out["is_folder"] = bool(out.get("is_folder"))
+        out["in_onyx"] = bool(out.get("in_onyx"))
         out["theme"] = json.loads(out["theme"]) if out.get("theme") else None
         return out
 
@@ -706,8 +709,10 @@ class Store:
         actor: str = "chris",
         is_template: bool | None = None,
         theme: Any = ...,
+        in_onyx: bool | None = None,
     ) -> dict[str, Any]:
-        """``theme``: leave out to keep it; None or "vault" for the app's own look; a preset name or
+        """``in_onyx``: whether the board keeps a snapshot in Onyx (opt-in, off for a new board).
+        ``theme``: leave out to keep it; None or "vault" for the app's own look; a preset name or
         {"preset": name}; or custom {ground, ink, accent, font, corners}."""
         self._actor(actor)
         stored: str | None = None
@@ -736,6 +741,8 @@ class Store:
                 db.execute("UPDATE boards SET description = ? WHERE id = ?", (description, board_id))
             if is_template is not None:
                 db.execute("UPDATE boards SET is_template = ? WHERE id = ?", (int(bool(is_template)), board_id))
+            if in_onyx is not None:
+                db.execute("UPDATE boards SET in_onyx = ? WHERE id = ?", (int(bool(in_onyx)), board_id))
             self._touch(board_id, [], actor)
             if row["parent_id"]:
                 self._touch(row["parent_id"], self._board_card_ids(board_id), actor)

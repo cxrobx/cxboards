@@ -151,6 +151,7 @@ def test_snapshot_draws_lines_labels_swatches_and_marks(store: Store) -> None:
     b = store.add_card(board["id"], "swatch", data={"hex": "#2AA198"}, x=500, y=80)
     store.add_connector(a["id"], b["id"], label="becomes", style="dashed")
     store.label_cards([a["id"]], ["idea"])
+    store.update_board(board["id"], in_onyx=True)
     page = Exporter(store).export_board(board["id"]).read_text()
     assert '<svg class="lines"' in page and "becomes" in page and 'stroke-dasharray' in page
     assert "<mark>loud</mark>" in page and 'class="label"' in page and "#2AA198" in page

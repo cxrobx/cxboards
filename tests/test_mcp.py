@@ -43,6 +43,9 @@ def test_agent_plans_a_session_end_to_end(client, bounce) -> None:
     made = m.make_sub_board("october", [note_id], "Hook ideas")
     assert "Made board Hook ideas" in made
     assert "inside October sessions" in m.list_boards()
+    with pytest.raises(Exception, match="isn't in Onyx"):  # opt-in: an agent can't publish a board
+        m.export_board("october")
+    m._call("PATCH", "/api/boards/october", {"in_onyx": True})
     assert "Artifacts/Muzik/Boards/october-sessions" in m.export_board("october")
 
 

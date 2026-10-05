@@ -77,6 +77,7 @@ def test_the_snapshot_wears_the_theme(store: Store) -> None:
     board = store.create_board("Look")
     store.add_card(board["id"], "note", text="hello")
     store.update_board(board["id"], theme="chrisx")
+    store.update_board(board["id"], in_onyx=True)
     page = Exporter(store).export_board(board["id"]).read_text()
     assert "--ivory:#000000" in page and "--slate:#F3ECDD" in page and "Fraunces" in page
     assert ".card{border-radius:0px}" in page and "<script" not in page
@@ -152,6 +153,7 @@ def test_a_backdrop_is_an_uploaded_image(store: Store, tmp_path) -> None:
     pal = store.board_state(board["id"])["palette"]
     assert pal["backdrop"] == "/media/cover.jpg" and pal["backdropDim"] == "0.800"
     assert pal["backdropScrim"] == themes.mix("#0E0E0E", "#B23A2E", 0.2)
+    store.update_board(board["id"], in_onyx=True)
     page = Exporter(store).export_board(board["id"]).read_text()
     assert "http://127.0.0.1:4870/media/cover.jpg" in page and "http://127.0.0.1:4870/fonts/css?family=Anton" in page
     assert "<script" not in page

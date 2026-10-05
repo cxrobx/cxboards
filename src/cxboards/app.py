@@ -96,6 +96,7 @@ def create_app(
     @asynccontextmanager
     async def lifespan(app: FastAPI):
         broadcaster.bind(asyncio.get_running_loop())
+        exporter.sweep()  # snapshots of boards no longer in Onyx (or gone while the server was down)
         yield
         # Turns still answering are stopped, so each saves what it had as "stopped".
         running = [t.task for t in list(turns.values()) if t.task]
@@ -395,7 +396,7 @@ def create_app(
     def update_board(board_id: str, request: Request, body: dict[str, Any] = Body(...)) -> dict[str, Any]:
         return store.update_board(
             board_id_of(board_id), body.get("title"), body.get("description"), actor_of(request),
-            is_template=body.get("is_template"), theme=with_fonts(body["theme"]) if "theme" in body else ...,
+            is_template=body.get("is_template"), in_onyx=body.get("in_onyx"), theme=with_fonts(body["theme"]) if "theme" in body else ...,
         )
 
     @app.post("/api/boards/{board_id}/move")
@@ -472,7 +473,8 @@ def create_app(
     def print_view(board_id: str) -> HTMLResponse:
         """The board's snapshot, opened for printing (Save as PDF from the print dialog)."""
         board = store.resolve_board(board_id)
-        page = exporter.export_board(board["id"]).read_text(encoding="utf-8")
+        # Rendered beside Onyx's folder, not into it: printing doesn't put a board in Onyx.
+        page = exporter.write(board["id"], config.home / "print").read_text(encoding="utf-8")
         script = "<script>addEventListener('load',()=>setTimeout(()=>print(),400))</script>"
         page = page.replace("<head>", f'<head><base href="/print/{board["id"]}/">', 1).replace("</body>", script + "</body>")
         page = page.replace("@media screen and (prefers-color-scheme: dark)", "@media not all")  # print on paper colours
@@ -481,7 +483,7 @@ def create_app(
     @app.get("/print/{board_id}/media/{name}")
     def print_media(board_id: str, name: str) -> FileResponse:
         board = store.resolve_board(board_id)
-        path = exporter.root / board["export_slug"] / "media" / name
+        path = config.home / "print" / board["export_slug"] / "media" / name
         if "/" in name or not path.is_file():
             raise NotFound(name)
         return FileResponse(path)

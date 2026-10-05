@@ -1,9 +1,11 @@
 """Static snapshots of each board, for Onyx.
 
-Every board is written to ``<home>/export/<slug>/index.html`` (plus a
-``media/`` folder) a moment after it changes. That export folder is linked once
-into Onyx's Artifacts (``Muzik/Boards``), so each board shows up there as a
-page, gets highlight-to-ask, and is indexed by the vault MCP.
+A board Chris has put in Onyx (``in_onyx``, opt-in, off by default) is written to
+``<home>/export/<slug>/index.html`` (plus a ``media/`` folder) a moment after it
+changes. That export folder is linked once into Onyx's Artifacts (``Muzik/Boards``),
+so each such board shows up there as a page, gets highlight-to-ask, and is indexed
+by the vault MCP. A board that isn't in Onyx has no folder there: the sweep removes
+it, and links to it from other snapshots are plain text.
 
 The page needs no JavaScript. Cards are absolutely positioned in reading order;
 when the reader is narrower than the board, a container query drops them into
@@ -25,7 +27,7 @@ from typing import Any
 import markdown as md
 
 from . import themes
-from .store import NotFound, Store
+from .store import Invalid, NotFound, Store
 
 MARKER = ".cxboards-board"
 TARGET_WIDTH = 1100.0
@@ -52,6 +54,10 @@ def _clip(cx: float, cy: float, tx: float, ty: float, rect: tuple[float, float, 
         (h / 2) / abs(dy) if dy else float("inf"),
     )
     return cx + dx * scale, cy + dy * scale
+
+
+class NotInOnyx(Invalid):
+    pass
 
 
 def _e(value: Any) -> str:
@@ -86,7 +92,7 @@ class Exporter:
             self._timers.pop(board_id, None)
         try:
             self.export_board(board_id)
-        except NotFound:
+        except (NotFound, NotInOnyx):
             pass
 
     def flush(self) -> None:
@@ -98,19 +104,19 @@ class Exporter:
         for board_id in pending:
             try:
                 self.export_board(board_id)
-            except NotFound:
+            except (NotFound, NotInOnyx):
                 pass
 
     # ------------------------------------------------------------------ writing
 
     def export_all(self) -> list[Path]:
-        written = [self.export_board(b["id"]) for b in self.store.list_boards()]
+        written = [self.export_board(b["id"]) for b in self.store.list_boards() if b["in_onyx"]]
         self.sweep()
         return written
 
     def sweep(self) -> None:
-        """Remove snapshot folders whose board is gone. Only folders carrying our marker."""
-        live = {b["id"]: b["export_slug"] for b in self.store.list_boards()}
+        """Remove snapshot folders whose board is gone or not in Onyx. Only folders carrying our marker."""
+        live = {b["id"]: b["export_slug"] for b in self.store.list_boards() if b["in_onyx"]}
         for folder in self.root.iterdir() if self.root.exists() else []:
             marker = folder / MARKER
             if not marker.is_file():
@@ -120,9 +126,17 @@ class Exporter:
                 shutil.rmtree(folder)
 
     def export_board(self, board_id: str) -> Path:
+        """Write a board's Onyx snapshot. Refuses (and sweeps away any old one) when it isn't in Onyx."""
+        if not self.store.board(board_id)["in_onyx"]:
+            self.sweep()
+            raise NotInOnyx("this board isn't in Onyx: turn on Board ▸ Show in Onyx first")
+        return self.write(board_id, self.root)
+
+    def write(self, board_id: str, root: Path) -> Path:
+        """Render a board into ``root/<slug>/``. Onyx's folder only through ``export_board``."""
         state = self.store.board_state(board_id)
         board = state["board"]
-        folder = self.root / board["export_slug"]
+        folder = root / board["export_slug"]
         media = folder / "media"
         folder.mkdir(parents=True, exist_ok=True)
         page = self.render(state, media)
@@ -131,7 +145,8 @@ class Exporter:
         os.replace(tmp, folder / "index.html")
         (folder / MARKER).write_text(board_id)
         self._prune_media(state["cards"], media)
-        self.sweep()
+        if root == self.root:
+            self.sweep()
         return folder / "index.html"
 
     def _prune_media(self, cards: list[dict[str, Any]], media: Path) -> None:
@@ -156,10 +171,12 @@ class Exporter:
     # ------------------------------------------------------------------ rendering
 
     def _slug_of(self, board_id: str) -> str | None:
+        """The snapshot folder a link can point at: None when the board is gone or not in Onyx."""
         try:
-            return self.store.board(board_id)["export_slug"]
+            board = self.store.board(board_id)
         except NotFound:
             return None
+        return board["export_slug"] if board["in_onyx"] else None
 
     def render_card(self, card: dict[str, Any], media: Path, position: str = "") -> str:
         kind, data = card["kind"], card["data"]
@@ -238,11 +255,13 @@ class Exporter:
         elif kind == "board":
             child = card.get("board") or {}
             slug = self._slug_of(child.get("id", ""))
-            href = f"../{slug}/index.html" if slug else "#"
+            inner = (
+                f'<span class="board-glyph">▦</span><span class="card-title">{_e(child.get("title"))}</span>'
+                f'<span class="site">{child.get("card_count", 0)} cards</span>'
+            )
             body = (
-                f'<a class="board-link" href="{_e(href)}"><span class="board-glyph">▦</span>'
-                f'<span class="card-title">{_e(child.get("title"))}</span>'
-                f'<span class="site">{child.get("card_count", 0)} cards</span></a>'
+                f'<a class="board-link" href="../{_e(slug)}/index.html">{inner}</a>'
+                if slug else f'<div class="board-link">{inner}</div>'
             )
         else:
             body = ""
@@ -384,7 +403,9 @@ class Exporter:
             parts.insert(0, lines)
         crumbs = state["breadcrumbs"][:-1]
         trail = " / ".join(
-            f'<a href="../{_e(self._slug_of(b["id"]))}/index.html">{_e(b["title"])}</a>' for b in crumbs
+            f'<a href="../{_e(slug)}/index.html">{_e(b["title"])}</a>' if (slug := self._slug_of(b["id"]))
+            else f"<span>{_e(b['title'])}</span>"
+            for b in crumbs
         )
         when = datetime.now().strftime("%Y-%m-%d %H:%M")
         live = f"{self.store.config.base_url}/b/{board['id']}"
