@@ -3,6 +3,10 @@
 A local-first visual planning board for macOS, with infinite spatial canvases
 that you and your AI agents share live.
 
+![CXBoards spatial canvas with the Ask panel and live Claude MCP card updates](docs/media/cxboards-demo.gif)
+
+<sub>Interactive UI demo with illustrative board data.</sub>
+
 ## What's inside
 
 - **Rich canvas cards**: markdown notes (formatting shortcuts and full-screen
