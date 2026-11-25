@@ -1,7 +1,7 @@
 # CXBoards
 
-A local-first visual planning board for macOS — infinite spatial canvases that
-you and your AI agents share live.
+A local-first visual planning board for macOS, with infinite spatial canvases
+that you and your AI agents share live.
 
 ## What's inside
 
@@ -26,7 +26,7 @@ you and your AI agents share live.
 - **214 built-in templates**: 38 categories of YAML board templates plus your
   own reusable boards.
 - **Per-board themes**: built-in presets or custom ground, ink, accent, Google
-  Fonts, backdrop images, and film/print grain — inherited down child boards
+  Fonts, backdrop images, and film/print grain, inherited down child boards
   and applied to the native window chrome and static exports.
 - **Safe by design**: soft-delete trash (90 days), per-actor undo/redo,
   search across every board, presentation mode, bookmarklet clipper, and
