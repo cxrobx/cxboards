@@ -6,11 +6,11 @@
     <string>com.cx.cxboards.server</string>
     <key>ProgramArguments</key>
     <array>
-        <string>/Users/christopherrobinson/Projects/cxboards/.venv/bin/cxboards</string>
+        <string>__REPO__/.venv/bin/cxboards</string>
         <string>serve</string>
     </array>
     <key>WorkingDirectory</key>
-    <string>/Users/christopherrobinson/Projects/cxboards</string>
+    <string>__REPO__</string>
     <key>RunAtLoad</key>
     <true/>
     <key>KeepAlive</key>
@@ -20,13 +20,13 @@
     <key>ProcessType</key>
     <string>Background</string>
     <key>StandardOutPath</key>
-    <string>/Users/christopherrobinson/Library/Logs/cxboards.log</string>
+    <string>__HOME__/Library/Logs/cxboards.log</string>
     <key>StandardErrorPath</key>
-    <string>/Users/christopherrobinson/Library/Logs/cxboards.log</string>
+    <string>__HOME__/Library/Logs/cxboards.log</string>
     <key>EnvironmentVariables</key>
     <dict>
         <key>PATH</key>
-        <string>/Users/christopherrobinson/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+        <string>__HOME__/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
         <key>PYTHONUNBUFFERED</key>
         <string>1</string>
     </dict>

@@ -7,7 +7,7 @@ label=com.cx.cxboards.server
 plist=~/Library/LaunchAgents/$label.plist
 
 cd $repo/web && npm run build --silent
-cp $repo/deploy/$label.plist $plist
+sed -e "s|__REPO__|$repo|g" -e "s|__HOME__|$HOME|g" "$repo/deploy/$label.plist" > "$plist"
 launchctl bootout gui/$(id -u)/$label 2>/dev/null || true
 launchctl bootstrap gui/$(id -u) $plist
 for _ in {1..30}; do

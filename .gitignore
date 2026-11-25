@@ -7,3 +7,4 @@ web/dist/
 web/*.tsbuildinfo
 .DS_Store
 motion/node_modules/
+.playwright-mcp/
